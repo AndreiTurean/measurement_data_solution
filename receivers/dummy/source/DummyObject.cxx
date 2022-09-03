@@ -2,38 +2,45 @@
 
 namespace receivers
 {
-        DummyObject::DummyObject(InterfaceAccess* interfaceAccess)
+        DummyObject::DummyObject(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, std::string_view name):
+                interfaceAccess_(interfaceAccess),
+				instanceNb_(nb),
+				handle_(handle),
+				name_(name)
         {
 
         }
 
-        //! MeasurementObject interface implementation
         const uint8_t& DummyObject::getInstanceNumber()
         {
-
+            return instanceNb_;
         }
         const uint64_t& DummyObject::getHandle()
         {
-
+            return handle_;
         }
         const MeasurementObjectType& DummyObject::getType()
         {
-
+            return type_;
         }
-        std::string_view getName()
+        std::string_view DummyObject::getName()
+        {
+             return name_;
+        }
+
+        bool DummyObject::validatePackage(DataPackageCPtr)
         {
 
+            return false;
         }
 
-        //! DataReceiverObject interface implementation
-        bool validatePackage(DataPackageCPtr package)
+        void* DummyObject::getInterface(std::string_view)
         {
-
+            return nullptr;
         }
+}
 
-        //! InterfaceAccess interface implementation
-        void* getInterface(std::string_view interfaceName)
-        {
-            
-        }
+MeasurementObject* createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, std::string_view name)
+{
+	return new receivers::DummyObject(interfaceAccess,instanceNb,handle,name);
 }

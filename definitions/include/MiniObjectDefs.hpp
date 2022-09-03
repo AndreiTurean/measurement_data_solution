@@ -6,7 +6,6 @@
 
 enum class MeasurementObjectType : uint8_t
 {
-    dummy,
     data_source,
     data_receiver,
     player,
@@ -20,7 +19,7 @@ struct MeasurementObject
     virtual const MeasurementObjectType& getType() = 0;
     virtual std::string_view getName() = 0;
 };
-using MeasurementObjectList = std::list<MeasurementObject>;
+using MeasurementObjectList = std::list<std::shared_ptr<MeasurementObject>>;
 
 struct DataPackage
 {
@@ -40,6 +39,6 @@ using DataReceiverObjectPtr = std::shared_ptr<DataReceiverObject>;
 
 struct DataSenderObject
 {
-    virtual void addPackage(DataPackagePtr package) = 0;
+    virtual DataPackagePtr sendPackage() = 0;
 };
 using DataSenderObjectPtr = std::shared_ptr<DataSenderObject>;

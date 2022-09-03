@@ -21,7 +21,8 @@ target_include_directories(${PROJECT_NAME}_dummy PUBLIC
   $<INSTALL_INTERFACE:include>  # <prefix>/include/
 )
 
-target_link_libraries(${PROJECT_NAME}_dummy PRIVATE core)
+#target_link_libraries(${PROJECT_NAME}_dummy PRIVATE core)
+target_link_libraries(${PROJECT_NAME}_dummy PRIVATE defs)
 
 #######################################################
 # setting target compile feature/options              #

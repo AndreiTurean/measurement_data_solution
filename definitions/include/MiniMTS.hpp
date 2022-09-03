@@ -26,5 +26,5 @@ enum class EngineInitFlag : uint8_t
 
 struct ConfigurationParser
 {
-    virtual MeasurementObjectList loadConfiguration(std::filesystem::path path) = 0;
+    virtual const MeasurementObjectList& loadConfiguration(std::filesystem::path path) = 0;
 };

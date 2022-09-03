@@ -1,5 +1,5 @@
 #pragma once
-
+#include <visibility.h>
 #include <MiniMTS.hpp>
 #include <MiniObjectDefs.hpp>
 
@@ -10,8 +10,13 @@ namespace receivers
         public DataReceiverObject,
         public InterfaceAccess
     {
+        InterfaceAccess* interfaceAccess_;
+        uint8_t instanceNb_;
+        uint64_t handle_;
+        std::string_view name_;
+        MeasurementObjectType type_;
     public:
-        DummyObject(InterfaceAccess* interfaceAccess);
+        DummyObject(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, std::string_view name);
 
         //! MeasurementObject interface implementation
         virtual const uint8_t& getInstanceNumber();
@@ -26,3 +31,5 @@ namespace receivers
         virtual void* getInterface(std::string_view interfaceName);
     };
 }
+
+extern "C" MeasurementObject* CORE_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, std::string_view name);

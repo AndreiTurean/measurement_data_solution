@@ -4,41 +4,40 @@ cmake_minimum_required(VERSION 3.22.0)
 # project definition                                  #
 #######################################################
 #   setting the project name, version and language
-project(player VERSION 0.1.0)
+#project(dummy VERSION 0.1.0)
 
 #   add a normal library and control how it is build using the BUILD_SHARED_LIB flag from the command
 #   line interface
 #   https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html
 
-add_library(${PROJECT_NAME}
-source/Player.cxx
-source/PlayerDataBuffer.cxx
-source/PlayerObject.cxx)
+add_library(${PROJECT_NAME}_xml
+source/XmlWrapper.cxx)
 
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_library(${PROJECT_NAME}::${PROJECT_NAME}::xml ALIAS ${PROJECT_NAME}_xml)
 
 #   add the include directory to our target as PUBLIC
-target_include_directories(${PROJECT_NAME} PUBLIC
+target_include_directories(${PROJECT_NAME}_xml PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>  # <prefix>/include/
 )
 
-#target_link_libraries(${PROJECT_NAME} PRIVATE core)
-target_link_libraries(${PROJECT_NAME} PRIVATE defs)
+target_link_libraries(${PROJECT_NAME}_xml PRIVATE core)
+find_package(tinyxml2 CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME}_xml PRIVATE tinyxml2::tinyxml2)
 
 #######################################################
 # setting target compile feature/options              #
 #######################################################
 # https://cmake.org/cmake/help/latest/manual/cmake-compile-features.7.html
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_compile_features(${PROJECT_NAME}_xml PUBLIC cxx_std_17)
 
 if(BUILD_SHARED_LIBS)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC PLAYER_DLL) # we want to build a shared library
-    target_compile_definitions(${PROJECT_NAME} PRIVATE CREATE_DLL)
+    target_compile_definitions(${PROJECT_NAME}_xml PUBLIC XML_DLL) # we want to build a shared library
+    target_compile_definitions(${PROJECT_NAME}_xml PRIVATE CREATE_DLL)
 endif()
 
 
-target_compile_options(${PROJECT_NAME} PRIVATE
+target_compile_options(${PROJECT_NAME}_xml PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4> # setting the W4 warning level for MSVC compilers
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror> # setting the Wall for other compilers
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fms-extensions>
@@ -48,7 +47,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 # install step                                        #
 #######################################################
 include(GNUInstallDirs)
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME}_xml
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT RUNTIME
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

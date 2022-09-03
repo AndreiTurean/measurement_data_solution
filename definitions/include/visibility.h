@@ -38,5 +38,3 @@
 #define CORE_API
 #define CORE_LOCAL
 #endif
-
-#define company_name syler

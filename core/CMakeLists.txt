@@ -14,6 +14,7 @@ add_library(${PROJECT_NAME}
 source/ConfigurationManager.cxx
 source/DistributionManager.cxx
 source/Engine.cxx
+source/MeasurementObjectFactory.cxx
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -23,6 +24,13 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>  # <prefix>/include/
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+$<TARGET_PROPERTY:transmitters_dummy,INTERFACE_INCLUDE_DIRECTORIES>
+)
+
+target_link_libraries(${PROJECT_NAME} utilis::utilis::xml)
+target_link_libraries(${PROJECT_NAME} defs)
 
 #######################################################
 # setting target compile feature/options              #
@@ -59,19 +67,7 @@ install(TARGETS ${PROJECT_NAME}
 #######################################################
 
 if(BUILD_TESTING)
-    # include(GoogleTest)
-    # enable_testing()
-
-    # add_executable(${PROJECT_NAME}_test
-    # test/main.cxx)
-
-    # # packages are getted using the vcpkg package manager
-    # find_package(GTest REQUIRED)
-    # target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
-
-    # gtest_add_tests(TARGET ${PROJECT_NAME}_test)
-
-    # target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME}::${PROJECT_NAME}) #link against the alias library
-
-    # install(TARGETS ${PROJECT_NAME}_test)
+  include(GoogleTest)
+  enable_testing()
+  add_subdirectory(test)
 endif()
