@@ -12,7 +12,7 @@ namespace core
         }
     }
 
-    void* Engine::getInterface(std::string_view)
+    void* Engine::getInterface(const std::string&)
     {
         return nullptr;
     }

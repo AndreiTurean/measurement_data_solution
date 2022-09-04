@@ -27,7 +27,7 @@ namespace core
         receiversPool_.push_back(object);
     }
 
-    void* DistributionManager::getInterface(std::string_view interfaceName)
+    void* DistributionManager::getInterface(const std::string& interfaceName)
     {
         if(interfaceAccess_)
             return interfaceAccess_->getInterface(interfaceName);

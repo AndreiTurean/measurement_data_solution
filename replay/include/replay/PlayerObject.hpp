@@ -23,10 +23,10 @@ namespace replay
         virtual const uint8_t& getInstanceNumber();
         virtual const uint64_t& getHandle();
         virtual const MeasurementObjectType& getType();
-        virtual std::string_view getName();
+        virtual const std::string& getName();
 
         //! InterfaceAccess interface implementation
-        virtual void* getInterface(std::string_view interfaceName);
+        virtual void* getInterface(const std::string& interfaceName);
 
     private:
         InterfaceAccess* interfaceAccess_;

@@ -2,7 +2,7 @@
 
 namespace receivers
 {
-        DummyObject::DummyObject(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, std::string_view name):
+        DummyObject::DummyObject(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, const std::string& name):
                 interfaceAccess_(interfaceAccess),
 				instanceNb_(nb),
 				handle_(handle),
@@ -23,7 +23,7 @@ namespace receivers
         {
             return type_;
         }
-        std::string_view DummyObject::getName()
+        const std::string& DummyObject::getName()
         {
              return name_;
         }
@@ -34,13 +34,13 @@ namespace receivers
             return false;
         }
 
-        void* DummyObject::getInterface(std::string_view)
+        void* DummyObject::getInterface(const std::string&)
         {
             return nullptr;
         }
 }
 
-MeasurementObject* createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, std::string_view name)
+MeasurementObject* createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name)
 {
 	return new receivers::DummyObject(interfaceAccess,instanceNb,handle,name);
 }

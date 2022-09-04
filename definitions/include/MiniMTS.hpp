@@ -1,12 +1,12 @@
 #pragma once
 #include <MiniObjectDefs.hpp>
 #include <filesystem>
-#include <string_view>
+#include <string>
 
 
 struct InterfaceAccess
 {
-    virtual void* getInterface(std::string_view interfaceName) = 0;
+    virtual void* getInterface(const std::string& interfaceName) = 0;
 };
 
 struct EngineInit

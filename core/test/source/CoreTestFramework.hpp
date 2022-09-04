@@ -30,13 +30,21 @@ public:
         ASSERT_TRUE(engine_->getConfigurationManager() != nullptr);
     }
 
-    void ASSERT_MO_CREATED(std::string name, MeasurementObjectType type)
+    void ASSERT_MO_CREATED(std::string name)
     {
         auto& conf = engine_->getConfigurationManager();
-        ASSERT_TRUE(conf->createMeasurementObject(name, 1, 100, type));
+        ASSERT_TRUE(conf->createMeasurementObject(name, 1, 100));
         for(auto mo :conf->getMOsAddedInConfig())
         {
-            ASSERT_EQ(mo->getName(), "dummy");
+            EXPECT_EQ(mo->getName(), name);
         }
+
+        ASSERT_EQ(conf->getMOsAddedInConfig().size(), 1);
+    }
+
+    void ASSERT_MO_FUNC_EXTRACTED()
+    {
+        auto& conf = engine_->getConfigurationManager();
+        EXPECT_GT(conf->getFactorySize(), 0);
     }
 };

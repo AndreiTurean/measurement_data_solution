@@ -2,7 +2,7 @@
 
 namespace transmitters
 {
-    Dummy::Dummy(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, std::string_view name) :
+    Dummy::Dummy(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const std::string& name) :
         interfaceAccess_(interfaceAccess),
         instanceNumber_(instanceNb),
         handle_(handle),
@@ -11,7 +11,7 @@ namespace transmitters
     {
 
     }
-    void* Dummy::getInterface(std::string_view)
+    void* Dummy::getInterface(const std::string&)
     {
         return nullptr;
     }
@@ -31,13 +31,13 @@ namespace transmitters
     {
         return type_;
     }
-    std::string_view Dummy::getName()
+    const std::string& Dummy::getName()
     {
         return name_;
     }
 }
 
-std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, std::string_view name)
+std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name)
 {
 	return std::make_shared<transmitters::Dummy>(interfaceAccess, instanceNb, handle, name);
 }

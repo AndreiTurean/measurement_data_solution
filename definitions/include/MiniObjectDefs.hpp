@@ -2,7 +2,7 @@
 #include <list>
 #include <memory>
 #include <cstdint>
-#include <string_view>
+#include <string>
 
 enum class MeasurementObjectType : uint8_t
 {
@@ -17,7 +17,7 @@ struct MeasurementObject
     virtual const uint8_t& getInstanceNumber() = 0;
     virtual const uint64_t& getHandle() = 0;
     virtual const MeasurementObjectType& getType() = 0;
-    virtual std::string_view getName() = 0;
+    virtual const std::string& getName() = 0;
 };
 using MeasurementObjectList = std::list<std::shared_ptr<MeasurementObject>>;
 

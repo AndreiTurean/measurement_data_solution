@@ -22,7 +22,7 @@ namespace core
         return measurementObjectList_;
     }
 
-    void* ConfigurationManager::getInterface(std::string_view interfaceName)
+    void* ConfigurationManager::getInterface(const std::string& interfaceName)
     {
         if(interfaceName == "ConfigurationParser")
             return dynamic_cast<ConfigurationParser*>(this);
@@ -31,15 +31,13 @@ namespace core
         return nullptr;
     }
 
-    bool ConfigurationManager::createMeasurementObject(std::string_view name, uint8_t instanceNb, uint64_t handle, MeasurementObjectType type)
+    bool ConfigurationManager::createMeasurementObject(const std::string& name, uint8_t instanceNb, uint64_t handle)
     {
         size_t sizeBeforeCreate = measurementObjectList_.size();
-        //measurementObjectList_.push_back();
-        auto res = factory_->createMeasurementObject(name, instanceNb, handle, type);
-
+        measurementObjectList_.push_back(factory_->createMeasurementObject(name, instanceNb, handle));
         return sizeBeforeCreate < measurementObjectList_.size();
     }
-    bool ConfigurationManager::removeMeasurementObject(std::string_view)
+    bool ConfigurationManager::removeMeasurementObject(const std::string&)
     {
         return false;
     }
@@ -47,5 +45,10 @@ namespace core
     const MeasurementObjectList& ConfigurationManager::getMOsAddedInConfig()
     {
         return measurementObjectList_;
+    }
+
+    size_t ConfigurationManager::getFactorySize()
+    {
+        return factory_->getExtractedFuncSize();
     }
 }

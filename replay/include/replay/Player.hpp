@@ -30,6 +30,6 @@ namespace replay
         virtual bool pause();
 
         //! InterfaceAccess interface implementation
-        virtual void* getInterface(std::string_view interfaceName);
+        virtual void* getInterface(const std::string& interfaceName);
     };
 }
