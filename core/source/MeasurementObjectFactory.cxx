@@ -1,9 +1,7 @@
 #include <core/MeasurementObjectFactory.hpp>
-#include <dlfcn.h>
-#include <gnu/lib-names.h>
-#include <transmitters/DummyObject.hpp>
-#include <iostream>
+#include <utilis/LibUtility.hpp>
 
+typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, uint64_t, const char*);
 namespace core
 {
     MeasurementObjectFactory::MeasurementObjectFactory()
@@ -19,16 +17,12 @@ namespace core
 
         for(auto& obj : std::filesystem::recursive_directory_iterator(path))
         {
-            void* handle = dlopen(obj.path().c_str(), RTLD_NOW);
+            void* func = core::utility::LibUtility::openLibrary(obj.path().c_str(), "createMO");
 
-            if(handle == nullptr)
-                continue;
-            auto func = dlsym(handle, "createMO");
-
-            if(func == nullptr)
-                continue;
-
-            objectsMap_[obj.path().filename().c_str()] = func;
+            if(func)
+            {
+                objectsMap_[obj.path().filename().c_str()] = func;
+            }
         }
     }
 

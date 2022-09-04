@@ -25,9 +25,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>  # <prefix>/include/
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-$<TARGET_PROPERTY:transmitters_dummy,INTERFACE_INCLUDE_DIRECTORIES>
-)
+# target_include_directories(${PROJECT_NAME} PRIVATE
+# $<TARGET_PROPERTY:transmitters_dummy,INTERFACE_INCLUDE_DIRECTORIES>
+# )
 
 target_link_libraries(${PROJECT_NAME} utilis::utilis::xml)
 target_link_libraries(${PROJECT_NAME} defs)
