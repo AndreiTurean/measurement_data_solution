@@ -1,14 +1,9 @@
 #include <core/MeasurementObjectFactory.hpp>
-#include <utilis/LibUtility.hpp>
+
 
 typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, uint64_t, const char*);
 namespace core
 {
-    MeasurementObjectFactory::MeasurementObjectFactory()
-    {
-
-    }
-    
     void MeasurementObjectFactory::scanForMeasurementObjects(std::filesystem::path path)
     {
         
@@ -17,7 +12,7 @@ namespace core
 
         for(auto& obj : std::filesystem::recursive_directory_iterator(path))
         {
-            void* func = core::utility::LibUtility::openLibrary(obj.path().c_str(), "createMO");
+            void* func = utilityLibrary_.openLibrary(obj.path().c_str(), "createMO");
 
             if(func)
             {

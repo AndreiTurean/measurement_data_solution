@@ -47,4 +47,34 @@ public:
         auto& conf = engine_->getConfigurationManager();
         EXPECT_GT(conf->getFactorySize(), 0);
     }
+
+    void ASSERT_MULTIPLE_MOS_CREATED(std::string name, size_t count)
+    {
+        std::vector<std::string> moList;
+        for(size_t idx = 0; idx < count; ++ idx)
+        {
+            std::string moName = name + std::to_string(count);
+            auto& conf = engine_->getConfigurationManager();
+            ASSERT_TRUE(conf->createMeasurementObject(name, (uint8_t)idx, idx + 100));
+            
+            ASSERT_EQ(conf->getMOsAddedInConfig().size(), idx + 1);
+        }
+    }
+
+    void ASSERT_CREATE_DUPLICATE_MO(std::string name)
+    {
+        bool flag = true;
+        for(int idx = 0; idx < 2; ++idx)
+        {
+            auto& conf = engine_->getConfigurationManager();
+            ASSERT_EQ(conf->createMeasurementObject(name, 1, 100), flag);
+            for(auto mo :conf->getMOsAddedInConfig())
+            {
+                EXPECT_EQ(mo->getName(), name);
+            }
+
+            ASSERT_EQ(conf->getMOsAddedInConfig().size(), 1);
+            flag &= false;
+        }
+    }
 };

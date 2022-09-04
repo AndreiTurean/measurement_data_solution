@@ -1,5 +1,6 @@
 #include <core/ConfigurationManager.hpp>
 #include <XmlWrapper.hpp>
+#include <algorithm>
 
 namespace core
 {
@@ -34,7 +35,15 @@ namespace core
     bool ConfigurationManager::createMeasurementObject(const std::string& name, uint8_t instanceNb, uint64_t handle)
     {
         size_t sizeBeforeCreate = measurementObjectList_.size();
-        measurementObjectList_.push_back(factory_->createMeasurementObject(name, instanceNb, handle));
+        MeasurementObjectPtr mo = factory_->createMeasurementObject(name, instanceNb, handle);
+        if(std::any_of(measurementObjectList_.begin(), measurementObjectList_.end(), [&](const MeasurementObjectPtr obj)
+            { 
+                return obj->getHandle() == mo->getHandle();
+            }))
+        {
+            return false;
+        }
+        measurementObjectList_.push_back(mo);
         return sizeBeforeCreate < measurementObjectList_.size();
     }
     bool ConfigurationManager::removeMeasurementObject(const std::string&)

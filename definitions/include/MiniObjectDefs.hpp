@@ -19,6 +19,7 @@ struct MeasurementObject
     virtual const MeasurementObjectType& getType() = 0;
     virtual const std::string& getName() = 0;
 };
+using MeasurementObjectPtr = std::shared_ptr<MeasurementObject>;
 using MeasurementObjectList = std::list<std::shared_ptr<MeasurementObject>>;
 
 struct DataPackage
