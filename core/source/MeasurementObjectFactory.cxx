@@ -27,10 +27,9 @@ namespace core
 
             if(func == nullptr)
                 continue;
+
             objectsMap_[obj.path().filename().c_str()] = func;
         }
-
-        
     }
 
     std::shared_ptr<MeasurementObject> MeasurementObjectFactory::createMeasurementObject(const std::string& name, uint8_t instanceNb, uint64_t handle)
@@ -39,16 +38,21 @@ namespace core
         {
             return nullptr;
         }
+        auto it = objectsMap_.find(name.c_str());
 
-        auto func = objectsMap_[name.c_str()];
-        createMO_t* mo = (createMO_t*)func;
+        if(it == objectsMap_.end())
+        {
+            return nullptr;
+        }
+
+        createMO_t* mo = (createMO_t*)it->second;
 
         if(!mo)
         {
             return nullptr;
         }
 
-        return mo(nullptr, instanceNb, handle, name.c_str());
+        return mo(nullptr, instanceNb, handle, it->first.c_str());
     }
 
     size_t MeasurementObjectFactory::getExtractedFuncSize()

@@ -40,7 +40,7 @@ namespace receivers
         }
 }
 
-MeasurementObject* createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name)
+std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name)
 {
-	return new receivers::DummyObject(interfaceAccess,instanceNb,handle,name);
+	return std::make_shared<receivers::DummyObject>(interfaceAccess,instanceNb,handle,name);
 }

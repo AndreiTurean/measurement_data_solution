@@ -2,6 +2,7 @@
 #include <visibility.h>
 #include <MiniMTS.hpp>
 #include <Distribution.hpp>
+#include <memory>
 
 namespace transmitters
 {
@@ -30,7 +31,9 @@ namespace transmitters
 
 // the types of the class factories
 typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, uint64_t, const char*);
-typedef const char* getName_t();
 
-extern "C" std::shared_ptr<MeasurementObject> CORE_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name);
-extern "C" const char* getName();
+#if defined _WIN32 
+extern "C" std::shared_ptr<MeasurementObject> DUMMY_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name);
+#else
+extern "C" std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name);
+#endif
