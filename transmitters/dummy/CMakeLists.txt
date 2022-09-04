@@ -21,8 +21,11 @@ target_include_directories(${PROJECT_NAME}_dummy PUBLIC
   $<INSTALL_INTERFACE:include>  # <prefix>/include/
 )
 
+find_package(Threads REQUIRED)
+
 #target_link_libraries(${PROJECT_NAME}_dummy PRIVATE core)
 target_link_libraries(${PROJECT_NAME}_dummy PRIVATE defs)
+target_link_libraries (${PROJECT_NAME}_dummy ${CMAKE_THREAD_LIBS_INIT})
 
 #######################################################
 # setting target compile feature/options              #
@@ -38,7 +41,7 @@ endif()
 
 target_compile_options(${PROJECT_NAME}_dummy PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4> # setting the W4 warning level for MSVC compilers
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror> # setting the Wall for other compilers
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror -pthread> # setting the Wall for other compilers
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fms-extensions>
 )
 

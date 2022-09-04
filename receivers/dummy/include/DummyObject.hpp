@@ -15,6 +15,7 @@ namespace receivers
         uint64_t handle_;
         std::string name_;
         MeasurementObjectType type_;
+
     public:
         DummyObject(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, const std::string& name);
 

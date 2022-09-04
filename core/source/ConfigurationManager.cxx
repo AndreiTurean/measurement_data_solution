@@ -1,6 +1,7 @@
 #include <core/ConfigurationManager.hpp>
 #include <XmlWrapper.hpp>
 #include <algorithm>
+#include <core/DistributionManager.hpp>
 
 namespace core
 {
@@ -44,6 +45,12 @@ namespace core
             return false;
         }
         measurementObjectList_.push_back(mo);
+
+        if(mo->getType() == MeasurementObjectType::data_receiver)
+        {
+            auto ifc = static_cast<DistributionManagerPrivate*>(interfaceAccess_->getInterface("DistributionManagerPrivate"));
+            ifc->addReceiver(std::dynamic_pointer_cast<DataReceiverObject>(mo));
+        }
         return sizeBeforeCreate < measurementObjectList_.size();
     }
     bool ConfigurationManager::removeMeasurementObject(const std::string&)

@@ -3,6 +3,9 @@
 #include <MiniMTS.hpp>
 #include <Distribution.hpp>
 #include <memory>
+#include <Distribution.hpp>
+#include <thread>
+#include <mutex>
 
 namespace transmitters
 {
@@ -17,9 +20,17 @@ namespace transmitters
         uint64_t handle_;
         std::string name_;
         MeasurementObjectType type_;
+        DataDistribution* dataDistributionInterface_;
+
+    private:
+        std::mutex processingMtx_;
+        bool isProcessing_;
+        std::unique_ptr<std::thread> processingThread_;
+        void doFSMProcessing();
         
     public:
         Dummy(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const std::string& name);
+        ~Dummy();
         virtual void* getInterface(const std::string& interfaceName);
         virtual DataPackagePtr sendPackage();
         virtual const uint8_t& getInstanceNumber();

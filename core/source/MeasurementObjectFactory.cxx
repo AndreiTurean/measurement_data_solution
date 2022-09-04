@@ -4,6 +4,11 @@
 typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, uint64_t, const char*);
 namespace core
 {
+    MeasurementObjectFactory::MeasurementObjectFactory(InterfaceAccess* interfaceAccess):
+        interfaceAccess_(interfaceAccess)
+    {
+
+    }
     void MeasurementObjectFactory::scanForMeasurementObjects(std::filesystem::path path)
     {
         
@@ -41,7 +46,7 @@ namespace core
             return nullptr;
         }
 
-        return mo(nullptr, instanceNb, handle, it->first.c_str());
+        return mo(interfaceAccess_, instanceNb, handle, it->first.c_str());
     }
 
     size_t MeasurementObjectFactory::getExtractedFuncSize()

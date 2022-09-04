@@ -1,12 +1,14 @@
 #include <DummyObject.hpp>
+#include <iostream>
 
 namespace receivers
 {
         DummyObject::DummyObject(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, const std::string& name):
-                interfaceAccess_(interfaceAccess),
-				instanceNb_(nb),
-				handle_(handle),
-				name_(name)
+            interfaceAccess_(interfaceAccess),
+            instanceNb_(nb),
+            handle_(handle),
+            name_(name),
+            type_(MeasurementObjectType::data_receiver)
         {
 
         }
@@ -28,9 +30,9 @@ namespace receivers
              return name_;
         }
 
-        bool DummyObject::validatePackage(DataPackageCPtr)
+        bool DummyObject::validatePackage(DataPackageCPtr pkg)
         {
-
+            std::cout<<"pkg timestamp:" << pkg->timestamp <<std::endl;
             return false;
         }
 

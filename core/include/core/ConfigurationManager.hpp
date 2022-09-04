@@ -11,6 +11,7 @@ namespace core
         InterfaceAccess* interfaceAccess_;
         MeasurementObjectList measurementObjectList_;
         std::shared_ptr<MeasurementObjectFactory> factory_;
+        
     public:
         ConfigurationManager(InterfaceAccess* interfaceAccess, std::shared_ptr<MeasurementObjectFactory> factory);
         virtual const MeasurementObjectList& loadConfiguration(std::filesystem::path path);

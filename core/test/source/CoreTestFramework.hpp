@@ -1,15 +1,19 @@
 #pragma once
 #include <core/Engine.hpp>
 #include <gtest/gtest.h>
-
+#include <chrono>
+#include <thread>
+using namespace std::chrono_literals;
 class CoreTestFramework : public ::testing::Test
 {
 protected:
     std::shared_ptr<core::Engine> engine_;
+    size_t moSize_;
     
 public:
     virtual void SetUp() override
     {
+        moSize_ = 0;
         engine_ = std::make_shared<core::Engine>();
         ASSERT_TRUE(engine_ != nullptr);
     }
@@ -30,16 +34,16 @@ public:
         ASSERT_TRUE(engine_->getConfigurationManager() != nullptr);
     }
 
-    void ASSERT_MO_CREATED(std::string name)
+    void ASSERT_MO_CREATED(std::string name, uint64_t handle = 100)
     {
         auto& conf = engine_->getConfigurationManager();
-        ASSERT_TRUE(conf->createMeasurementObject(name, 1, 100));
-        for(auto mo :conf->getMOsAddedInConfig())
-        {
-            EXPECT_EQ(mo->getName(), name);
-        }
+        ASSERT_TRUE(conf->createMeasurementObject(name, 1, handle));
+        auto mo = conf->getMOsAddedInConfig().back();
 
-        ASSERT_EQ(conf->getMOsAddedInConfig().size(), 1);
+        EXPECT_EQ(mo->getName(), name);
+
+        ASSERT_EQ(conf->getMOsAddedInConfig().size(), moSize_ + 1);
+        moSize_++;
     }
 
     void ASSERT_MO_FUNC_EXTRACTED()
@@ -76,5 +80,15 @@ public:
             ASSERT_EQ(conf->getMOsAddedInConfig().size(), 1);
             flag &= false;
         }
+    }
+    
+    void ASSERT_DATA_IS_PROCESSED()
+    {
+        std::this_thread::sleep_for(1ms);
+        size_t pass = 0;
+        size_t fail = 0;
+        engine_->getDistributionStatistics(pass, fail);
+        ASSERT_GT(pass, 0);
+        ASSERT_EQ(fail, 0);
     }
 };

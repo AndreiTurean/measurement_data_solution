@@ -42,7 +42,7 @@ add_subdirectory(utilis)
 add_subdirectory(replay)
 add_subdirectory(receivers)
 add_subdirectory(transmitters)
-add_subdirectory(aquisition)
+add_subdirectory(recording)
 add_subdirectory(core)
 
 #######################################################

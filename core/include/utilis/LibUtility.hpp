@@ -52,7 +52,7 @@ namespace core
 #ifndef _WIN32
                 return dlsym(handle, libSymbols);
 #else
-                return return (void *)GetProcAddress((HMODULE)handle, libSymbols);
+                return (void *)GetProcAddress((HMODULE)handle, libSymbols);
 #endif     
             }
 
