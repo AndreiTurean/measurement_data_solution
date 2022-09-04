@@ -21,8 +21,8 @@ target_include_directories(${PROJECT_NAME}_xml PUBLIC
   $<INSTALL_INTERFACE:include>  # <prefix>/include/
 )
 
-find_package(tinyxml2 CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME}_xml PRIVATE tinyxml2::tinyxml2)
+# find_package(tinyxml2 CONFIG REQUIRED)
+# target_link_libraries(${PROJECT_NAME}_xml PRIVATE tinyxml2::tinyxml2)
 
 #######################################################
 # setting target compile feature/options              #
