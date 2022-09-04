@@ -25,7 +25,7 @@ find_package(Threads REQUIRED)
 
 #target_link_libraries(${PROJECT_NAME}_dummy PRIVATE core)
 target_link_libraries(${PROJECT_NAME}_dummy PRIVATE defs)
-target_link_libraries (${PROJECT_NAME}_dummy ${CMAKE_THREAD_LIBS_INIT})
+#target_link_libraries (${PROJECT_NAME}_dummy ${CMAKE_THREAD_LIBS_INIT})
 
 #######################################################
 # setting target compile feature/options              #
