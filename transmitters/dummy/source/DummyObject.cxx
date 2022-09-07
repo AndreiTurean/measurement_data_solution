@@ -27,7 +27,11 @@ namespace transmitters
             std::lock_guard<std::mutex> lock(processingMtx_);
             isProcessing_ = false;
         }
-        processingThread_->join();
+
+        if(processingThread_)
+        {
+            processingThread_->join();
+        }
     }
     void Dummy::doFSMProcessing()
     {

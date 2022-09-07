@@ -57,24 +57,22 @@ install(TARGETS ${PROJECT_NAME}_dummy
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     COMPONENT DEVELOPMENT
 )
+
 #######################################################
 # test step                                           #
 #######################################################
 
 if(BUILD_TESTING)
-    # include(GoogleTest)
-    # enable_testing()
+  add_library(${PROJECT_NAME}_dummy_static STATIC
+  source/DummyObject.cxx)
 
-    # add_executable(${PROJECT_NAME}_test
-    # test/main.cxx)
+  target_include_directories(${PROJECT_NAME}_dummy_static PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>  # <prefix>/include/
+  )
+  target_link_libraries(${PROJECT_NAME}_dummy_static PUBLIC defs)
 
-    # # packages are getted using the vcpkg package manager
-    # find_package(GTest REQUIRED)
-    # target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
-
-    # gtest_add_tests(TARGET ${PROJECT_NAME}_test)
-
-    # target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME}::${PROJECT_NAME}) #link against the alias library
-
-    # install(TARGETS ${PROJECT_NAME}_test)
+  include(GoogleTest)
+  enable_testing()
+  add_subdirectory(test)
 endif()
