@@ -18,6 +18,7 @@ namespace receivers
 
     public:
         DummyObject(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, const std::string& name);
+        ~DummyObject();
 
         //! MeasurementObject interface implementation
         virtual const uint8_t& getInstanceNumber();

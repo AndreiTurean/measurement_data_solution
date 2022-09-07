@@ -59,10 +59,12 @@ public:
         {
             std::string moName = name + std::to_string(count);
             auto& conf = engine_->getConfigurationManager();
-            ASSERT_TRUE(conf->createMeasurementObject(name, (uint8_t)idx, idx + 100));
+            ASSERT_TRUE(conf->createMeasurementObject(name, (uint8_t)idx, idx + 100 + 5));
             
             ASSERT_EQ(conf->getMOsAddedInConfig().size(), idx + 1);
         }
+
+        moSize_+= count;
     }
 
     void ASSERT_CREATE_DUPLICATE_MO(std::string name)
@@ -84,10 +86,12 @@ public:
     
     void ASSERT_DATA_IS_PROCESSED()
     {
-        std::this_thread::sleep_for(1ms);
+        std::this_thread::sleep_for(120000ms);
         size_t pass = 0;
         size_t fail = 0;
         engine_->getDistributionStatistics(pass, fail);
+        std::cout<<"passed pkg:" << pass << std::endl;
+        std::cout<<"failed pkg:" << fail << std::endl;
         ASSERT_GT(pass, 0);
         ASSERT_EQ(fail, 0);
     }

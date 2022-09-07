@@ -20,5 +20,6 @@ namespace core
         bool removeMeasurementObject(const std::string& name);
         const MeasurementObjectList& getMOsAddedInConfig();
         size_t getFactorySize();
+        void clearMeasurementObjectList();
     };
 }

@@ -3,6 +3,8 @@
 #include <MiniObjectDefs.hpp>
 #include <Distribution.hpp>
 #include <statistics/DistributionStatistics.hpp>
+#include <mutex>
+
 namespace core
 {
     struct DistributionManagerPrivate
@@ -17,6 +19,8 @@ namespace core
         InterfaceAccess* interfaceAccess_;
         std::list<DataReceiverObjectPtr> receiversPool_;
         statistics::DistributionStatistics statistics_;
+        std::mutex distributionLock_;
+        bool distributing_;
     public:
         DistributionManager(InterfaceAccess* ifcAccess);
         virtual ~DistributionManager();
@@ -31,6 +35,6 @@ namespace core
         //! InterfaceAccess interface implementation
         virtual void* getInterface(const std::string& interfaceName);
         void getDistributionStatistics(size_t& pass, size_t& fail);
-
+        void stopDistribution();
     };
 }

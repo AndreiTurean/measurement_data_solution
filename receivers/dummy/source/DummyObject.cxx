@@ -12,6 +12,10 @@ namespace receivers
         {
 
         }
+        DummyObject::~DummyObject()
+        {
+            std::cout<<"DEAD"<<std::endl;
+        }
 
         const uint8_t& DummyObject::getInstanceNumber()
         {
@@ -30,10 +34,10 @@ namespace receivers
              return name_;
         }
 
-        bool DummyObject::validatePackage(DataPackageCPtr pkg)
+        bool DummyObject::validatePackage(DataPackageCPtr)
         {
-            std::cout<<"pkg timestamp:" << pkg->timestamp <<std::endl;
-            return false;
+            //std::cout<<"pkg received from handle:" << pkg->sourceHandle <<std::endl;
+            return true;
         }
 
         void* DummyObject::getInterface(const std::string&)

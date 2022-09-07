@@ -18,15 +18,16 @@ namespace transmitters
             std::lock_guard<std::mutex> lock(processingMtx_);
             dataDistributionInterface_ = reinterpret_cast<DataDistribution*>(interfaceAccess_->getInterface("DataDistribution"));
             processingThread_ = std::make_unique<std::thread>(&transmitters::Dummy::doFSMProcessing, this);
-            processingThread_->detach();
-            processingThread_.reset();
         }
     }
 
     Dummy::~Dummy()
     {
-        std::lock_guard<std::mutex> lock(processingMtx_);
-        isProcessing_ = false;
+        {
+            std::lock_guard<std::mutex> lock(processingMtx_);
+            isProcessing_ = false;
+        }
+        processingThread_->join();
     }
     void Dummy::doFSMProcessing()
     {
@@ -40,6 +41,7 @@ namespace transmitters
                 }
 
                 DataPackagePtr pkg = std::make_shared<DataPackage>(); //create a blank package
+                pkg->sourceHandle = this->handle_;
                 dataDistributionInterface_->distributeData(pkg);
             }
 

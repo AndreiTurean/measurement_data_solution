@@ -16,10 +16,9 @@ namespace core
     }
     Engine::~Engine()
     {
-        if(dataDistributionPtr_)
-        {
-            //delete dynamic_cast<DistributionManager*>(dataDistributionPtr_);
-        }
+        auto ifc = dynamic_cast<DistributionManager*>(this->dataDistributionPtr_);
+
+        ifc->stopDistribution();
     }
 
     Engine::Engine(const Engine& lhs)
@@ -68,7 +67,7 @@ namespace core
     
     void Engine::terminate()
     {
-        configMgr_.reset();
+        //configMgr_.reset();
     }
 
     std::shared_ptr<ConfigurationManager>& Engine::getConfigurationManager()

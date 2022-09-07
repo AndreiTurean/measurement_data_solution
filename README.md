@@ -26,3 +26,12 @@ In order to integrate the build of the framework with visual studio code, you ne
 ## Integration with Visual Studio
 
 Assuming that you have a modern Visual Studio, it should already be integrated. What you will need to do more is to configure your WSL in order to run the code using the Ubuntu Kernel.
+
+# Project peformance report
+
+## CORE memory analysis tests
+### Memory allocation for 200 instances of transmitters and one receiver (build 220905):
+![220905](./img/memory_consumtion_200_instances_220905.png)
+
+### Memory leaks for 200 instances of transmitters and one receiver (build 220905):
+![220905_leak](./img/memory_leak_core_220905.png)

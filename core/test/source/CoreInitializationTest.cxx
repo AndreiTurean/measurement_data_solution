@@ -39,7 +39,7 @@ TEST_F(CoreTestFramework, ConfigurationManagerShouldBeVisibleForReceivers)
 TEST_F(CoreTestFramework, ReceiversShouldAcceptData)
 {
     ASSERT_ENGINE_INITIALIZED();
+    ASSERT_MULTIPLE_MOS_CREATED("libtransmitters_dummy_debug.so", 200);
     ASSERT_MO_CREATED("libreceivers_dummy_debug.so");
-    ASSERT_MO_CREATED("libtransmitters_dummy_debug.so", 102);
     ASSERT_DATA_IS_PROCESSED();
 }
