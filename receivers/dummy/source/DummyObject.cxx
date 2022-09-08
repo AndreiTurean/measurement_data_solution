@@ -14,7 +14,6 @@ namespace receivers
         }
         DummyObject::~DummyObject()
         {
-            std::cout<<"DEAD"<<std::endl;
         }
 
         const uint8_t& DummyObject::getInstanceNumber()

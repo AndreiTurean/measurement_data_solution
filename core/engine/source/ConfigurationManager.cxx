@@ -9,7 +9,8 @@ namespace core
         interfaceAccess_(interfaceAccess),
         factory_(factory)
     {
-
+        logger_ = static_cast<LoggingInterface*>(interfaceAccess_->getInterface("LoggingInterface"));
+        logger_->subscribe("ConfigurationManager", 1);
     }
     const MeasurementObjectList& ConfigurationManager::loadConfiguration(std::filesystem::path path)
     {
@@ -35,6 +36,8 @@ namespace core
 
     bool ConfigurationManager::createMeasurementObject(const std::string& name, uint8_t instanceNb, uint64_t handle)
     {
+        std::string msg = "Started creating object: " + name + " with instance number: " + std::to_string((int) instanceNb);
+        logger_->log(msg.c_str(), 1);
         size_t sizeBeforeCreate = measurementObjectList_.size();
         MeasurementObjectPtr mo = factory_->createMeasurementObject(name, instanceNb, handle);
         if(std::any_of(measurementObjectList_.begin(), measurementObjectList_.end(), [&](const MeasurementObjectPtr obj)
@@ -51,6 +54,9 @@ namespace core
             auto ifc = static_cast<DistributionManagerPrivate*>(interfaceAccess_->getInterface("DistributionManagerPrivate"));
             ifc->addReceiver(std::dynamic_pointer_cast<DataReceiverObject>(mo));
         }
+
+        std::string msg2 = "Finished creating object: " + name + " with instance number: " + std::to_string((int) instanceNb);
+        logger_->log(msg2.c_str(), 1);
         return sizeBeforeCreate < measurementObjectList_.size();
     }
     bool ConfigurationManager::removeMeasurementObject(const std::string&)

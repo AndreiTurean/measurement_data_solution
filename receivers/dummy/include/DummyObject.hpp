@@ -8,7 +8,8 @@ namespace receivers
     class DummyObject :
         public MeasurementObject,
         public DataReceiverObject,
-        public InterfaceAccess
+        public InterfaceAccess,
+        public std::enable_shared_from_this<DummyObject>
     {
         InterfaceAccess* interfaceAccess_;
         uint8_t instanceNb_;
@@ -18,7 +19,7 @@ namespace receivers
 
     public:
         DummyObject(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, const std::string& name);
-        ~DummyObject();
+        virtual ~DummyObject();
 
         //! MeasurementObject interface implementation
         virtual const uint8_t& getInstanceNumber();

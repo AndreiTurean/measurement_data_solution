@@ -28,11 +28,6 @@ namespace core
             */
             ~LibUtility()
             {
-                for(auto handle : handleContainer_)
-                {
-                    if(handle)
-                        closeLibrary(handle);
-                }
             }
             /*!
             *   @brief Method receive a library name and will try to load and resolve the symbols.

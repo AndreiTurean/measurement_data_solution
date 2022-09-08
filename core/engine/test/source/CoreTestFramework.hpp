@@ -20,6 +20,7 @@ public:
     virtual void TearDown() override
     {
         ASSERT_TRUE(engine_ != nullptr);
+        engine_->terminate();
         engine_.reset();
         ASSERT_TRUE(engine_ == nullptr);
     }
@@ -34,7 +35,7 @@ public:
         ASSERT_TRUE(engine_->getConfigurationManager() != nullptr);
     }
 
-    void ASSERT_MO_CREATED(std::string name, uint64_t handle = 100)
+    void ASSERT_MO_CREATED(const std::string& name, uint64_t handle = 100)
     {
         auto& conf = engine_->getConfigurationManager();
         ASSERT_TRUE(conf->createMeasurementObject(name, 1, handle));
@@ -52,7 +53,7 @@ public:
         EXPECT_GT(conf->getFactorySize(), 0);
     }
 
-    void ASSERT_MULTIPLE_MOS_CREATED(std::string name, size_t count)
+    void ASSERT_MULTIPLE_MOS_CREATED(const std::string& name, size_t count)
     {
         std::vector<std::string> moList;
         for(size_t idx = 0; idx < count; ++ idx)
@@ -67,7 +68,7 @@ public:
         moSize_+= count;
     }
 
-    void ASSERT_CREATE_DUPLICATE_MO(std::string name)
+    void ASSERT_CREATE_DUPLICATE_MO(const std::string& name)
     {
         bool flag = true;
         for(int idx = 0; idx < 2; ++idx)

@@ -7,30 +7,21 @@ namespace core
         :   interfaceAccess_(ifcAccess)
         ,   distributing_(true)
     {
-
+        logger_ = static_cast<LoggingInterface*>(interfaceAccess_->getInterface("LoggingInterface"));
+        logger_->subscribe("DistributionManager",2);
     }
     DistributionManager::~DistributionManager()
     {
         std::lock_guard<std::mutex> lock(distributionLock_);
+        logger_->log("Destroying distribution manager", 2);
+        while(distributing_);
         receiversPool_.clear();
-        interfaceAccess_ = nullptr;
-    }
-
-    DistributionManager::DistributionManager(const DistributionManager& lhs)
-    {
-        this->interfaceAccess_ = lhs.interfaceAccess_;
-    }
-
-    const DistributionManager& DistributionManager::operator=(const DistributionManager& lhs)
-    {
-        this->interfaceAccess_ = lhs.interfaceAccess_;
-        return *this;
     }
 
     bool DistributionManager::distributeData(DataPackageCPtr package)
     {
         std::lock_guard<std::mutex> lock(distributionLock_);
-
+        //logger_->log("Distribute data", 2);
         if(!distributing_)
         {
             return false;
@@ -75,6 +66,7 @@ namespace core
     void DistributionManager::stopDistribution()
     {
         std::lock_guard<std::mutex> lock(distributionLock_);
+        logger_->log("Distribution of data was stopped", 2);
         distributing_ = false;
     }
 }

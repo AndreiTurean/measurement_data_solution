@@ -11,7 +11,8 @@
 
 namespace core
 {
-    class MeasurementObjectFactory
+    class MeasurementObjectFactory:
+        public std::enable_shared_from_this<MeasurementObjectFactory>
     {
         std::map<std::string, void*> objectsMap_;
         core::utility::LibUtility utilityLibrary_;

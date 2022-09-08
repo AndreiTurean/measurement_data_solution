@@ -1,16 +1,19 @@
 #pragma once
 #include <MiniMTS.hpp>
+#include <Log.hpp>
 #include <core/MeasurementObjectFactory.hpp>
 
 namespace core
 {
     class ConfigurationManager :
         public ConfigurationParser,
-        public InterfaceAccess
+        public InterfaceAccess,
+        public std::enable_shared_from_this<ConfigurationManager>
     {
         InterfaceAccess* interfaceAccess_;
         MeasurementObjectList measurementObjectList_;
         std::shared_ptr<MeasurementObjectFactory> factory_;
+        LoggingInterface* logger_;
         
     public:
         ConfigurationManager(InterfaceAccess* interfaceAccess, std::shared_ptr<MeasurementObjectFactory> factory);

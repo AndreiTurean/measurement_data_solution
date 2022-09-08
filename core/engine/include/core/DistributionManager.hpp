@@ -4,6 +4,7 @@
 #include <Distribution.hpp>
 #include <statistics/DistributionStatistics.hpp>
 #include <mutex>
+#include <Log.hpp>
 
 namespace core
 {
@@ -14,18 +15,18 @@ namespace core
     class DistributionManager :
         public InterfaceAccess,
         public DataDistribution,
-        public DistributionManagerPrivate
+        public DistributionManagerPrivate,
+        public std::enable_shared_from_this<DistributionManager>
     {
         InterfaceAccess* interfaceAccess_;
         std::list<DataReceiverObjectPtr> receiversPool_;
         statistics::DistributionStatistics statistics_;
         std::mutex distributionLock_;
         bool distributing_;
+        LoggingInterface* logger_;
     public:
         DistributionManager(InterfaceAccess* ifcAccess);
         virtual ~DistributionManager();
-        DistributionManager(const DistributionManager& lhs);
-        const DistributionManager& operator=(const DistributionManager& lhs);
 
 
         //! DataDistribution interface implementation
