@@ -31,6 +31,7 @@ namespace transmitters
         if(processingThread_)
         {
             processingThread_->join();
+            processingThread_.reset();
         }
     }
     void Dummy::doFSMProcessing()
@@ -46,10 +47,12 @@ namespace transmitters
 
                 DataPackagePtr pkg = std::make_shared<DataPackage>(); //create a blank package
                 pkg->sourceHandle = this->handle_;
+                pkg->payload = new uint8_t[1024];
                 dataDistributionInterface_->distributeData(pkg);
+                delete[] reinterpret_cast<uint8_t*>(pkg->payload);
             }
 
-            std::this_thread::sleep_for(10ms);
+            std::this_thread::sleep_for(1ms);
         }
     }
 
@@ -57,9 +60,28 @@ namespace transmitters
     {
         return nullptr;
     }
-    DataPackagePtr Dummy::sendPackage()
+    void Dummy::startProcessing()
     {
-        return std::make_shared<DataPackage>();
+        if(interfaceAccess_)
+        {
+            std::lock_guard<std::mutex> lock(processingMtx_);
+            processingThread_.reset();
+            dataDistributionInterface_ = reinterpret_cast<DataDistribution*>(interfaceAccess_->getInterface("DataDistribution"));
+            processingThread_ = std::make_unique<std::thread>(&transmitters::Dummy::doFSMProcessing, this);
+        }
+    }
+    void Dummy::endProcessing()
+    {
+        {
+            std::lock_guard<std::mutex> lock(processingMtx_);
+            isProcessing_ = false;
+        }
+
+        if(processingThread_)
+        {
+            processingThread_->join();
+            processingThread_.reset();
+        }
     }
     const uint8_t& Dummy::getInstanceNumber()
     {

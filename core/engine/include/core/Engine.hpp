@@ -6,6 +6,13 @@
 
 namespace core
 {
+    namespace metrics
+    {
+        class Watchdog;
+    }
+}
+namespace core
+{
     class Engine :
         public InterfaceAccess,
         public EngineInit,
@@ -14,6 +21,7 @@ namespace core
         std::shared_ptr<ConfigurationManager> configMgr_;
         std::shared_ptr<DistributionManager> dataDistributionPtr_;
         std::shared_ptr<LoggingInterface> logger_;
+        metrics::Watchdog* watchdog_;
     public:
         Engine(EngineInitFlag flag = EngineInitFlag::normal);
         virtual ~Engine();

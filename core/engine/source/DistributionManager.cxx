@@ -21,7 +21,6 @@ namespace core
     bool DistributionManager::distributeData(DataPackageCPtr package)
     {
         std::lock_guard<std::mutex> lock(distributionLock_);
-        //logger_->log("Distribute data", 2);
         if(!distributing_)
         {
             return false;

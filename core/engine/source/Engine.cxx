@@ -3,19 +3,45 @@
 #include <core/DistributionManager.hpp>
 #include <cstring>
 #include <Logger.hpp>
+#include "Watchdog.hpp"
 
 namespace core
 {
     Engine::Engine(EngineInitFlag flag):
         dataDistributionPtr_(nullptr)
     {
+        bool silentLog = false;
+        bool silenceWatchDog = false;
         switch (flag)
         {
+        case EngineInitFlag::normal:
+            break;
+        case EngineInitFlag::silent:
+        {
+            silentLog = true;
+        }
+        break;
+        case EngineInitFlag::no_metrics:
+        {
+            silenceWatchDog = true;
+        }
+        break;
+        case EngineInitFlag::performance:
+        {
+            silentLog = true;
+            silenceWatchDog = true;
+        }
+        break;
         default:
             break;
         }
-        logger_ = std::make_shared<Logger>(this);
+        logger_ = std::make_shared<Logger>(this, !silentLog);
         dataDistributionPtr_ = std::make_shared<DistributionManager>(this);
+
+        if(!silenceWatchDog)
+        {
+            watchdog_ = new metrics::Watchdog(logger_);
+        }
     }
     Engine::~Engine()
     {
@@ -52,10 +78,15 @@ namespace core
     void Engine::terminate()
     {
         logger_->log("Started engine termination");
-        logger_.reset();
+        if(watchdog_)
+        {
+            delete watchdog_;
+        }
+        
         dataDistributionPtr_->stopDistribution();
         dataDistributionPtr_.reset();
         configMgr_.reset();
+        logger_.reset();
     }
 
     std::shared_ptr<ConfigurationManager>& Engine::getConfigurationManager()

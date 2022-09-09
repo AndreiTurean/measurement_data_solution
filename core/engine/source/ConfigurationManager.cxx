@@ -45,6 +45,7 @@ namespace core
                 return obj->getHandle() == mo->getHandle();
             }))
         {
+            logger_->log("Failed to create duplicate measurement object", 1, severity::error);
             return false;
         }
         measurementObjectList_.push_back(mo);

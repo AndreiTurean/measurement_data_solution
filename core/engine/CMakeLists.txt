@@ -15,6 +15,8 @@ source/ConfigurationManager.cxx
 source/DistributionManager.cxx
 source/Engine.cxx
 source/MeasurementObjectFactory.cxx
+source/Watchdog.cxx
+source/Watchdog.hpp
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

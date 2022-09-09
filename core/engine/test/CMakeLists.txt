@@ -1,7 +1,8 @@
 enable_testing()
 add_executable(${PROJECT_NAME}_test
 source/main.cxx
-source/CoreInitializationTest.cxx)
+source/CoreInitializationTest.cxx
+)
 add_test(NAME {PROJECT_NAME}_test COMMAND ${PROJECT_NAME}_test)
 
 set_property(TEST {PROJECT_NAME}_test PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}")

@@ -35,10 +35,10 @@ public:
         ASSERT_TRUE(engine_->getConfigurationManager() != nullptr);
     }
 
-    void ASSERT_MO_CREATED(const std::string& name, uint64_t handle = 100)
+    void ASSERT_MO_CREATED(const std::string& name, uint64_t handle = 100, uint8_t instancenb = 0)
     {
         auto& conf = engine_->getConfigurationManager();
-        ASSERT_TRUE(conf->createMeasurementObject(name, 1, handle));
+        ASSERT_TRUE(conf->createMeasurementObject(name, instancenb, handle));
         auto mo = conf->getMOsAddedInConfig().back();
 
         EXPECT_EQ(mo->getName(), name);
@@ -86,6 +86,18 @@ public:
     }
     
     void ASSERT_DATA_IS_PROCESSED()
+    {
+        std::this_thread::sleep_for(120000ms);
+        size_t pass = 0;
+        size_t fail = 0;
+        engine_->getDistributionStatistics(pass, fail);
+        std::cout<<"passed pkg:" << pass << std::endl;
+        std::cout<<"failed pkg:" << fail << std::endl;
+        ASSERT_GT(pass, 0);
+        ASSERT_EQ(fail, 0);
+    }
+
+    void ASSERT_STRESS_AQUISITION()
     {
         std::this_thread::sleep_for(120000ms);
         size_t pass = 0;

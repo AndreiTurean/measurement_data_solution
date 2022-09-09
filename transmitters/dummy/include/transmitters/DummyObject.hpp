@@ -32,7 +32,8 @@ namespace transmitters
         Dummy(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const std::string& name);
         ~Dummy();
         virtual void* getInterface(const std::string& interfaceName);
-        virtual DataPackagePtr sendPackage();
+        virtual void startProcessing();
+        virtual void endProcessing();
         virtual const uint8_t& getInstanceNumber();
         virtual const uint64_t& getHandle();
         virtual const MeasurementObjectType& getType();

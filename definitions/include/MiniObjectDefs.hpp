@@ -40,6 +40,7 @@ using DataReceiverObjectPtr = std::shared_ptr<DataReceiverObject>;
 
 struct DataSenderObject
 {
-    virtual DataPackagePtr sendPackage() = 0;
+    virtual void startProcessing() = 0;
+    virtual void endProcessing() = 0;
 };
 using DataSenderObjectPtr = std::shared_ptr<DataSenderObject>;
