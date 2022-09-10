@@ -8,7 +8,28 @@
 
 ##	Git
 ##	WS:
-*	WSL will be used for cross compiling
+*	WSL will be used for cross compiling.
+
+##  ImGui
+### GLFW3
+*   Used with ImGui
+### GLAD
+*   Used with ImGui
+### SDL2
+*   Used with ImGui
+## ElfUtils
+*   This is mandatory only for linux users.
+
+## Other linux dependencies:
+*   xorg-dev
+*   libwayland-dev
+*   libxkbcommon-dev
+*   wayland-protocols
+*   extra-cmake-modules
+
+For installation the above dependencies use the following commands:
+*   sudo apt install xorg-dev
+*   sudo apt install libwayland-dev libxkbcommon-dev wayland-protocols extra-cmake-modules
 
 # How to build the project
 

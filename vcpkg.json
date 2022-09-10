@@ -15,20 +15,16 @@
       "features": ["sdl2-binding", "sdl2-renderer-binding", "opengl3-binding", "opengl2-binding", "glfw-binding"]
     },
     {
-      "name": "glew",
-      "platform": "!windows"
+      "name": "glew"
     },
     {
-      "name": "glfw3",
-      "platform": "!windows"
+      "name": "glfw3"
     },
     {
-      "name": "opengl",
-      "platform": "!windows"
+      "name": "opengl"
     },
     {
-      "name": "glad",
-      "platform": "!windows"
+      "name": "glad"
     },
     {
       "name": "openmpi",
