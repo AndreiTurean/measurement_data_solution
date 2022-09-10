@@ -39,13 +39,14 @@ enable_testing()
 #   setting the project name, version and language
 project(mini_mts VERSION 0.1.0)
 
-add_subdirectory(definitions)
-add_subdirectory(utilis)
-add_subdirectory(replay)
-add_subdirectory(receivers)
-add_subdirectory(transmitters)
-add_subdirectory(recording)
-add_subdirectory(core)
+add_subdirectory(source/definitions)
+add_subdirectory(source/utilis)
+add_subdirectory(source/replay)
+add_subdirectory(source/receivers)
+add_subdirectory(source/transmitters)
+add_subdirectory(source/recording)
+add_subdirectory(source/core)
+add_subdirectory(source/application)
 
 #######################################################
 # package versioning                                  #

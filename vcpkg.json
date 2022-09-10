@@ -8,7 +8,31 @@
       
     },
     {
-      "name": "tinyxml2"
+      "name": "sdl2"
+    },
+    {
+      "name": "imgui",
+      "features": ["sdl2-binding", "sdl2-renderer-binding", "opengl3-binding", "opengl2-binding", "glfw-binding"]
+    },
+    {
+      "name": "glew",
+      "platform": "!windows"
+    },
+    {
+      "name": "glfw3",
+      "platform": "!windows"
+    },
+    {
+      "name": "opengl",
+      "platform": "!windows"
+    },
+    {
+      "name": "glad",
+      "platform": "!windows"
+    },
+    {
+      "name": "openmpi",
+      "platform": "!windows"
     }
   ]
 }
