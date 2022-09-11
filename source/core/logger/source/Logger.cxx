@@ -39,22 +39,22 @@ namespace core
         break;
         case severity::information:
         {
-            std::cout<< std::to_string(timestamp) << "[INFO/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
+            std::cout<< std::to_string(timestamp) << " [INFO/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
         }
         break;
         case severity::warning:
         {
-            std::cout<< std::to_string(timestamp) <<"[WARN/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
+            std::cout<< std::to_string(timestamp) <<" [WARN/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
         }
         break;
         case severity::error:
         {
-            std::cerr<< std::to_string(timestamp) <<"[ERR/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
+            std::cerr<< std::to_string(timestamp) <<" [ERR/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
         }
         break;
         case severity::critical:
         {
-            std::cerr<< std::to_string(timestamp) <<"[CRIT/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
+            std::cerr<< std::to_string(timestamp) <<" [CRIT/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
         }
         break;
         default:

@@ -22,6 +22,8 @@ namespace application
         uint64_t pkgHandle_;
         uint64_t pkgTimestamp_;
         size_t pkgSize_;
+        ReceiverSinkManager* registeredReceiverMgr_;
+        std::string processorName_;
     public:
         DataVisualizer(const std::string& name);
         void Show(std::shared_ptr<core::ConfigurationManager>& cfgMgr);

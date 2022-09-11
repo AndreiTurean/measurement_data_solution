@@ -48,13 +48,22 @@ namespace core
             logger_->log("Failed to create duplicate measurement object", 1, severity::error);
             return false;
         }
-        measurementObjectList_.push_back(mo);
 
         if(mo->getType() == MeasurementObjectType::data_receiver)
         {
+            if(std::any_of(measurementObjectList_.begin(), measurementObjectList_.end(), [&](const MeasurementObjectPtr obj)
+            { 
+                return obj->getName() == mo->getName();
+            }))
+            {
+                logger_->log("There is already a identical processor present in the configuration manager", 1, severity::error);
+                return false;
+            }
             auto ifc = static_cast<DistributionManagerPrivate*>(interfaceAccess_->getInterface("DistributionManagerPrivate"));
             ifc->addReceiver(std::dynamic_pointer_cast<DataReceiverObject>(mo));
         }
+
+        measurementObjectList_.push_back(mo);
 
         std::string msg2 = "Finished creating object: " + name + " with instance number: " + std::to_string((int) instanceNb);
         logger_->log(msg2.c_str(), 1);

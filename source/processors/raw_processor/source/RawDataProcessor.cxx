@@ -42,9 +42,17 @@ namespace processors
             return true;
         }
 
-        void* RawDataProcessor::getInterface(const std::string&)
+        void* RawDataProcessor::getInterface(const std::string& interfaceName)
         {
-            return dynamic_cast<ReceiverSinkManager*>(this);
+            if(interfaceName == "ReceiverSinkManager")
+            {
+                return dynamic_cast<ReceiverSinkManager*>(this);
+            }
+            if(interfaceAccess_)
+            {
+                return interfaceAccess_->getInterface(interfaceName);
+            }
+            return nullptr;
         }
 
         bool RawDataProcessor::registerToReceiverSink(NotifySubjects* subject)
@@ -52,9 +60,16 @@ namespace processors
             return subjects_.insert(subject).second;
 
         }
-        bool RawDataProcessor::unregisterToReceiverSink(NotifySubjects*)
+        bool RawDataProcessor::unregisterToReceiverSink(NotifySubjects* subject)
         {
-            return false;
+            auto it = subjects_.find(subject);
+
+            if(it == subjects_.end())
+            {
+                return false;
+            }
+            subjects_.erase(it);
+            return true;
         }
 }
 

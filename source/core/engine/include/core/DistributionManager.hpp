@@ -5,6 +5,7 @@
 #include <statistics/DistributionStatistics.hpp>
 #include <mutex>
 #include <Log.hpp>
+#include <set>
 
 namespace core
 {
@@ -19,7 +20,7 @@ namespace core
         public std::enable_shared_from_this<DistributionManager>
     {
         InterfaceAccess* interfaceAccess_;
-        std::list<DataReceiverObjectPtr> receiversPool_;
+        std::set<DataReceiverObjectPtr> receiversPool_;
         statistics::DistributionStatistics statistics_;
         std::mutex distributionLock_;
         bool distributing_;

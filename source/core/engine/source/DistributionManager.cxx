@@ -41,7 +41,7 @@ namespace core
     void DistributionManager::addReceiver(DataReceiverObjectPtr object)
     {
         std::lock_guard<std::mutex> lock(distributionLock_);
-        receiversPool_.push_back(object);
+        receiversPool_.insert(object);
     }
 
     void* DistributionManager::getInterface(const std::string& interfaceName)

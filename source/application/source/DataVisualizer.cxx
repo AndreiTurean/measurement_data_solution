@@ -8,7 +8,9 @@ namespace application
         needConfiguration_(true),
         pkgHandle_(0),
         pkgTimestamp_(0),
-        pkgSize_(0)
+        pkgSize_(0),
+        registeredReceiverMgr_(nullptr),
+        processorName_("None")
     {
         
     }
@@ -18,28 +20,42 @@ namespace application
         if (visible_)
         {
             ImGui::Begin(name_.c_str(), &visible_, ImGuiWindowFlags_AlwaysAutoResize);
-            if(needConfiguration_)
+            if(registeredReceiverMgr_ == nullptr)
             {
-            if(ImGui::TreeNode("Connect to a data receiver"))
-            {
+                if(ImGui::TreeNode("Connect to a data processor"))
+                {
                     for(const auto& mo : cfgMgr->getMOsAddedInConfig())
                     {
                         if(mo->getType() == MeasurementObjectType::data_receiver)
                         {
-                            if(ImGui::Button(mo->getName().c_str()))
+                            processorName_ = mo->getName() + std::to_string(mo->getInstanceNumber());
+                            if(ImGui::Button(processorName_.c_str()))
                             {
                                 auto ifc = std::dynamic_pointer_cast<InterfaceAccess>(mo);
-                                ReceiverSinkManager* mgr = static_cast<ReceiverSinkManager*>(ifc->getInterface("ReceiverSinkManager"));
-                                needConfiguration_ = !mgr->registerToReceiverSink(this);
+                                registeredReceiverMgr_ = static_cast<ReceiverSinkManager*>(ifc->getInterface("ReceiverSinkManager"));
+                                registeredReceiverMgr_->registerToReceiverSink(this);
+                                break;
                             }
+                            processorName_ = "None";
                         }
                     }
                     ImGui::TreePop();
                 }
             }
+            else
+            {
+                if(ImGui::Button("Remove processor"))
+                {
+                    registeredReceiverMgr_->unregisterToReceiverSink(this);
+                    registeredReceiverMgr_ = nullptr;
+                    processorName_ = "None";
+                }
+            }
+            ImGui::Text("Connected to processor: %s", processorName_.c_str());
             ImGui::Text("Last received package size: %zu", pkgSize_);
             ImGui::Text("Last received package timestamp: %lu", pkgTimestamp_);
             ImGui::Text("Last received package handle: %lu", pkgHandle_);
+           
             ImGui::End();
         }
     }
