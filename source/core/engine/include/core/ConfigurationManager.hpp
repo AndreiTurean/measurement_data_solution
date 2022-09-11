@@ -25,5 +25,7 @@ namespace core
         size_t getFactorySize();
         void clearMeasurementObjectList();
         std::vector<std::string> getFactoryObjectList();
+
+        friend class EngineUtilis;
     };
 }

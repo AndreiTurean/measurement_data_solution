@@ -7,7 +7,7 @@ namespace core
     MeasurementObjectFactory::MeasurementObjectFactory(InterfaceAccess* interfaceAccess):
         interfaceAccess_(interfaceAccess)
     {
-
+        scanForMeasurementObjects(std::filesystem::current_path());
     }
     void MeasurementObjectFactory::scanForMeasurementObjects(std::filesystem::path path)
     {

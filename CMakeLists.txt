@@ -47,6 +47,7 @@ add_subdirectory(source/transmitters)
 add_subdirectory(source/recording)
 add_subdirectory(source/core)
 add_subdirectory(source/application)
+add_subdirectory(source/test)
 
 #######################################################
 # package versioning                                  #

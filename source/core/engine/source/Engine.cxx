@@ -70,10 +70,9 @@ namespace core
     {
         logger_->log("Started initialization");
         std::shared_ptr<MeasurementObjectFactory> factory = std::make_shared<MeasurementObjectFactory>(this);
-        factory->scanForMeasurementObjects(std::filesystem::current_path());
         configMgr_ = std::make_shared<ConfigurationManager>(this, factory);
         self_ = std::make_shared<EngineObject>();
-        if(configMgr_->createMeasurementObject(self_))
+        if(!configMgr_->createMeasurementObject(self_))
         {
             logger_->log("Failed to introduce Engine Object in the configuration manager", ENGINE_HANDLE, severity::critical);
         }
@@ -92,6 +91,7 @@ namespace core
         dataDistributionPtr_->stopDistribution();
         dataDistributionPtr_.reset();
         configMgr_.reset();
+        self_.reset();
         logger_.reset();
     }
 

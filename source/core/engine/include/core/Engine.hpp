@@ -37,5 +37,7 @@ namespace core
         bool isWatchDogActive();
         bool isLoggerActive();
         bool isPerformingDataAquisition();
+
+        friend class EngineUtilis;
     };
 }

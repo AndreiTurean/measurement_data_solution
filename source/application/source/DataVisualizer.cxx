@@ -34,6 +34,7 @@ namespace application
                         if(mo->getType() == MeasurementObjectType::data_receiver)
                         {
                             processorName_ = mo->getName() + std::to_string(mo->getInstanceNumber());
+
                             if(ImGui::Button(processorName_.c_str()))
                             {
                                 auto ifc = std::dynamic_pointer_cast<InterfaceAccess>(mo);
