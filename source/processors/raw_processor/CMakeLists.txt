@@ -30,10 +30,10 @@ target_link_libraries(${PROJECT_NAME}_raw PRIVATE defs)
 # https://cmake.org/cmake/help/latest/manual/cmake-compile-features.7.html
 target_compile_features(${PROJECT_NAME}_raw PUBLIC cxx_std_17)
 
-if(BUILD_SHARED_LIBS)
-    target_compile_definitions(${PROJECT_NAME}_raw PUBLIC DUMMY_DLL) # we want to build a shared library
-    target_compile_definitions(${PROJECT_NAME}_raw PRIVATE CREATE_DLL)
-endif()
+
+target_compile_definitions(${PROJECT_NAME}_raw PUBLIC DUMMY_DLL) # we want to build a shared library
+target_compile_definitions(${PROJECT_NAME}_raw PRIVATE CREATE_DLL)
+
 
 
 target_compile_options(${PROJECT_NAME}_raw PRIVATE
