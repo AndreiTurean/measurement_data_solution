@@ -37,5 +37,6 @@ namespace core
         virtual void* getInterface(const std::string& interfaceName);
         void getDistributionStatistics(size_t& pass, size_t& fail);
         void stopDistribution();
+        bool isDistributing();
     };
 }

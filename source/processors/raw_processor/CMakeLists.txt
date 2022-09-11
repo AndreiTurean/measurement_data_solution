@@ -10,33 +10,33 @@ cmake_minimum_required(VERSION 3.22.0)
 #   line interface
 #   https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html
 
-add_library(${PROJECT_NAME}_dummy MODULE
-source/DummyObject.cxx)
+add_library(${PROJECT_NAME}_raw MODULE
+source/RawDataProcessor.cxx)
 
-add_library(${PROJECT_NAME}::${PROJECT_NAME}:dummy ALIAS ${PROJECT_NAME}_dummy)
+add_library(${PROJECT_NAME}::${PROJECT_NAME}:raw ALIAS ${PROJECT_NAME}_raw)
 
 #   add the include directory to our target as PUBLIC
-target_include_directories(${PROJECT_NAME}_dummy PUBLIC
+target_include_directories(${PROJECT_NAME}_raw PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>  # <prefix>/include/
 )
 
-#target_link_libraries(${PROJECT_NAME}_dummy PRIVATE core)
-target_link_libraries(${PROJECT_NAME}_dummy PRIVATE defs)
+#target_link_libraries(${PROJECT_NAME}_raw PRIVATE core)
+target_link_libraries(${PROJECT_NAME}_raw PRIVATE defs)
 
 #######################################################
 # setting target compile feature/options              #
 #######################################################
 # https://cmake.org/cmake/help/latest/manual/cmake-compile-features.7.html
-target_compile_features(${PROJECT_NAME}_dummy PUBLIC cxx_std_17)
+target_compile_features(${PROJECT_NAME}_raw PUBLIC cxx_std_17)
 
 if(BUILD_SHARED_LIBS)
-    target_compile_definitions(${PROJECT_NAME}_dummy PUBLIC DUMMY_DLL) # we want to build a shared library
-    target_compile_definitions(${PROJECT_NAME}_dummy PRIVATE CREATE_DLL)
+    target_compile_definitions(${PROJECT_NAME}_raw PUBLIC DUMMY_DLL) # we want to build a shared library
+    target_compile_definitions(${PROJECT_NAME}_raw PRIVATE CREATE_DLL)
 endif()
 
 
-target_compile_options(${PROJECT_NAME}_dummy PRIVATE
+target_compile_options(${PROJECT_NAME}_raw PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4> # setting the W4 warning level for MSVC compilers
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror> # setting the Wall for other compilers
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fms-extensions>
@@ -46,7 +46,7 @@ target_compile_options(${PROJECT_NAME}_dummy PRIVATE
 # install step                                        #
 #######################################################
 include(GNUInstallDirs)
-install(TARGETS ${PROJECT_NAME}_dummy
+install(TARGETS ${PROJECT_NAME}_raw
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     COMPONENT RUNTIME
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

@@ -74,4 +74,9 @@ namespace core
     {
         return factory_->getExtractedFuncSize();
     }
+
+    std::vector<std::string> ConfigurationManager::getFactoryObjectList()
+    {
+        return factory_->getFactoryList();
+    }
 }

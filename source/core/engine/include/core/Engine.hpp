@@ -31,5 +31,8 @@ namespace core
         virtual void terminate();
         std::shared_ptr<ConfigurationManager>& getConfigurationManager();
         void getDistributionStatistics(size_t& pass, size_t& fail);
+        bool isWatchDogActive();
+        bool isLoggerActive();
+        bool isPerformingDataAquisition();
     };
 }

@@ -24,5 +24,6 @@ namespace core
         const MeasurementObjectList& getMOsAddedInConfig();
         size_t getFactorySize();
         void clearMeasurementObjectList();
+        std::vector<std::string> getFactoryObjectList();
     };
 }

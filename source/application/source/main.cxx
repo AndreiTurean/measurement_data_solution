@@ -11,6 +11,9 @@
 #include <GLES2/gl2.h>
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
+#include <core/Engine.hpp>
+#include <imgui_stdlib.h>
+#include "DataVisualizer.hpp"
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -92,9 +95,18 @@ int main(int, char**)
     //IM_ASSERT(font != NULL);
 
     // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
+    //bool show_demo_window = true;
+    //bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    std::shared_ptr<core::Engine> engine = std::make_shared<core::Engine>();
+    engine->initialize();
+    auto configMgr = engine->getConfigurationManager();
+    bool showConfigMgr = false;
+    uint64_t handle = 100;
+    uint8_t instanceNb = 0;
+    bool showMetrics = true;
+    bool showConfigMgrStats = false;
+    std::vector<application::DataVisualizer> visualizerPool;
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -111,40 +123,106 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
-
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+        // 2. Show engine stats
         {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Main console");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Settings Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
+            if(showMetrics)
+            {
+                ImGui::ShowMetricsWindow(&showMetrics);
+            }
+            ImGui::Begin("Engine stats", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::Text("Watchdog active: %s", engine->isWatchDogActive() ? "Yes" : "No");
+            ImGui::Text("Data distribution active: %s", engine->isPerformingDataAquisition() ? "Yes" : "No");
+            ImGui::Text("Logging active: %s", engine->isLoggerActive() ? "Yes" : "No");
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            if (ImGui::Button(showConfigMgr ? "Close configuration manager" : "Open configuration manager"))
+            {
+                showConfigMgr = !showConfigMgr;
+            }
+            if (ImGui::Button(showConfigMgrStats ? "Close configuration manager stats" : "Open configuration manager stats"))
+            {
+                showConfigMgrStats = !showConfigMgrStats;
+            }
+            if(ImGui::Button(showMetrics ? "Close debug metrics" : "Open debug metrics"))
+            {
+                showMetrics = !showMetrics;
+            }
+
+            if(ImGui::TreeNode("Available visualizers"))
+            {
+                if(ImGui::Button("Raw Data Visualizer"))
+                {
+                    visualizerPool.push_back(application::DataVisualizer("Raw Data Visualizer"));
+                }
+                ImGui::TreePop();
+            }
+            
             ImGui::End();
         }
 
-        // 3. Show another simple window.
-        if (show_another_window)
+        for(auto& vis : visualizerPool)
         {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
+            vis.Show(configMgr);
+        }
+
+        if(showConfigMgrStats)
+        {
+            auto moList = configMgr->getMOsAddedInConfig();
+            ImGui::Begin("Configuration manager stats", &showConfigMgrStats, ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::Text("Available measurement object from factory: %zu", configMgr->getFactorySize());
+            ImGui::Text("Object added in the configuration manger: %zu", moList.size());
+            if (ImGui::Button(showConfigMgr ? "Close configuration manager" : "Open configuration manager"))
+            {
+                showConfigMgr = !showConfigMgr;
+            }
+           
+            ImGui::End();
+        }
+
+        if (showConfigMgr)
+        {
+            ImGui::Begin("Configuration manager", &showConfigMgr, ImGuiWindowFlags_AlwaysAutoResize);
+            if(ImGui::TreeNode("Available measurement object to be created"))
+            {
+                for(auto object : configMgr->getFactoryObjectList())
+                {
+                    if (ImGui::Button(object.c_str()))
+                    {
+                        configMgr->createMeasurementObject(object.c_str(), instanceNb++, handle++);
+                    }
+                }
+                ImGui::TreePop();
+            }
+            if(ImGui::TreeNode("Created Measurement Objects"))
+            {
+                for(auto object :configMgr->getMOsAddedInConfig())
+                {
+                    std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
+                    if(ImGui::TreeNode(nodeName.c_str()))
+                    {
+                        ImGui::Text("Handle: %lu", object->getHandle());
+                        ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
+                        switch (object->getType())
+                        {
+                        case MeasurementObjectType::data_receiver:
+                            ImGui::Text("Type: Receiver");
+                        break;
+                        case MeasurementObjectType::data_source:
+                            ImGui::Text("Type: Data source");
+                        break;
+                        case MeasurementObjectType::player:
+                            ImGui::Text("Type: Player");
+                        break;
+                        case MeasurementObjectType::recorder:
+                            ImGui::Text("Type: Recorder");
+                        break;
+                        default:
+                            break;
+                        }
+                        ImGui::TreePop();
+                    }
+                }
+                ImGui::TreePop();
+            }
             ImGui::End();
         }
 
@@ -164,7 +242,7 @@ int main(int, char**)
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-
+    engine->terminate();
     glfwDestroyWindow(window);
     glfwTerminate();
 

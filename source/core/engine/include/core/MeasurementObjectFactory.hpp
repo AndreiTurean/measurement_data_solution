@@ -22,5 +22,6 @@ namespace core
         void scanForMeasurementObjects(std::filesystem::path path);
         std::shared_ptr<MeasurementObject> createMeasurementObject(const std::string& name, uint8_t instanceNb, uint64_t handle);
         size_t getExtractedFuncSize();
+        std::vector<std::string> getFactoryList();
     };
 }

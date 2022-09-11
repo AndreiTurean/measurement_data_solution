@@ -68,4 +68,10 @@ namespace core
         logger_->log("Distribution of data was stopped", 2);
         distributing_ = false;
     }
+
+    bool DistributionManager::isDistributing()
+    {
+        std::lock_guard<std::mutex> lock(distributionLock_);
+        return distributing_;
+    }
 }

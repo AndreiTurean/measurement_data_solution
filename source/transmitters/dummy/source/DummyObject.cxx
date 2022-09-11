@@ -36,6 +36,7 @@ namespace transmitters
     }
     void Dummy::doFSMProcessing()
     {
+        uint64_t cnt = 0;
         while(true)
         {
             {
@@ -48,6 +49,8 @@ namespace transmitters
                 DataPackagePtr pkg = std::make_shared<DataPackage>(); //create a blank package
                 pkg->sourceHandle = this->handle_;
                 pkg->payload = new uint8_t[1024];
+                pkg->size = 1024;
+                pkg->timestamp = cnt++;
                 dataDistributionInterface_->distributeData(pkg);
                 delete[] reinterpret_cast<uint8_t*>(pkg->payload);
             }

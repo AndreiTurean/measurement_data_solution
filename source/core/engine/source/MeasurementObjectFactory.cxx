@@ -53,4 +53,14 @@ namespace core
     {
         return objectsMap_.size();
     }
+
+    std::vector<std::string> MeasurementObjectFactory::getFactoryList()
+    {
+        std::vector<std::string> result;
+        for(auto iter : objectsMap_)
+        {
+            result.push_back(iter.first);
+        }
+        return result;
+    }
 }

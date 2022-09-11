@@ -2,24 +2,28 @@
 #include <visibility.h>
 #include <MiniMTS.hpp>
 #include <MiniObjectDefs.hpp>
+#include <Receiver.hpp>
+#include <set>
 
-namespace receivers
+namespace processors
 {
-    class DummyObject :
+    class RawDataProcessor :
         public MeasurementObject,
         public DataReceiverObject,
         public InterfaceAccess,
-        public std::enable_shared_from_this<DummyObject>
+        public std::enable_shared_from_this<RawDataProcessor>,
+        public ReceiverSinkManager
     {
         InterfaceAccess* interfaceAccess_;
         uint8_t instanceNb_;
         uint64_t handle_;
         std::string name_;
         MeasurementObjectType type_;
+        std::set<NotifySubjects*> subjects_;
 
     public:
-        DummyObject(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, const std::string& name);
-        virtual ~DummyObject();
+        RawDataProcessor(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, const std::string& name);
+        virtual ~RawDataProcessor();
 
         //! MeasurementObject interface implementation
         virtual const uint8_t& getInstanceNumber();
@@ -32,6 +36,10 @@ namespace receivers
 
         //! InterfaceAccess interface implementation
         virtual void* getInterface(const std::string& interfaceName);
+
+        virtual bool registerToReceiverSink(NotifySubjects* subject);
+        virtual bool unregisterToReceiverSink(NotifySubjects* subject);
+        
     };
 }
 

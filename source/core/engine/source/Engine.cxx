@@ -35,7 +35,7 @@ namespace core
         default:
             break;
         }
-        logger_ = std::make_shared<Logger>(this, !silentLog);
+        logger_ = std::make_shared<Logger>(this, silentLog);
         dataDistributionPtr_ = std::make_shared<DistributionManager>(this);
 
         if(!silenceWatchDog)
@@ -80,6 +80,7 @@ namespace core
         logger_->log("Started engine termination");
         if(watchdog_)
         {
+            logger_->log("Destroying the watchdog");
             delete watchdog_;
         }
         
@@ -97,5 +98,19 @@ namespace core
     void Engine::getDistributionStatistics(size_t& pass, size_t& fail)
     {
         dataDistributionPtr_->getDistributionStatistics(pass,fail);
+    }
+
+    bool Engine::isWatchDogActive()
+    {
+        return watchdog_ != nullptr;
+    }
+
+    bool Engine::isLoggerActive()
+    {
+        return logger_ != nullptr;
+    }
+    bool Engine::isPerformingDataAquisition()
+    {
+        return dataDistributionPtr_->isDistributing();
     }
 }
