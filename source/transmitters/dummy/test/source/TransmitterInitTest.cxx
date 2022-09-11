@@ -7,7 +7,7 @@ TEST_F(TransmitterTestFramework, ShouldIntialize)
 
 TEST_F(TransmitterTestFramework, ShouldResetWithNewHandle)
 {
-    ASSERT_OBJECT_HANDLE(1234567);
+    ASSERT_OBJECT_HANDLE(0);
 }
 
 TEST_F(TransmitterTestFramework, ShouldResetWithNewInstanceNumber)

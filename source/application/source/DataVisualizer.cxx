@@ -2,7 +2,7 @@
 
 namespace application
 {
-    DataVisualizer::DataVisualizer(const std::string& name):
+    DataVisualizer::DataVisualizer(const std::string& name, uint8_t instanceNb):
         name_(name),
         visible_(true),
         needConfiguration_(true),
@@ -10,9 +10,14 @@ namespace application
         pkgTimestamp_(0),
         pkgSize_(0),
         registeredReceiverMgr_(nullptr),
-        processorName_("None")
+        processorName_("None"),
+        instanceNb_(instanceNb),
+        handle_(INVALID_HANDLE),
+        type_(MeasurementObjectType::visualization)
     {
-        
+        handle_ = (instanceNb_ + 1);
+        handle_ =  handle_ << 0x8 << 0x8 << 0x8 << 0x8 << 0x8;
+        name_ = name_ + " #" + std::to_string(instanceNb_);
     }
 
     void DataVisualizer::Show(std::shared_ptr<core::ConfigurationManager>& cfgMgr)
@@ -66,5 +71,22 @@ namespace application
         pkgTimestamp_ = pkg->timestamp;
         pkgSize_ = pkg->size;
         return true;
+    }
+
+    const uint8_t& DataVisualizer::getInstanceNumber()
+    {
+        return instanceNb_;
+    }
+    const uint64_t& DataVisualizer::getHandle()
+    {
+        return handle_;
+    }
+    const MeasurementObjectType& DataVisualizer::getType()
+    {
+        return type_;
+    }
+    const std::string& DataVisualizer::getName()
+    {
+        return name_;
     }
 }

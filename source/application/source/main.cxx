@@ -102,11 +102,10 @@ int main(int, char**)
     engine->initialize();
     auto configMgr = engine->getConfigurationManager();
     bool showConfigMgr = false;
-    uint64_t handle = 100;
     uint8_t instanceNb = 0;
     bool showMetrics = true;
     bool showConfigMgrStats = false;
-    std::vector<VisualizerPtr> visualizerPool;
+    std::set<VisualizerPtr> visualizerPool;
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -133,6 +132,14 @@ int main(int, char**)
             ImGui::Text("Watchdog active: %s", engine->isWatchDogActive() ? "Yes" : "No");
             ImGui::Text("Data distribution active: %s", engine->isPerformingDataAquisition() ? "Yes" : "No");
             ImGui::Text("Logging active: %s", engine->isLoggerActive() ? "Yes" : "No");
+            if (ImGui::Button("Reset"))
+            {
+                engine->terminate();
+                engine.reset();
+                engine = std::make_shared<core::Engine>();
+                engine->initialize();
+                configMgr = engine->getConfigurationManager();
+            }
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             if (ImGui::Button(showConfigMgr ? "Close configuration manager" : "Open configuration manager"))
             {
@@ -147,15 +154,6 @@ int main(int, char**)
                 showMetrics = !showMetrics;
             }
 
-            if(ImGui::TreeNode("Available visualizers"))
-            {
-                if(ImGui::Button("Raw Data Visualizer"))
-                {
-                    visualizerPool.push_back(std::make_shared<application::DataVisualizer>("Raw Data Visualizer"));
-                }
-                ImGui::TreePop();
-            }
-            
             ImGui::End();
         }
 
@@ -187,40 +185,134 @@ int main(int, char**)
                 {
                     if (ImGui::Button(object.c_str()))
                     {
-                        configMgr->createMeasurementObject(object.c_str(), instanceNb++, handle++);
+                        configMgr->createMeasurementObject(object.c_str(), instanceNb++);
                     }
                 }
+
+                if(ImGui::Button("Raw Data Visualizer"))
+                {
+                    visualizerPool.insert(std::make_shared<application::DataVisualizer>("Raw Data Visualizer", instanceNb++));
+                }
+            
                 ImGui::TreePop();
             }
             if(ImGui::TreeNode("Created Measurement Objects"))
             {
-                for(auto object :configMgr->getMOsAddedInConfig())
+                if(ImGui::TreeNode("Data processors"))
                 {
-                    std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
-                    if(ImGui::TreeNode(nodeName.c_str()))
+                    for(auto object :configMgr->getMOsAddedInConfig())
                     {
-                        ImGui::Text("Handle: %lu", object->getHandle());
-                        ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
-                        switch (object->getType())
+                        std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
+
+                        if(object->getType() == MeasurementObjectType::data_receiver)
                         {
-                        case MeasurementObjectType::data_receiver:
-                            ImGui::Text("Type: Receiver");
-                        break;
-                        case MeasurementObjectType::data_source:
-                            ImGui::Text("Type: Data source");
-                        break;
-                        case MeasurementObjectType::player:
-                            ImGui::Text("Type: Player");
-                        break;
-                        case MeasurementObjectType::recorder:
-                            ImGui::Text("Type: Recorder");
-                        break;
-                        default:
-                            break;
+                            if(ImGui::TreeNode(nodeName.c_str()))
+                            {
+                                ImGui::Text("Handle: %lX", object->getHandle());
+                                ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
+                                ImGui::Text("Type: Receiver");
+                                ImGui::TreePop();
+                            }
                         }
-                        ImGui::TreePop();
                     }
+                    ImGui::TreePop();
                 }
+                if(ImGui::TreeNode("Data transmitters"))
+                {
+                    for(auto object :configMgr->getMOsAddedInConfig())
+                    {
+                        std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
+
+                        if(object->getType() == MeasurementObjectType::data_source)
+                        {
+                            if(ImGui::TreeNode(nodeName.c_str()))
+                            {
+                                ImGui::Text("Handle: %lX", object->getHandle());
+                                ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
+                                ImGui::Text("Type: Transmitter");
+                                ImGui::TreePop();
+                            }
+                        }
+                    }
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Player"))
+                {
+                    for(auto object :configMgr->getMOsAddedInConfig())
+                    {
+                        std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
+
+                        if(object->getType() == MeasurementObjectType::player)
+                        {
+                            if(ImGui::TreeNode(nodeName.c_str()))
+                            {
+                                ImGui::Text("Handle: %lX", object->getHandle());
+                                ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
+                                ImGui::Text("Type: Player");
+                                ImGui::TreePop();
+                            }
+                        }
+                    }
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Recorder"))
+                {
+                    for(auto object :configMgr->getMOsAddedInConfig())
+                    {
+                        std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
+
+                        if(object->getType() == MeasurementObjectType::recorder)
+                        {
+                            if(ImGui::TreeNode(nodeName.c_str()))
+                            {
+                                ImGui::Text("Handle: %lX", object->getHandle());
+                                ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
+                                ImGui::Text("Type: Recorder");
+                                ImGui::TreePop();
+                            }
+                        }
+                    }
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("System"))
+                {
+                    for(auto object :configMgr->getMOsAddedInConfig())
+                    {
+                        std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
+
+                        if(object->getType() == MeasurementObjectType::system)
+                        {
+                            if(ImGui::TreeNode(nodeName.c_str()))
+                            {
+                                ImGui::Text("Handle: %lX", object->getHandle());
+                                ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
+                                ImGui::Text("Type: System");
+                                ImGui::TreePop();
+                            }
+                        }
+                    }
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Visualization"))
+                {
+                    for(const auto& visMo : visualizerPool)
+                    {
+                        auto mo = std::dynamic_pointer_cast<MeasurementObject>(visMo);
+                        if(ImGui::TreeNode(mo->getName().c_str()))
+                        {
+                            ImGui::Text("Handle: %lX", mo->getHandle());
+                            ImGui::Text("Instance number: %d", (int)mo->getInstanceNumber());
+                            ImGui::Text("Type: Visualization");
+                            ImGui::TreePop();
+                        }
+                    }
+                    ImGui::TreePop();
+                }
+
                 ImGui::TreePop();
             }
             ImGui::End();

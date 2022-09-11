@@ -3,14 +3,15 @@
 
 namespace processors
 {
-        RawDataProcessor::RawDataProcessor(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, const std::string& name):
+        RawDataProcessor::RawDataProcessor(InterfaceAccess* interfaceAccess, uint8_t nb, const std::string& name):
             interfaceAccess_(interfaceAccess),
             instanceNb_(nb),
-            handle_(handle),
+            handle_(INVALID_HANDLE),
             name_(name),
             type_(MeasurementObjectType::data_receiver)
         {
-
+            handle_ = (instanceNb_ + 1);
+            handle_ = handle_ << 0x8;
         }
         RawDataProcessor::~RawDataProcessor()
         {
@@ -73,7 +74,7 @@ namespace processors
         }
 }
 
-std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name)
+std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
 {
-	return std::make_shared<processors::RawDataProcessor>(interfaceAccess,instanceNb,handle,name);
+	return std::make_shared<processors::RawDataProcessor>(interfaceAccess, instanceNb, name);
 }

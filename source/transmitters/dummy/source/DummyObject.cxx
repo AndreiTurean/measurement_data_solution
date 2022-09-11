@@ -5,14 +5,17 @@ using namespace std::chrono_literals;
 
 namespace transmitters
 {
-    Dummy::Dummy(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const std::string& name) :
+    Dummy::Dummy(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const std::string& name) :
         interfaceAccess_(interfaceAccess),
         instanceNumber_(instanceNb),
-        handle_(handle),
+        handle_(INVALID_HANDLE),
         name_(name),
         type_(MeasurementObjectType::data_source),
         isProcessing_(true)
     {
+        handle_ = (instanceNb + 1);
+        handle_ = handle_ << 0x8 << 0x8;
+
         if(interfaceAccess_)
         {
             std::lock_guard<std::mutex> lock(processingMtx_);
@@ -104,7 +107,7 @@ namespace transmitters
     }
 }
 
-std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name)
+std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
 {
-	return std::make_shared<transmitters::Dummy>(interfaceAccess, instanceNb, handle, name);
+	return std::make_shared<transmitters::Dummy>(interfaceAccess, instanceNb, name);
 }

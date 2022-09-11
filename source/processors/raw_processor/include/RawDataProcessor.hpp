@@ -22,7 +22,7 @@ namespace processors
         std::set<NotifySubjects*> subjects_;
 
     public:
-        RawDataProcessor(InterfaceAccess* interfaceAccess, uint8_t nb, uint64_t handle, const std::string& name);
+        RawDataProcessor(InterfaceAccess* interfaceAccess, uint8_t nb, const std::string& name);
         virtual ~RawDataProcessor();
 
         //! MeasurementObject interface implementation
@@ -47,7 +47,7 @@ namespace processors
 typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, uint64_t, const char*);
 
 #if defined _WIN32 
-extern "C" std::shared_ptr<MeasurementObject> DUMMY_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name);
+extern "C" std::shared_ptr<MeasurementObject> DUMMY_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name);
 #else
-extern "C" std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name);
+extern "C" std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name);
 #endif

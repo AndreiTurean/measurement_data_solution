@@ -15,7 +15,8 @@ namespace application
 {
     class DataVisualizer:
         public NotifySubjects,
-        public Visualizer
+        public Visualizer,
+        public MeasurementObject
     {
         std::string name_;
         bool visible_;
@@ -25,9 +26,21 @@ namespace application
         size_t pkgSize_;
         ReceiverSinkManager* registeredReceiverMgr_;
         std::string processorName_;
+        uint8_t instanceNb_;
+        uint64_t handle_;
+        MeasurementObjectType type_;
     public:
-        DataVisualizer(const std::string& name);
+        DataVisualizer(const std::string& name, uint8_t instanceNb);
         virtual void Show(std::shared_ptr<core::ConfigurationManager>& cfgMgr);
         virtual bool notify(DataPackageCPtr pkg);
+        virtual const uint8_t& getInstanceNumber();
+        virtual const uint64_t& getHandle();
+        virtual const MeasurementObjectType& getType();
+        virtual const std::string& getName();
+
+        friend bool operator==(const std::shared_ptr<DataVisualizer>& lhs, const std::shared_ptr<DataVisualizer>& rhs)
+        {
+            return lhs->getHandle() == rhs->getHandle();
+        }
     };
 }

@@ -31,6 +31,8 @@ For installation the above dependencies use the following commands:
 *   sudo apt install xorg-dev
 *   sudo apt install libwayland-dev libxkbcommon-dev wayland-protocols extra-cmake-modules
 
+## Doxygen
+*   Used for generating the documentation. Each target is presented with a doxy file
 # How to build the project
 
 After all the prequisites are fullfilled, then you can proceed to select one CMake preset, keep in mind that you need to get one that will suite your machine, and run the CMake command using the preset. 

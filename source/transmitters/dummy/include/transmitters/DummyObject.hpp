@@ -29,7 +29,7 @@ namespace transmitters
         void doFSMProcessing();
         
     public:
-        Dummy(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const std::string& name);
+        Dummy(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const std::string& name);
         ~Dummy();
         virtual void* getInterface(const std::string& interfaceName);
         virtual void startProcessing();
@@ -45,7 +45,7 @@ namespace transmitters
 typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, uint64_t, const char*);
 
 #if defined _WIN32
-extern "C" std::shared_ptr<MeasurementObject> DUMMY_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name);
+extern "C" std::shared_ptr<MeasurementObject> DUMMY_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name);
 #else
-extern "C" std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, uint64_t handle, const char* name);
+extern "C" std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name);
 #endif

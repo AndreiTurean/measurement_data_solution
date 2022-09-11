@@ -11,7 +11,7 @@ protected:
 public:
     virtual void SetUp() override
     {
-       object_ = std::make_shared<transmitters::Dummy>(nullptr, 0, 10, "dummy");
+       object_ = std::make_shared<transmitters::Dummy>(nullptr, 0, "dummy");
     }
     virtual void TearDown() override
     {
@@ -27,21 +27,21 @@ public:
     void ASSERT_OBJECT_HANDLE(uint64_t handle)
     {
         object_.reset();
-        object_ = std::make_shared<transmitters::Dummy>(nullptr, 0, handle, "dummy");
-        EXPECT_EQ(object_->getHandle(), handle);
+        object_ = std::make_shared<transmitters::Dummy>(nullptr, 0, "dummy");
+        EXPECT_EQ(object_->getHandle(), 65536);
     }
 
     void ASSERT_OBJECT_INSTANCE_NB(uint8_t instanceNumber)
     {
         object_.reset();
-        object_ = std::make_shared<transmitters::Dummy>(nullptr, instanceNumber, 100, "dummy");
+        object_ = std::make_shared<transmitters::Dummy>(nullptr, instanceNumber, "dummy");
         EXPECT_EQ(object_->getInstanceNumber(), instanceNumber);
     }
 
     void ASSERT_OBJECT_NAME(std::string name)
     {
         object_.reset();
-        object_ = std::make_shared<transmitters::Dummy>(nullptr, 0, 100, name);
+        object_ = std::make_shared<transmitters::Dummy>(nullptr, 0, name);
         EXPECT_EQ(object_->getName(), name);
     }
 };

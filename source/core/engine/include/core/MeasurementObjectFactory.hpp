@@ -20,7 +20,7 @@ namespace core
     public:
         MeasurementObjectFactory(InterfaceAccess* interfaceAccess);
         void scanForMeasurementObjects(std::filesystem::path path);
-        std::shared_ptr<MeasurementObject> createMeasurementObject(const std::string& name, uint8_t instanceNb, uint64_t handle);
+        std::shared_ptr<MeasurementObject> createMeasurementObject(const std::string& name, uint8_t instanceNb);
         size_t getExtractedFuncSize();
         std::vector<std::string> getFactoryList();
     };

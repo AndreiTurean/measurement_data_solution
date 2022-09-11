@@ -8,11 +8,7 @@
 namespace core
 {
     Engine::Engine(EngineInitFlag flag):
-        dataDistributionPtr_(nullptr),
-        instanceNumber_(0),
-        name_("Engine"),
-        handle_(0),
-        type_(MeasurementObjectType::system)
+        dataDistributionPtr_(nullptr)
     {
         bool silentLog = false;
         bool silenceWatchDog = false;
@@ -76,6 +72,11 @@ namespace core
         std::shared_ptr<MeasurementObjectFactory> factory = std::make_shared<MeasurementObjectFactory>(this);
         factory->scanForMeasurementObjects(std::filesystem::current_path());
         configMgr_ = std::make_shared<ConfigurationManager>(this, factory);
+        self_ = std::make_shared<EngineObject>();
+        if(configMgr_->createMeasurementObject(self_))
+        {
+            logger_->log("Failed to introduce Engine Object in the configuration manager", ENGINE_HANDLE, severity::critical);
+        }
         logger_->log("Initialization finished");
     }
     
@@ -116,22 +117,5 @@ namespace core
     bool Engine::isPerformingDataAquisition()
     {
         return dataDistributionPtr_->isDistributing();
-    }
-
-    const uint8_t& Engine::getInstanceNumber()
-    {
-        return instanceNumber_;
-    }
-    const uint64_t& Engine::getHandle()
-    {
-        return handle_;
-    }
-    const MeasurementObjectType& Engine::getType()
-    {
-        return type_;
-    }
-    const std::string& Engine::getName()
-    {
-        return name_;
     }
 }

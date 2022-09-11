@@ -6,11 +6,11 @@
 */
 enum class severity : uint8_t
 {
-    debug = 0x00, //! debug message.
-    information = 0x01, //! information message.
-    warning = 0x02, //! warning message.
-    error = 0x03, //! error message.
-    critical = 0x04 //! critical message.
+    debug = 0x00, //!< debug message.
+    information = 0x01, //!< information message.
+    warning = 0x02, //!< warning message.
+    error = 0x03, //!< error message.
+    critical = 0x04 //!< critical message.
 };
 
 /*!

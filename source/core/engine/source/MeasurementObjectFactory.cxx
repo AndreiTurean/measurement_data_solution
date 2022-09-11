@@ -1,7 +1,7 @@
 #include <core/MeasurementObjectFactory.hpp>
 
 
-typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, uint64_t, const char*);
+typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, const char*);
 namespace core
 {
     MeasurementObjectFactory::MeasurementObjectFactory(InterfaceAccess* interfaceAccess):
@@ -26,7 +26,7 @@ namespace core
         }
     }
 
-    std::shared_ptr<MeasurementObject> MeasurementObjectFactory::createMeasurementObject(const std::string& name, uint8_t instanceNb, uint64_t handle)
+    std::shared_ptr<MeasurementObject> MeasurementObjectFactory::createMeasurementObject(const std::string& name, uint8_t instanceNb)
     {
         if(name.empty())
         {
@@ -46,7 +46,7 @@ namespace core
             return nullptr;
         }
 
-        return mo(interfaceAccess_, instanceNb, handle, it->first.c_str());
+        return mo(interfaceAccess_, instanceNb, it->first.c_str());
     }
 
     size_t MeasurementObjectFactory::getExtractedFuncSize()

@@ -37,11 +37,11 @@ struct EngineInit
 */
 enum class EngineInitFlag : uint8_t
 {
-    normal = 0x00, //! engine will start normaly with all its components.
-    silent = 0x01, //! engine will inform the logger to not log debug messages.
-    no_metrics = 0x02, //! engine won't create a watchdog.
-    no_exception_handler = 0x04, //! some safety casts will be ignored.
-    performance = 0x07, //! engine will run with the following flags: silent | no_metrics | no_exception_handler
+    normal = 0x00, //!< engine will start normaly with all its components.
+    silent = 0x01, //!< engine will inform the logger to not log debug messages.
+    no_metrics = 0x02, //!< engine won't create a watchdog.
+    no_exception_handler = 0x04, //!< some safety casts will be ignored.
+    performance = 0x07, //!< engine will run with the following flags: silent | no_metrics | no_exception_handler
 };
 
 /*!
@@ -57,3 +57,7 @@ struct ConfigurationParser
     */
     virtual const MeasurementObjectList& loadConfiguration(std::filesystem::path path) = 0;
 };
+
+#define INVALID_HANDLE 0xffffffffffffffff
+#define ENGINE_HANDLE 0x00
+#define CONFIGURATION_MGR_HANDLE 0x01

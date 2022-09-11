@@ -34,12 +34,12 @@ namespace core
         return nullptr;
     }
 
-    bool ConfigurationManager::createMeasurementObject(const std::string& name, uint8_t instanceNb, uint64_t handle)
+    bool ConfigurationManager::createMeasurementObject(const std::string& name, uint8_t instanceNb)
     {
         std::string msg = "Started creating object: " + name + " with instance number: " + std::to_string((int) instanceNb);
         logger_->log(msg.c_str(), 1);
         size_t sizeBeforeCreate = measurementObjectList_.size();
-        MeasurementObjectPtr mo = factory_->createMeasurementObject(name, instanceNb, handle);
+        MeasurementObjectPtr mo = factory_->createMeasurementObject(name, instanceNb);
         if(std::any_of(measurementObjectList_.begin(), measurementObjectList_.end(), [&](const MeasurementObjectPtr obj)
             { 
                 return obj->getHandle() == mo->getHandle();
@@ -87,5 +87,20 @@ namespace core
     std::vector<std::string> ConfigurationManager::getFactoryObjectList()
     {
         return factory_->getFactoryList();
+    }
+
+    bool ConfigurationManager::createMeasurementObject(MeasurementObjectPtr object)
+    {
+        if(std::any_of(measurementObjectList_.begin(), measurementObjectList_.end(), [&](const MeasurementObjectPtr obj)
+            { 
+                return obj->getHandle() == object->getHandle();
+            }))
+        {
+            logger_->log("Failed to create duplicate measurement object", 1, severity::error);
+            return false;
+        }
+
+        measurementObjectList_.push_back(object);
+        return true;
     }
 }

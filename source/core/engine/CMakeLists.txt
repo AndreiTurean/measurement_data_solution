@@ -17,6 +17,7 @@ source/Engine.cxx
 source/MeasurementObjectFactory.cxx
 source/Watchdog.cxx
 source/Watchdog.hpp
+source/EngineObject.cxx
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
