@@ -9,12 +9,13 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 #include <string>
 #include <Receiver.hpp>
-#include <core/ConfigurationManager.hpp>
+#include "Visualizer.hpp"
 
 namespace application
 {
     class DataVisualizer:
-        public NotifySubjects
+        public NotifySubjects,
+        public Visualizer
     {
         std::string name_;
         bool visible_;
@@ -26,7 +27,7 @@ namespace application
         std::string processorName_;
     public:
         DataVisualizer(const std::string& name);
-        void Show(std::shared_ptr<core::ConfigurationManager>& cfgMgr);
+        virtual void Show(std::shared_ptr<core::ConfigurationManager>& cfgMgr);
         virtual bool notify(DataPackageCPtr pkg);
     };
 }

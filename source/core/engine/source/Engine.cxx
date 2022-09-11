@@ -8,7 +8,11 @@
 namespace core
 {
     Engine::Engine(EngineInitFlag flag):
-        dataDistributionPtr_(nullptr)
+        dataDistributionPtr_(nullptr),
+        instanceNumber_(0),
+        name_("Engine"),
+        handle_(0),
+        type_(MeasurementObjectType::system)
     {
         bool silentLog = false;
         bool silenceWatchDog = false;
@@ -112,5 +116,22 @@ namespace core
     bool Engine::isPerformingDataAquisition()
     {
         return dataDistributionPtr_->isDistributing();
+    }
+
+    const uint8_t& Engine::getInstanceNumber()
+    {
+        return instanceNumber_;
+    }
+    const uint64_t& Engine::getHandle()
+    {
+        return handle_;
+    }
+    const MeasurementObjectType& Engine::getType()
+    {
+        return type_;
+    }
+    const std::string& Engine::getName()
+    {
+        return name_;
     }
 }

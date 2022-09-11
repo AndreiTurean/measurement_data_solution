@@ -10,6 +10,7 @@ enum class MeasurementObjectType : uint8_t
     data_receiver,
     player,
     recorder,
+    system,
 };
 
 struct MeasurementObject

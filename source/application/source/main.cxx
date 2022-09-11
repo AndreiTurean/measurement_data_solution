@@ -106,7 +106,7 @@ int main(int, char**)
     uint8_t instanceNb = 0;
     bool showMetrics = true;
     bool showConfigMgrStats = false;
-    std::vector<application::DataVisualizer> visualizerPool;
+    std::vector<VisualizerPtr> visualizerPool;
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -151,7 +151,7 @@ int main(int, char**)
             {
                 if(ImGui::Button("Raw Data Visualizer"))
                 {
-                    visualizerPool.push_back(application::DataVisualizer("Raw Data Visualizer"));
+                    visualizerPool.push_back(std::make_shared<application::DataVisualizer>("Raw Data Visualizer"));
                 }
                 ImGui::TreePop();
             }
@@ -161,7 +161,7 @@ int main(int, char**)
 
         for(auto& vis : visualizerPool)
         {
-            vis.Show(configMgr);
+            vis->Show(configMgr);
         }
 
         if(showConfigMgrStats)
