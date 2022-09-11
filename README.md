@@ -56,3 +56,12 @@ Assuming that you have a modern Visual Studio, it should already be integrated. 
 
 ### Memory leaks for 200 instances of transmitters and one receiver (build 220905):
 ![220905_leak](./img/memory_leak_core_220905.png)
+
+# Project demo
+
+## One transmitter, one processor and one visualizer:
+![220911_111](./img/demo_build_220911.png)
+
+## Two transmitters, one processor and one visualizer:
+![220911_211](./img/demo_build_220911_2_transmitters.png)
+
