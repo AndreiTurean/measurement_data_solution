@@ -14,7 +14,7 @@ public:
     virtual void SetUp() override
     {
         moSize_ = 0;
-        engine_ = std::make_shared<core::Engine>();
+        engine_ = std::make_shared<core::Engine>(EngineInitFlag::performance);
         ASSERT_TRUE(engine_ != nullptr);
     }
     virtual void TearDown() override
@@ -38,13 +38,13 @@ public:
     void ASSERT_MO_CREATED(const std::string& name, uint8_t instancenb = 0)
     {
         auto& conf = engine_->getConfigurationManager();
+        moSize_ = conf->getMOsAddedInConfig().size();
         ASSERT_TRUE(conf->createMeasurementObject(name, instancenb));
         auto mo = conf->getMOsAddedInConfig().back();
 
         EXPECT_EQ(mo->getName(), name);
 
         ASSERT_EQ(conf->getMOsAddedInConfig().size(), moSize_ + 1);
-        moSize_++;
     }
 
     void ASSERT_MO_FUNC_EXTRACTED()
@@ -56,31 +56,32 @@ public:
     void ASSERT_MULTIPLE_MOS_CREATED(const std::string& name, size_t count)
     {
         std::vector<std::string> moList;
+        auto& conf = engine_->getConfigurationManager();
+        moSize_ = conf->getMOsAddedInConfig().size();
         for(size_t idx = 0; idx < count; ++ idx)
         {
             std::string moName = name + std::to_string(count);
-            auto& conf = engine_->getConfigurationManager();
-            ASSERT_TRUE(conf->createMeasurementObject(name, (uint8_t)idx));
             
-            ASSERT_EQ(conf->getMOsAddedInConfig().size(), idx + 1);
+            ASSERT_TRUE(conf->createMeasurementObject(name, (uint8_t)idx));
+            ASSERT_EQ(conf->getMOsAddedInConfig().size(), idx + 1 + moSize_);
         }
-
-        moSize_+= count;
     }
 
     void ASSERT_CREATE_DUPLICATE_MO(const std::string& name)
     {
         bool flag = true;
-        for(int idx = 0; idx < 2; ++idx)
+        auto& conf = engine_->getConfigurationManager();
+        moSize_ = conf->getMOsAddedInConfig().size();
+        for(int idx = 0; idx < 10; ++idx)
         {
-            auto& conf = engine_->getConfigurationManager();
             ASSERT_EQ(conf->createMeasurementObject(name, 1), flag);
             for(auto mo :conf->getMOsAddedInConfig())
             {
-                EXPECT_EQ(mo->getName(), name);
+                if(mo->getHandle() != ENGINE_HANDLE)
+                    EXPECT_EQ(mo->getName(), name);
             }
 
-            ASSERT_EQ(conf->getMOsAddedInConfig().size(), 1);
+            ASSERT_EQ(conf->getMOsAddedInConfig().size(), moSize_+ 1);
             flag &= false;
         }
     }
