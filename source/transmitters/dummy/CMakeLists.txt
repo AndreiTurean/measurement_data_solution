@@ -63,16 +63,16 @@ install(TARGETS ${PROJECT_NAME}_dummy
 #######################################################
 
 if(BUILD_TESTING)
-  add_library(${PROJECT_NAME}_dummy_static STATIC
-  source/DummyObject.cxx)
+  # add_library(${PROJECT_NAME}_dummy_static STATIC
+  # source/DummyObject.cxx)
 
-  target_include_directories(${PROJECT_NAME}_dummy_static PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>  # <prefix>/include/
-  )
-  target_link_libraries(${PROJECT_NAME}_dummy_static PUBLIC defs)
+  # target_include_directories(${PROJECT_NAME}_dummy_static PUBLIC
+  # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  # $<INSTALL_INTERFACE:include>  # <prefix>/include/
+  # )
+  # target_link_libraries(${PROJECT_NAME}_dummy_static PUBLIC defs)
 
-  include(GoogleTest)
-  enable_testing()
-  add_subdirectory(test)
+  # include(GoogleTest)
+  # enable_testing()
+  # add_subdirectory(test)
 endif()

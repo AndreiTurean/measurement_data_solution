@@ -39,6 +39,11 @@ namespace application
                             {
                                 auto ifc = std::dynamic_pointer_cast<InterfaceAccess>(mo);
                                 registeredReceiverMgr_ = static_cast<ReceiverSinkManager*>(ifc->getInterface("ReceiverSinkManager"));
+
+                                if(!registeredReceiverMgr_)
+                                {
+                                    throw std::runtime_error("Failed to get ReceiverSinkManager interface");
+                                }
                                 registeredReceiverMgr_->registerToReceiverSink(this);
                                 break;
                             }
@@ -52,8 +57,6 @@ namespace application
             {
                 if(ImGui::Button("Remove processor"))
                 {
-                    registeredReceiverMgr_->unregisterToReceiverSink(this);
-                    registeredReceiverMgr_ = nullptr;
                     processorName_ = "None";
                 }
             }

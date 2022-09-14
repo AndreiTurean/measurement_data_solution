@@ -55,7 +55,6 @@ public:
 
     void ASSERT_MULTIPLE_MOS_CREATED(const std::string& name, size_t count)
     {
-        std::vector<std::string> moList;
         auto& conf = engine_->getConfigurationManager();
         moSize_ = conf->getMOsAddedInConfig().size();
         for(size_t idx = 0; idx < count; ++ idx)

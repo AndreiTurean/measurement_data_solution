@@ -37,6 +37,7 @@ namespace core
         *   @todo implement file reading and decide of the file format and structure.
         */
         virtual const MeasurementObjectList& loadConfiguration(std::filesystem::path path);
+
         /*!
         *   @brief Method that retreive the desired interface as a void pointer.
         *   @param interfaceName Interface name as a string

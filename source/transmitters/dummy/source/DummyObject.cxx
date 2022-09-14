@@ -106,8 +106,3 @@ namespace transmitters
         return name_;
     }
 }
-
-std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
-{
-	return std::make_shared<transmitters::Dummy>(interfaceAccess, instanceNb, name);
-}
