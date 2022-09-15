@@ -61,3 +61,4 @@ struct ConfigurationParser
 #define INVALID_HANDLE 0xffffffffffffffff
 #define ENGINE_HANDLE 0x00
 #define CONFIGURATION_MGR_HANDLE 0x01
+#define DISTRIBUTION_MGR_HANDLE 0x02
