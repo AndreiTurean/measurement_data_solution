@@ -1,6 +1,6 @@
 #pragma once
 #include <visibility.h>
-#include <MiniMTS.hpp>
+#include <MdsInterface.hpp>
 #include <MiniObjectDefs.hpp>
 #include <Receiver.hpp>
 #include <set>
@@ -44,10 +44,22 @@ namespace processors
 }
 
 // the types of the class factories
-typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, uint64_t, const char*);
+//typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, uint64_t, const char*);
 
 #if defined _WIN32 
-extern "C" std::shared_ptr<MeasurementObject> DUMMY_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name);
+extern "C" 
+{ 
+    std::shared_ptr<MeasurementObject> DUMMY_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
+    {
+        return std::make_shared<processors::RawDataProcessor>(interfaceAccess, instanceNb, name);
+    }
+}
 #else
-extern "C" std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name);
+extern "C" 
+{
+    std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
+    {
+        return std::make_shared<processors::RawDataProcessor>(interfaceAccess, instanceNb, name);
+    }
+}
 #endif

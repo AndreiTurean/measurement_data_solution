@@ -56,8 +56,42 @@ struct ConfigurationParser
     *   @note When loading a configuration, engine will be reseted and reinitialized.
     */
     virtual const MeasurementObjectList& loadConfiguration(std::filesystem::path path) = 0;
+    virtual bool createMeasurementObject(const std::string& name, uint8_t instanceNb) = 0;
+    /*!
+    *   @brief Method used to introduce an already created measurement object into the configuration manager.
+    *   @param object Already created measurement object that will be inserted into the configuration manager.
+    *   @return Return true if the object was inserted correctly, false otherwise.
+    */
+    virtual bool createMeasurementObject(MeasurementObjectPtr object) = 0;
+
+    /*!
+    *   @brief Method used to remove a measurement object from the configuration manager.
+    *   @param name Measurement object name
+    *   @return True if the 
+    */
+    virtual bool removeMeasurementObject(const std::string& name) = 0;
+
+    /*!
+    *   @brief Retreive the active measurement object lists from the configuration manager.
+    *   @return Return a const reference of the measurement object list.
+    */
+    virtual const MeasurementObjectList& getMOsAddedInConfig() = 0;
+
+    /*!
+    *   @brief Get the factory size. The factory size represents the number of unique measurement
+    * objects that can be created. The factory is populated using dlopen methods.
+    *   @return Return the factory size.
+    *   @note For more information about the factory read MeasurementObjectFactory class definitions.
+    */
+    virtual size_t getFactorySize() = 0;
 };
 
+/***************************************
+handle definitions
+***************************************/
 #define INVALID_HANDLE 0xffffffffffffffff
 #define ENGINE_HANDLE 0x00
 #define CONFIGURATION_MGR_HANDLE 0x01
+#define DISTRIBUTION_MGR_HANDLE 0x02
+#define WATCHDOG_HANDLE 0x03
+

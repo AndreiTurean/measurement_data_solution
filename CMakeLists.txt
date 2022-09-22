@@ -37,7 +37,7 @@ enable_testing()
 # project definition                                  #
 #######################################################
 #   setting the project name, version and language
-project(mini_mts VERSION 0.1.0)
+project(mds VERSION 0.1.0)
 
 add_subdirectory(source/definitions)
 add_subdirectory(source/utilis)

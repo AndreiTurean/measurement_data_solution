@@ -73,8 +73,3 @@ namespace processors
             return true;
         }
 }
-
-std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
-{
-	return std::make_shared<processors::RawDataProcessor>(interfaceAccess, instanceNb, name);
-}

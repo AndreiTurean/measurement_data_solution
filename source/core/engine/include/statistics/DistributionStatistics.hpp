@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 namespace core
 {
@@ -32,6 +33,10 @@ namespace core
             {
                 failedCnt_ = 0;
                 passedCnt_ = 0;
+            }
+            size_t getAmountOfProcessedPackagesPerSecond()
+            {
+                return 0;
             }
         };
     }

@@ -3,17 +3,9 @@ cmake_minimum_required(VERSION 3.22.0)
 #######################################################
 # project definition                                  #
 #######################################################
-#   setting the project name, version and language
-#project(dummy VERSION 0.1.0)
-
-#   add a normal library and control how it is build using the BUILD_SHARED_LIB flag from the command
-#   line interface
-#   https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html
 
 add_library(${PROJECT_NAME}_dummy MODULE
 source/DummyObject.cxx)
-
-add_library(${PROJECT_NAME}::${PROJECT_NAME}::dummy ALIAS ${PROJECT_NAME}_dummy)
 
 #   add the include directory to our target as PUBLIC
 target_include_directories(${PROJECT_NAME}_dummy PUBLIC
@@ -22,10 +14,7 @@ target_include_directories(${PROJECT_NAME}_dummy PUBLIC
 )
 
 find_package(Threads REQUIRED)
-
-#target_link_libraries(${PROJECT_NAME}_dummy PRIVATE core)
 target_link_libraries(${PROJECT_NAME}_dummy PRIVATE defs)
-#target_link_libraries (${PROJECT_NAME}_dummy ${CMAKE_THREAD_LIBS_INIT})
 
 #######################################################
 # setting target compile feature/options              #
@@ -57,22 +46,3 @@ install(TARGETS ${PROJECT_NAME}_dummy
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     COMPONENT DEVELOPMENT
 )
-
-#######################################################
-# test step                                           #
-#######################################################
-
-if(BUILD_TESTING)
-  add_library(${PROJECT_NAME}_dummy_static STATIC
-  source/DummyObject.cxx)
-
-  target_include_directories(${PROJECT_NAME}_dummy_static PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>  # <prefix>/include/
-  )
-  target_link_libraries(${PROJECT_NAME}_dummy_static PUBLIC defs)
-
-  include(GoogleTest)
-  enable_testing()
-  add_subdirectory(test)
-endif()

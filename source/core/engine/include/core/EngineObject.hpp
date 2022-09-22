@@ -1,21 +1,44 @@
 #pragma once
-#include <MiniMTS.hpp>
+#include <MdsInterface.hpp>
 
 namespace core
 {
+    /*!
+    *   @brief MDS engine measurement object
+    */
     class EngineObject:
         public MeasurementObject
     {
-        uint8_t instanceNumber_;
-        uint64_t handle_;
-        std::string name_;
-        MeasurementObjectType type_;
+        uint8_t instanceNumber_; //!< engine instance number. Shall be 0
+        uint64_t handle_; //!< engine handle. Shall be 0
+        std::string name_; //!< engine name
+        MeasurementObjectType type_; //!< engine type.
     public:
+        /*!
+        *   @brief MDS engine measurement object constructor.
+        */
         EngineObject();
-        virtual const uint8_t& getInstanceNumber();
-        virtual const uint64_t& getHandle();
-        virtual const MeasurementObjectType& getType();
-        virtual const std::string& getName();
+
+        /*!
+        *   @brief Get MDS engine measurement object instance number.
+        *   @return engine instance number.
+        */
+        virtual const uint8_t& getInstanceNumber() override;
+
+        /*!
+        *   @brief Get MDS engine measurement object handle.
+        */
+        virtual const uint64_t& getHandle() override;
+
+        /*!
+        *   @brief Get MDS engine measurement object type.
+        */
+        virtual const MeasurementObjectType& getType() override;
+
+        /*!
+        *   @brief Get MDS engine measurement object name.
+        */
+        virtual const std::string& getName() override;
 
     };
 }

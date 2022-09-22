@@ -8,7 +8,7 @@ namespace core
         ,   distributing_(true)
     {
         logger_ = static_cast<LoggingInterface*>(interfaceAccess_->getInterface("LoggingInterface"));
-        logger_->subscribe("DistributionManager",2);
+        logger_->subscribe("DistributionManager", DISTRIBUTION_MGR_HANDLE);
     }
     DistributionManager::~DistributionManager()
     {

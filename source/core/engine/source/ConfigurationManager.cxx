@@ -10,7 +10,7 @@ namespace core
         factory_(factory)
     {
         logger_ = static_cast<LoggingInterface*>(interfaceAccess_->getInterface("LoggingInterface"));
-        logger_->subscribe("ConfigurationManager", 1);
+        logger_->subscribe("ConfigurationManager", CONFIGURATION_MGR_HANDLE);
     }
     const MeasurementObjectList& ConfigurationManager::loadConfiguration(std::filesystem::path path)
     {
