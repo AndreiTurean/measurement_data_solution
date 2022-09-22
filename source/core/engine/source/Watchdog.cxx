@@ -1,6 +1,7 @@
-#include "Watchdog.hpp"
 #include <chrono>
 #include <cstdint>
+#include "Watchdog.hpp"
+#include <MdsInterface.hpp>
 
 namespace core
 {
@@ -27,7 +28,7 @@ namespace core
             lastTimestamp_(0)
         {
             watchThread_ = std::make_unique<std::thread>(&Watchdog::watch, this);
-            logger_->subscribe("Watchdog", 3);
+            logger_->subscribe("Watchdog", WATCHDOG_HANDLE);
         }
         Watchdog::~Watchdog()
         {

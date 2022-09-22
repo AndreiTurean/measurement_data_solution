@@ -44,33 +44,33 @@ namespace core
         *   @return Return a void pointer to the requested interface
         *   @warning Check if the returned pointer is not nullptr.
         */
-        virtual void* getInterface(const std::string& interfaceName);
+        virtual void* getInterface(const std::string& interfaceName) override;
         /*!
         *   @brief Method that call the Measurement object factory and create a object based on name and instance number.
         *   @param name Measurement object name
         *   @param instanceNb Measurement object instance number
         *   @return Return true if the object was created succesfully, false otherwise.
         */
-        bool createMeasurementObject(const std::string& name, uint8_t instanceNb);
+        virtual bool createMeasurementObject(const std::string& name, uint8_t instanceNb) override;
         /*!
         *   @brief Method used to introduce an already created measurement object into the configuration manager.
         *   @param object Already created measurement object that will be inserted into the configuration manager.
         *   @return Return true if the object was inserted correctly, false otherwise.
         */
-        bool createMeasurementObject(MeasurementObjectPtr object);
+        virtual bool createMeasurementObject(MeasurementObjectPtr object) override;
 
         /*!
         *   @brief Method used to remove a measurement object from the configuration manager.
         *   @param name Measurement object name
         *   @return True if the 
         */
-        bool removeMeasurementObject(const std::string& name);
+        virtual bool removeMeasurementObject(const std::string& name) override;
 
         /*!
         *   @brief Retreive the active measurement object lists from the configuration manager.
         *   @return Return a const reference of the measurement object list.
         */
-        const MeasurementObjectList& getMOsAddedInConfig();
+        virtual const MeasurementObjectList& getMOsAddedInConfig() override;
 
         /*!
         *   @brief Get the factory size. The factory size represents the number of unique measurement
@@ -78,7 +78,7 @@ namespace core
         *   @return Return the factory size.
         *   @note For more information about the factory read MeasurementObjectFactory class definitions.
         */
-        size_t getFactorySize();
+        virtual size_t getFactorySize() override;
 
         /*!
         *   @brief Clear the measurement object list. This can be used when the configuration manager was loaded or

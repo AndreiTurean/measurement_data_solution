@@ -1,9 +1,9 @@
 #pragma once
 #include <Log.hpp>
 #include <MdsInterface.hpp>
-#include <core/ConfigurationManager.hpp>
-#include <core/DistributionManager.hpp>
 #include <core/EngineObject.hpp>
+#include <core/DistributionManager.hpp>
+#include <core/ConfigurationManager.hpp>
 
 namespace core
 {
@@ -50,7 +50,7 @@ namespace core
         *   @return Return a void pointer to the requested interface
         *   @warning Check if the returned pointer is not nullptr.
         */
-        virtual void* getInterface(const std::string& interfaceName);
+        virtual void* getInterface(const std::string& interfaceName) override;
 
         /*!
         *   @brief Method use to initialize the engine component.
@@ -58,13 +58,13 @@ namespace core
         * data distribution manager.
         *   @warning make sure that the engine is terminated before deleting it.
         */
-        virtual void initialize();
+        virtual void initialize() override;
 
         /*!
         *   @brief Method used to terminate the engine component.
         *   @note Need to be called before the destructor.
         */
-        virtual void terminate();
+        virtual void terminate() override;
 
         /*!
         *   @brief Method used to obtain the configuration manager.
