@@ -1,7 +1,7 @@
 #pragma once
+#include <Log.hpp>
 #include <MiniMTS.hpp>
 #include <core/ConfigurationManager.hpp>
-#include <Log.hpp>
 #include <core/DistributionManager.hpp>
 #include <core/EngineObject.hpp>
 

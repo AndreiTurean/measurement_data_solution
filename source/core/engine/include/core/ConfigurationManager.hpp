@@ -1,6 +1,6 @@
 #pragma once
-#include <MiniMTS.hpp>
 #include <Log.hpp>
+#include <MiniMTS.hpp>
 #include <core/MeasurementObjectFactory.hpp>
 
 /*!

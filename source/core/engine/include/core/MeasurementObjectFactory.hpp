@@ -1,12 +1,9 @@
 #pragma once
-#include <MiniMTS.hpp>
-#include <vector>
-#include <string_view>
-#include <filesystem>
-#include <functional>
 #include <map>
 #include <string>
-#include <visibility.h>
+#include <filesystem>
+
+#include <MiniMTS.hpp>
 #include <utilis/LibUtility.hpp>
 
 namespace core
@@ -19,7 +16,7 @@ namespace core
         InterfaceAccess* interfaceAccess_;
         void scanForMeasurementObjects(std::filesystem::path path);
     public:
-        MeasurementObjectFactory(InterfaceAccess* interfaceAccess);
+        explicit MeasurementObjectFactory(InterfaceAccess* interfaceAccess);
         
         std::shared_ptr<MeasurementObject> createMeasurementObject(const std::string& name, uint8_t instanceNb);
         size_t getExtractedFuncSize();

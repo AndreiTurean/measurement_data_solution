@@ -1,11 +1,12 @@
 #pragma once
+#include <set>
+#include <mutex>
+
+#include <Log.hpp>
 #include <MiniMTS.hpp>
 #include <MiniObjectDefs.hpp>
 #include <Distribution.hpp>
 #include <statistics/DistributionStatistics.hpp>
-#include <mutex>
-#include <Log.hpp>
-#include <set>
 
 /*!
 *   @brief Core namespace, used for core engine components.
@@ -34,12 +35,12 @@ namespace core
         public DistributionManagerPrivate,
         public std::enable_shared_from_this<DistributionManager>
     {
-        InterfaceAccess* interfaceAccess_;
-        std::set<DataReceiverObjectPtr> receiversPool_;
-        statistics::DistributionStatistics statistics_;
-        std::mutex distributionLock_;
-        bool distributing_;
-        LoggingInterface* logger_;
+        InterfaceAccess* interfaceAccess_; //!< interface access to parent interfaces
+        std::set<DataReceiverObjectPtr> receiversPool_; //!< receivers pool that contains measuremet ojbect that can receive and process data
+        statistics::DistributionStatistics statistics_; //!< data distribution statistics.
+        std::mutex distributionLock_; //!< receivers pool lock. Used also for distribution flag.
+        bool distributing_; //!< data distribution flag
+        LoggingInterface* logger_; //!< logging interface
     public:
         /*!
         *   @brief Data distribution manager class constructor.
