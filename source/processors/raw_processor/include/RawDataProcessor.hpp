@@ -1,6 +1,6 @@
 #pragma once
 #include <visibility.h>
-#include <MiniMTS.hpp>
+#include <MdsInterface.hpp>
 #include <MiniObjectDefs.hpp>
 #include <Receiver.hpp>
 #include <set>

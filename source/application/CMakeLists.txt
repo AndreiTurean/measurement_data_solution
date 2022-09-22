@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.22.0)
 # project definition                                  #
 #######################################################
 #   setting the project name, version and language
-project(mini_mts VERSION 0.1.0)
+project(mds VERSION 0.1.0)
 
 #   add a normal library and control how it is build using the BUILD_SHARED_LIB flag from the command
 #   line interface

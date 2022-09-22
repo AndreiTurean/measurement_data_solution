@@ -4,7 +4,7 @@
 #include <string>
 
 // Core headers
-#include <MiniMTS.hpp>
+#include <MdsInterface.hpp>
 #include <MiniObjectDefs.hpp>
 
 // Replay headers
