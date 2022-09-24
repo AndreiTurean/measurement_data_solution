@@ -15,6 +15,8 @@ namespace processors
         }
         RawDataProcessor::~RawDataProcessor()
         {
+            interfaceAccess_ = nullptr;
+            subjects_.clear();
         }
 
         const uint8_t& RawDataProcessor::getInstanceNumber()

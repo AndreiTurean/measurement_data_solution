@@ -67,6 +67,7 @@ namespace core
         std::lock_guard<std::mutex> lock(distributionLock_);
         logger_->log("Distribution of data was stopped", 2);
         distributing_ = false;
+        receiversPool_.clear();
     }
 
     bool DistributionManager::isDistributing()

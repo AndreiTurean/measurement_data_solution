@@ -69,9 +69,21 @@ namespace core
         logger_->log(msg2.c_str(), 1);
         return sizeBeforeCreate < measurementObjectList_.size();
     }
-    bool ConfigurationManager::removeMeasurementObject(const std::string&)
+    bool ConfigurationManager::removeMeasurementObject(const std::string& name)
     {
-        return false;
+        auto it = std::remove_if(measurementObjectList_.begin(), measurementObjectList_.end(), [&]
+        (auto obj)
+        {
+            return obj->getName() == name;
+        });
+
+        if(it == measurementObjectList_.end())
+        {
+            return false;
+        }
+        measurementObjectList_.erase(it, measurementObjectList_.end());
+
+        return true;
     }
 
     const MeasurementObjectList& ConfigurationManager::getMOsAddedInConfig()
@@ -102,5 +114,16 @@ namespace core
 
         measurementObjectList_.push_back(object);
         return true;
+    }
+
+    void ConfigurationManager::terminate()
+    {
+        measurementObjectList_.clear();
+        factory_.reset();
+    }
+
+    void ConfigurationManager::clearMeasurementObjectList()
+    {
+        measurementObjectList_.clear();
     }
 }

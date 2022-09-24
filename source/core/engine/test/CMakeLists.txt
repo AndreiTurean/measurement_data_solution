@@ -2,6 +2,7 @@ enable_testing()
 add_executable(${PROJECT_NAME}_test
 source/main.cxx
 source/CoreInitializationTest.cxx
+source/CoreEngineBenchMark.cxx
 )
 add_test(NAME {PROJECT_NAME}_test COMMAND ${PROJECT_NAME}_test)
 
@@ -13,5 +14,6 @@ target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gmock GTest::gtest GTe
 gtest_add_tests(TARGET ${PROJECT_NAME}_test)
 
 target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME}::${PROJECT_NAME}) #link against the alias library
+target_compile_options(${PROJECT_NAME}_test PRIVATE -Wdeprecated-declarations)
 
 install(TARGETS ${PROJECT_NAME}_test)

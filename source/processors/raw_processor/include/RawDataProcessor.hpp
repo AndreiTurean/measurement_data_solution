@@ -42,10 +42,6 @@ namespace processors
         
     };
 }
-
-// the types of the class factories
-//typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, uint64_t, const char*);
-
 #if defined _WIN32 
 extern "C" 
 { 

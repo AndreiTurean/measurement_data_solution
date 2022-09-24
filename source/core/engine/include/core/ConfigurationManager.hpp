@@ -94,7 +94,7 @@ namespace core
         *   @return a copy of the measurement object that passed the dlopen.
         */
         std::vector<std::string> getFactoryObjectList();
-
+        void terminate();
         friend class EngineUtilis; //!< Frined class used for creating a module test
     };
 }

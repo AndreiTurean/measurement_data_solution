@@ -36,6 +36,7 @@ namespace transmitters
             processingThread_->join();
             processingThread_.reset();
         }
+        dataDistributionInterface_ = nullptr;
     }
     void Dummy::doFSMProcessing()
     {
@@ -51,11 +52,10 @@ namespace transmitters
 
                 DataPackagePtr pkg = std::make_shared<DataPackage>(); //create a blank package
                 pkg->sourceHandle = this->handle_;
-                pkg->payload = new uint8_t[1024];
                 pkg->size = 1024;
                 pkg->timestamp = cnt++;
                 dataDistributionInterface_->distributeData(pkg);
-                delete[] reinterpret_cast<uint8_t*>(pkg->payload);
+                pkg.reset();
             }
 
             std::this_thread::sleep_for(1ms);

@@ -90,6 +90,7 @@ namespace core
         
         dataDistributionPtr_->stopDistribution();
         dataDistributionPtr_.reset();
+        configMgr_->terminate();
         configMgr_.reset();
         self_.reset();
         logger_.reset();
