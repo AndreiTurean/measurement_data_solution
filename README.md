@@ -67,3 +67,5 @@ Assuming that you have a modern Visual Studio, it should already be integrated. 
 ## Two transmitters, one processor and one visualizer:
 ![220911_211](./img/demo_build_220911_2_transmitters.png)
 
+[Project structure and informtation](./source/README.md)
+
