@@ -1,5 +1,5 @@
 #pragma once
-#include <MiniObjectDefs.hpp>
+#include <defs/MiniObjectDefs.hpp>
 #include <filesystem>
 #include <string>
 
@@ -94,4 +94,5 @@ handle definitions
 #define CONFIGURATION_MGR_HANDLE 0x01
 #define DISTRIBUTION_MGR_HANDLE 0x02
 #define WATCHDOG_HANDLE 0x03
+#define FACTORY_HANDLE 0x04
 

@@ -5,4 +5,4 @@
 project(transmitters VERSION 0.1.0)
 
 add_subdirectory(dummy)
-add_subdirectory(usb)
+add_subdirectory(camera)

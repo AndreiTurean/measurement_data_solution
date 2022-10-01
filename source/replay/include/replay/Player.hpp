@@ -1,5 +1,5 @@
 #pragma once
-#include <MdsInterface.hpp>
+#include <defs/MdsInterface.hpp>
 #include <PlayerDefs.hpp>
 
 /*!

@@ -8,7 +8,7 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 #include <string>
-#include <Receiver.hpp>
+#include <defs/Receiver.hpp>
 #include "Visualizer.hpp"
 
 namespace application

@@ -1,5 +1,5 @@
 #pragma once
-#include <MiniObjectDefs.hpp>
+#include <defs/MiniObjectDefs.hpp>
 /*!
 *   @brief Data distribution interface. Let distribute a package to all linked the receivers.
 */

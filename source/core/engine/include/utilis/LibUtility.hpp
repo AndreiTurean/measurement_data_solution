@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <mutex>
+#include <defs/Log.hpp>
 
 namespace core
 {
@@ -20,8 +21,13 @@ namespace core
         class LibUtility
         {
             std::vector<void*> handleContainer_; 
+            LoggingInterface* logger_;
         public:
-            LibUtility() = default;
+            LibUtility(LoggingInterface* logger):
+                logger_(logger)
+            {
+
+            }
 
             /*!
             *   @brief Class destructor. Close all the library handles left open. Exclude the null handles.
@@ -40,6 +46,11 @@ namespace core
                 void* handle = nullptr;
 #ifndef _WIN32
                 handle = dlopen(libName, RTLD_NOW);
+
+                if(!handle)
+                {
+                    logger_->log(dlerror(), FACTORY_HANDLE, severity::debug);
+                }
 #else
                 handle = LoadLibrary(libName);
 #endif

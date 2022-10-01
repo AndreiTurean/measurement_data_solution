@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <thread>
-#include <Log.hpp>
+#include <defs/Log.hpp>
 
 namespace core
 {

@@ -4,8 +4,8 @@
 #include <string>
 
 // Core headers
-#include <MdsInterface.hpp>
-#include <MiniObjectDefs.hpp>
+#include <defs/MdsInterface.hpp>
+#include <defs/MiniObjectDefs.hpp>
 
 // Replay headers
 #include <PlayerDefs.hpp>

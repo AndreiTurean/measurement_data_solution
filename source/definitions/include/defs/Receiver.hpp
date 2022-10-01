@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include <MiniObjectDefs.hpp>
+#include <defs/MiniObjectDefs.hpp>
 
 /*!
 *   @brief Interface used to notify all the subject registered using registerToReceiverSink method to a processor

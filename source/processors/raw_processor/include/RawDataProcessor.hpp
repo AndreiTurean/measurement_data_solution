@@ -1,13 +1,13 @@
 #pragma once
 #include <visibility.h>
-#include <MdsInterface.hpp>
-#include <MiniObjectDefs.hpp>
-#include <Receiver.hpp>
+#include <defs/MdsInterface.hpp>
+#include <defs/MiniObjectDefs.hpp>
+#include <defs/Receiver.hpp>
 #include <set>
 
 namespace processors
 {
-    class RawDataProcessor :
+    class DUMMY_API RawDataProcessor :
         public MeasurementObject,
         public DataReceiverObject,
         public InterfaceAccess,
@@ -42,20 +42,11 @@ namespace processors
         
     };
 }
-#if defined _WIN32 
+
 extern "C" 
-{ 
+{
     std::shared_ptr<MeasurementObject> DUMMY_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
     {
         return std::make_shared<processors::RawDataProcessor>(interfaceAccess, instanceNb, name);
     }
 }
-#else
-extern "C" 
-{
-    std::shared_ptr<MeasurementObject> createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
-    {
-        return std::make_shared<processors::RawDataProcessor>(interfaceAccess, instanceNb, name);
-    }
-}
-#endif

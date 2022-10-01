@@ -1,12 +1,19 @@
 #include <core/MeasurementObjectFactory.hpp>
+#include <cstring>
 
 
 typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, const char*);
 namespace core
 {
     MeasurementObjectFactory::MeasurementObjectFactory(InterfaceAccess* interfaceAccess):
-        interfaceAccess_(interfaceAccess)
+        utilityLibrary_(nullptr),
+        interfaceAccess_(interfaceAccess),
+        logger_(nullptr)
     {
+        
+        logger_ = static_cast<LoggingInterface*>(interfaceAccess_->getInterface("LoggingInterface"));
+        logger_->subscribe("MeasurementObjectFactory", FACTORY_HANDLE);
+        utilityLibrary_ = utility::LibUtility(logger_);
         scanForMeasurementObjects(std::filesystem::current_path());
     }
     void MeasurementObjectFactory::scanForMeasurementObjects(std::filesystem::path path)
@@ -17,6 +24,11 @@ namespace core
 
         for(auto& obj : std::filesystem::recursive_directory_iterator(path))
         {
+            if(strcmp(obj.path().extension().c_str(), ".so") != 0)
+            {
+                continue;
+            }
+
             void* func = utilityLibrary_.openLibrary(obj.path().c_str(), "createMO");
 
             if(func)

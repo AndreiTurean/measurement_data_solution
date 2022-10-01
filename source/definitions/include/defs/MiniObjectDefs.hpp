@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <list>
 #include <memory>
 #include <cstdint>
@@ -48,6 +49,14 @@ using MeasurementObjectPtr = std::shared_ptr<MeasurementObject>;
 //! List of measurement objects
 using MeasurementObjectList = std::list<std::shared_ptr<MeasurementObject>>;
 
+enum class PackageType : uint8_t
+{
+    dummy = 0x00,
+    camera = 0x01,
+    can = 0x02,
+    flexray = 0x04,
+    ethernet = 0x08
+};
 /*!
 *   @brief Data package definition
 */
@@ -57,6 +66,7 @@ struct DataPackage
     uint64_t sourceHandle; //!< package source handle
     size_t size; //!< package size
     uint8_t cycle_; //!< package cycle
+    PackageType type; //!< package type
     void* payload; //!< pointer to where the package payload starts.
 };
 //! Data package pointer
@@ -98,3 +108,16 @@ struct DataSenderObject
 
 //! Data transmitter pointer
 using DataSenderObjectPtr = std::shared_ptr<DataSenderObject>;
+
+using PropertyTable = std::map<std::string, std::string>;
+using PropertyPair= std::pair<std::string, std::string>;
+
+struct ExtendedMeasurementObject : public MeasurementObject
+{
+    virtual bool hasPropertyTable() = 0;
+    virtual bool insertEntry(const PropertyPair& entryPair) = 0;
+    virtual bool removeProperty(const std::string& propertyName) = 0;
+    virtual void clearPropertyTable() = 0;
+    virtual const PropertyTable& getPropertyTable() = 0;
+    virtual const std::string& getPropertyEntryValue(const std::string& entry) = 0;
+};

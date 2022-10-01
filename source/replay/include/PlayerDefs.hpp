@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include <MiniObjectDefs.hpp>
+#include <defs/MiniObjectDefs.hpp>
 
 enum class Direction
 {

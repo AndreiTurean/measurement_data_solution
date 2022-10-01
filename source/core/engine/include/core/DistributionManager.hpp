@@ -2,10 +2,10 @@
 #include <set>
 #include <mutex>
 
-#include <Log.hpp>
-#include <MdsInterface.hpp>
-#include <MiniObjectDefs.hpp>
-#include <Distribution.hpp>
+#include <defs/Log.hpp>
+#include <defs/MdsInterface.hpp>
+#include <defs/MiniObjectDefs.hpp>
+#include <defs/Distribution.hpp>
 #include <statistics/DistributionStatistics.hpp>
 
 /*!

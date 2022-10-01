@@ -3,7 +3,8 @@
 #include <string>
 #include <filesystem>
 
-#include <MdsInterface.hpp>
+#include <defs/MdsInterface.hpp>
+#include <defs/Log.hpp>
 #include <utilis/LibUtility.hpp>
 
 namespace core
@@ -17,6 +18,7 @@ namespace core
         std::map<std::string, void*> objectsMap_; //!< map containing factory defs and their shared library name
         core::utility::LibUtility utilityLibrary_; //!< utility library instance. Use to achive cross platform compilation
         InterfaceAccess* interfaceAccess_; //!< interface access pointer
+        LoggingInterface* logger_;
 
         /*!
         *   @brief Method use to scan the received path for any shared libraries that can be opened.

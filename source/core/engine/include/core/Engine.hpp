@@ -1,6 +1,6 @@
 #pragma once
-#include <Log.hpp>
-#include <MdsInterface.hpp>
+#include <defs/Log.hpp>
+#include <defs/MdsInterface.hpp>
 #include <core/EngineObject.hpp>
 #include <core/DistributionManager.hpp>
 #include <core/ConfigurationManager.hpp>
