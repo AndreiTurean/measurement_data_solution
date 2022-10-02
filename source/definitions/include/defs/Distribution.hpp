@@ -1,5 +1,5 @@
 #pragma once
-#include <defs/MiniObjectDefs.hpp>
+#include <defs/DataPackage.hpp>
 /*!
 *   @brief Data distribution interface. Let distribute a package to all linked the receivers.
 */
@@ -14,4 +14,5 @@ struct DataDistribution
     virtual bool distributeData(DataPackageCPtr package) = 0;
 };
 
+//! Data distribution pointer
 using DataDistributionPtr = std::shared_ptr<DataDistribution>;

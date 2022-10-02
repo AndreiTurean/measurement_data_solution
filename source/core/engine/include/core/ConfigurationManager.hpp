@@ -1,6 +1,7 @@
 #pragma once
 #include <defs/Log.hpp>
 #include <defs/MdsInterface.hpp>
+#include <defs/Configuration.hpp>
 #include <core/MeasurementObjectFactory.hpp>
 
 /*!

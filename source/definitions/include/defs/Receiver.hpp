@@ -1,6 +1,23 @@
 #pragma once
 #include <cstdint>
-#include <defs/MiniObjectDefs.hpp>
+#include <defs/DataPackage.hpp>
+
+/*!
+*   @brief Interface used by any processor in order to receive packages from the distribution manager
+*/
+struct DataReceiverObject
+{
+    /*!
+    *   @brief Process data package.
+    *   @note The package cannot be altered, but a new package can be created to be delivered to the subscribers
+    *   @param package Pointer to a const data package that will be analyzed and proccessed.
+    *   @return Return true if all the processors validate the package, false if any proccesor cannot validate it.
+    */
+    virtual bool validatePackage(DataPackageCPtr package) = 0;
+};
+
+//! Data processor pointer
+using DataReceiverObjectPtr = std::shared_ptr<DataReceiverObject>;
 
 /*!
 *   @brief Interface used to notify all the subject registered using registerToReceiverSink method to a processor

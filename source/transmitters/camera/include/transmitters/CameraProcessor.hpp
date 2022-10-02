@@ -1,5 +1,5 @@
 #pragma once
-#include <defs/MiniObjectDefs.hpp>
+#include <defs/DataPackage.hpp>
 #include <queue>
 #include <functional>
 namespace transmitters

@@ -10,7 +10,7 @@ Here are presents defintions and interfaces used in the proect.
 
 ## [MDS general purpose interfaces](./include/defs/MdsInterface.hpp)
 
-## [Measurement object specific interfaces](./include/defs/MiniObjectDefs.hpp)
+## [Measurement object specific interfaces](./include/defs/MeasurementObjectDefs.hpp)
 
 ## [Receiver interfaces](./include/defs/Receiver.hpp)
 

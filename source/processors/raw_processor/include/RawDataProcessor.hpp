@@ -1,7 +1,7 @@
 #pragma once
 #include <visibility.h>
 #include <defs/MdsInterface.hpp>
-#include <defs/MiniObjectDefs.hpp>
+#include <defs/MeasurementObjectDefs.hpp>
 #include <defs/Receiver.hpp>
 #include <set>
 

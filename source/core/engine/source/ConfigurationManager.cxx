@@ -2,6 +2,7 @@
 #include <XmlWrapper.hpp>
 #include <algorithm>
 #include <core/DistributionManager.hpp>
+#include <defs/Receiver.hpp>
 
 namespace core
 {
