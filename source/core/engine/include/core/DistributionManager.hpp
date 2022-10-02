@@ -4,8 +4,9 @@
 
 #include <defs/Log.hpp>
 #include <defs/MdsInterface.hpp>
-#include <defs/MiniObjectDefs.hpp>
+#include <defs/MeasurementObjectDefs.hpp>
 #include <defs/Distribution.hpp>
+#include <defs/Receiver.hpp>
 #include <statistics/DistributionStatistics.hpp>
 
 /*!

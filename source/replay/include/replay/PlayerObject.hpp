@@ -5,7 +5,7 @@
 
 // Core headers
 #include <defs/MdsInterface.hpp>
-#include <defs/MiniObjectDefs.hpp>
+#include <defs/MeasurementObjectDefs.hpp>
 
 // Replay headers
 #include <PlayerDefs.hpp>

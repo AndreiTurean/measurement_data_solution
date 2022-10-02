@@ -4,6 +4,7 @@
 #include <defs/Distribution.hpp>
 #include <memory>
 #include <defs/Distribution.hpp>
+#include <defs/Transmitter.hpp>
 #include <thread>
 #include <mutex>
 

@@ -8,6 +8,7 @@
 #include <mutex>
 
 #include <transmitters/CameraProcessor.hpp>
+#include <defs/Transmitter.hpp>
 
 namespace transmitters
 {

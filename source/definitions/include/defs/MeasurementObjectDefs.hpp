@@ -49,66 +49,6 @@ using MeasurementObjectPtr = std::shared_ptr<MeasurementObject>;
 //! List of measurement objects
 using MeasurementObjectList = std::list<std::shared_ptr<MeasurementObject>>;
 
-enum class PackageType : uint8_t
-{
-    dummy = 0x00,
-    camera = 0x01,
-    can = 0x02,
-    flexray = 0x04,
-    ethernet = 0x08
-};
-/*!
-*   @brief Data package definition
-*/
-struct DataPackage
-{
-    uint64_t timestamp; //!< package timestamp
-    uint64_t sourceHandle; //!< package source handle
-    size_t size; //!< package size
-    uint8_t cycle_; //!< package cycle
-    PackageType type; //!< package type
-    void* payload; //!< pointer to where the package payload starts.
-};
-//! Data package pointer
-using DataPackagePtr = std::shared_ptr<DataPackage>;
-//! Const data package pointer
-using DataPackageCPtr = std::shared_ptr<const DataPackage>;
-
-/*!
-*   @brief Interface used by any processor in order to receive packages from the distribution manager
-*/
-struct DataReceiverObject
-{
-    /*!
-    *   @brief Process data package.
-    *   @note The package cannot be altered, but a new package can be created to be delivered to the subscribers
-    *   @param package Pointer to a const data package that will be analyzed and proccessed.
-    *   @return Return true if all the processors validate the package, false if any proccesor cannot validate it.
-    */
-    virtual bool validatePackage(DataPackageCPtr package) = 0;
-};
-
-//! Data processor pointer
-using DataReceiverObjectPtr = std::shared_ptr<DataReceiverObject>;
-
-/*!
-*   @brief Interface used by any data transmitter in order to transmit packages to the distribution manager
-*/
-struct DataSenderObject
-{
-    /*!
-    *   @brief start the processing threah that will distribute data to the data distribution manager
-    */
-    virtual void startProcessing() = 0;
-    /*!
-    *   @brief end the processing threah that will distribute data to the data distribution manager
-    */
-    virtual void endProcessing() = 0;
-};
-
-//! Data transmitter pointer
-using DataSenderObjectPtr = std::shared_ptr<DataSenderObject>;
-
 using PropertyTable = std::map<std::string, std::string>;
 using PropertyPair= std::pair<std::string, std::string>;
 
