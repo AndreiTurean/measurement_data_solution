@@ -6,6 +6,7 @@
 #include <defs/MdsInterface.hpp>
 #include <defs/Log.hpp>
 #include <utilis/LibUtility.hpp>
+#include <defs/Configuration.hpp>
 
 namespace core
 {
@@ -13,9 +14,10 @@ namespace core
     *   @brief Measurement object factory definition
     */
     class MeasurementObjectFactory:
+        public ConfigurationFactory,
         public std::enable_shared_from_this<MeasurementObjectFactory>
     {
-        std::map<std::string, void*> objectsMap_; //!< map containing factory defs and their shared library name
+        std::map<const std::string, void*> objectsMap_; //!< map containing factory defs and their shared library name
         core::utility::LibUtility utilityLibrary_; //!< utility library instance. Use to achive cross platform compilation
         InterfaceAccess* interfaceAccess_; //!< interface access pointer
         LoggingInterface* logger_;
@@ -45,14 +47,8 @@ namespace core
         *   @brief Method use to retreive the factory func size.
         *   @return Return factory func size.
         */
-        size_t getExtractedFuncSize();
+        virtual size_t getFactorySize() override;
 
-        /*!
-        *   @brief Method used to obtain factory names.
-        *   @return Return a vector containing the names of the shared libraries that can create a measurement object.
-        */
-        std::vector<std::string> getFactoryList();
-
-        friend class EngineUtilis; //!< only for didactic purposes only.
+        virtual const std::map<const std::string, void*>& getFactoryMap() override;
     };
 }

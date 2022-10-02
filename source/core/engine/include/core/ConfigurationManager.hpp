@@ -74,14 +74,6 @@ namespace core
         virtual const MeasurementObjectList& getMOsAddedInConfig() override;
 
         /*!
-        *   @brief Get the factory size. The factory size represents the number of unique measurement
-        * objects that can be created. The factory is populated using dlopen methods.
-        *   @return Return the factory size.
-        *   @note For more information about the factory read MeasurementObjectFactory class definitions.
-        */
-        virtual size_t getFactorySize() override;
-
-        /*!
         *   @brief Clear the measurement object list. This can be used when the configuration manager was loaded or
         * a new configuration file was loaded and the old measurement objects need to be destroyed.
         */

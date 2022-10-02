@@ -1,42 +1,85 @@
 #pragma once
+#include <mutex>
+#include <thread>
 #include <cstdint>
-
+#include <defs/Distribution.hpp>
+using namespace std::chrono_literals;
 namespace core
 {
     namespace statistics
     {
-        class DistributionStatistics
+        class DistributionStatistics:
+            public DataDistributionStatistics
         {
-            size_t failedCnt_;
-            size_t passedCnt_;
+            uint64_t processedPackagesPerSecond_;
+            uint64_t maxProcessedPackagesPerSecond_;
+            uint64_t failedPackagesCnt_;
+            uint64_t processedPackagesCnt_;
+            bool alive_;
+
+            std::mutex countingMtx_;
+            std::mutex updateMtx_;
+            std::unique_ptr<std::thread> countingThread_;
+
+            void count()
+            {
+                while(true)
+                {
+                    {
+                        std::lock_guard<std::mutex> lock(countingMtx_);
+                        std::lock_guard<std::mutex> lock2(updateMtx_);
+
+                        if(!alive_)
+                        {
+                            return;
+                        }
+                        processedPackagesPerSecond_ = processedPackagesCnt_ + failedPackagesCnt_;
+                        maxProcessedPackagesPerSecond_ = std::max(maxProcessedPackagesPerSecond_, processedPackagesPerSecond_);
+        
+                        processedPackagesCnt_ = 0;
+                        failedPackagesCnt_ = 0;
+                    }
+
+                    std::this_thread::sleep_for(999ms);
+                }
+            }
         public:
-            DistributionStatistics()
+            DistributionStatistics():
+                processedPackagesPerSecond_(0),
+                maxProcessedPackagesPerSecond_(0),
+                failedPackagesCnt_(0),
+                processedPackagesCnt_(0),
+                alive_(true)
             {
-                failedCnt_ = 0;
-                passedCnt_ = 0;
+                countingThread_ = std::make_unique<std::thread>(&DistributionStatistics::count, this);
             }
 
-            void update(bool pass = true)
+            virtual ~DistributionStatistics()
             {
-                pass ? passedCnt_++ : passedCnt_++;
+                {
+                    std::lock_guard<std::mutex> lock(countingMtx_);
+                    alive_ = false;
+                }
+
+                countingThread_->join();
+                countingThread_.reset();
             }
 
-            void reset(size_t& pass, size_t& fail)
+            void update(bool processed = true)
             {
-                pass = passedCnt_;
-                fail = failedCnt_;
-
-                reset();
+                std::lock_guard<std::mutex> lock(countingMtx_);
+                processed ? processedPackagesCnt_++ : failedPackagesCnt_++;
             }
 
-            void reset()
+            virtual const uint64_t& getNumberOfProcessedPackagesPerSecond()
             {
-                failedCnt_ = 0;
-                passedCnt_ = 0;
+                std::lock_guard<std::mutex> lock2(updateMtx_);
+                return maxProcessedPackagesPerSecond_;
             }
-            size_t getAmountOfProcessedPackagesPerSecond()
+            virtual const uint64_t& getMaximumProcessedPackagesPerSecond()
             {
-                return 0;
+                std::lock_guard<std::mutex> lock2(updateMtx_);
+                return maxProcessedPackagesPerSecond_;
             }
         };
     }

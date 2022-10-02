@@ -61,18 +61,13 @@ namespace core
         return mo(interfaceAccess_, instanceNb, it->first.c_str());
     }
 
-    size_t MeasurementObjectFactory::getExtractedFuncSize()
+    size_t MeasurementObjectFactory::getFactorySize()
     {
         return objectsMap_.size();
     }
 
-    std::vector<std::string> MeasurementObjectFactory::getFactoryList()
+    const std::map<const std::string, void*>& MeasurementObjectFactory::getFactoryMap()
     {
-        std::vector<std::string> result;
-        for(auto iter : objectsMap_)
-        {
-            result.push_back(iter.first);
-        }
-        return result;
+        return objectsMap_;
     }
 }

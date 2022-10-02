@@ -67,21 +67,6 @@ namespace core
         virtual void terminate() override;
 
         /*!
-        *   @brief Method used to obtain the configuration manager.
-        *   @todo Replace the method by using the get interface method to obtain an interface to the
-        * configuration manager
-        *   @return Return a configuration manager reference.
-        */
-        std::shared_ptr<ConfigurationManager>& getConfigurationManager();
-
-        /*!
-        *   @brief Method used to obtain the packages that failed or passed the distribution process.
-        *   @param pass a reference in which the number of passed packages counter will be put.
-        *   @param fail a reference in which the number of failed packages counter will be put.
-        */
-        void getDistributionStatistics(size_t& pass, size_t& fail);
-
-        /*!
         *   @brief Method that retreive the watchdog status.
         *   @return Return true if the watchdog is active, false otherwise.
         */

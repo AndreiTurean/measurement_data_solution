@@ -32,30 +32,31 @@ public:
     {
         ASSERT_TRUE(engine_ != nullptr);
         engine_->initialize();
-        ASSERT_TRUE(engine_->getConfigurationManager() != nullptr);
+        ASSERT_TRUE(engine_->getInterface("ConfigurationParser") != nullptr);
     }
 
     void ASSERT_MO_CREATED(const std::string& name, uint8_t instancenb = 0)
     {
-        auto& conf = engine_->getConfigurationManager();
-        moSize_ = conf->getMOsAddedInConfig().size();
-        ASSERT_TRUE(conf->createMeasurementObject(name, instancenb));
-        auto mo = conf->getMOsAddedInConfig().back();
+        ConfigurationParser* configMgr = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
+        moSize_ = configMgr->getMOsAddedInConfig().size();
+        ASSERT_TRUE(configMgr->createMeasurementObject(name, instancenb));
+        auto mo = configMgr->getMOsAddedInConfig().back();
 
         EXPECT_EQ(mo->getName(), name);
 
-        ASSERT_EQ(conf->getMOsAddedInConfig().size(), moSize_ + 1);
+        ASSERT_EQ(configMgr->getMOsAddedInConfig().size(), moSize_ + 1);
     }
 
     void ASSERT_MO_FUNC_EXTRACTED()
     {
-        auto& conf = engine_->getConfigurationManager();
-        EXPECT_GT(conf->getFactorySize(), 0);
+        ConfigurationFactory* configFactory = static_cast<ConfigurationFactory*>(engine_->getInterface("ConfigurationFactory"));
+        ASSERT_TRUE(configFactory != nullptr);
+        EXPECT_GT(configFactory->getFactorySize(), 0);
     }
 
     void ASSERT_MULTIPLE_MOS_CREATED(const std::string& name, size_t count)
     {
-        auto& conf = engine_->getConfigurationManager();
+        ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
         moSize_ = conf->getMOsAddedInConfig().size();
         for(size_t idx = 0; idx < count; ++ idx)
         {
@@ -69,7 +70,7 @@ public:
     void ASSERT_CREATE_DUPLICATE_MO(const std::string& name)
     {
         bool flag = true;
-        auto& conf = engine_->getConfigurationManager();
+        ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
         moSize_ = conf->getMOsAddedInConfig().size();
         for(int idx = 0; idx < 10; ++idx)
         {
@@ -87,25 +88,51 @@ public:
     
     void ASSERT_DATA_IS_PROCESSED()
     {
-        std::this_thread::sleep_for(120000ms);
-        size_t pass = 0;
-        size_t fail = 0;
-        engine_->getDistributionStatistics(pass, fail);
-        std::cout<<"passed pkg:" << pass << std::endl;
-        std::cout<<"failed pkg:" << fail << std::endl;
-        ASSERT_GT(pass, 0);
-        ASSERT_EQ(fail, 0);
+        bool skip = true;
+        if(skip)
+        {
+            return;
+        }
+
+        int i = 0 ;
+        std::this_thread::sleep_for(1s);
+        while(i< 500)
+        {
+            std::this_thread::sleep_for(100ms);
+            DataDistributionStatistics* stat = static_cast<DataDistributionStatistics*>(engine_->getInterface("DataDistributionStatistics"));
+            auto r1 = stat->getNumberOfProcessedPackagesPerSecond();
+            auto r2 = stat->getMaximumProcessedPackagesPerSecond();
+
+            std::cout<< "Current: " << r1 << ", maximum: " << r2 << std::endl;
+            ASSERT_GT(r1, 3000);
+            ASSERT_GT(r2, 3000);
+
+            i++;
+        }
     }
 
     void ASSERT_STRESS_AQUISITION()
     {
-        std::this_thread::sleep_for(120000ms);
-        size_t pass = 0;
-        size_t fail = 0;
-        engine_->getDistributionStatistics(pass, fail);
-        std::cout<<"passed pkg:" << pass << std::endl;
-        std::cout<<"failed pkg:" << fail << std::endl;
-        ASSERT_GT(pass, 0);
-        ASSERT_EQ(fail, 0);
+        bool skip = true;
+        if(skip)
+        {
+            return;
+        }
+
+        int i = 0 ;
+        std::this_thread::sleep_for(1s);
+        while(i< 500)
+        {
+            std::this_thread::sleep_for(10ms);
+            DataDistributionStatistics* stat = static_cast<DataDistributionStatistics*>(engine_->getInterface("DataDistributionStatistics"));
+            auto r1 = stat->getNumberOfProcessedPackagesPerSecond();
+            auto r2 = stat->getMaximumProcessedPackagesPerSecond();
+
+            std::cout<< "Current: " << r1 << ", maximum: " << r2 << std::endl;
+            ASSERT_GT(r1, 3000);
+            ASSERT_GT(r2, 3000);
+
+            i++;
+        }
     }
 };

@@ -29,11 +29,18 @@ struct ConfigurationParser
     */
     virtual bool removeMeasurementObject(const std::string& name) = 0;
 
+    virtual void clearMeasurementObjectList() = 0;
+
     /*!
     *   @brief Retreive the active measurement object lists from the configuration manager.
     *   @return Return a const reference of the measurement object list.
     */
     virtual const MeasurementObjectList& getMOsAddedInConfig() = 0;
+};
+
+struct ConfigurationFactory
+{
+    virtual const std::map<const std::string, void*>& getFactoryMap() = 0;
 
     /*!
     *   @brief Get the factory size. The factory size represents the number of unique measurement

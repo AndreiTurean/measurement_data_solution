@@ -38,9 +38,9 @@ namespace core
     {
         InterfaceAccess* interfaceAccess_; //!< interface access to parent interfaces
         std::set<DataReceiverObjectPtr> receiversPool_; //!< receivers pool that contains measuremet ojbect that can receive and process data
-        statistics::DistributionStatistics statistics_; //!< data distribution statistics.
         std::mutex distributionLock_; //!< receivers pool lock. Used also for distribution flag.
         bool distributing_; //!< data distribution flag
+        statistics::DistributionStatistics* statistics_; //!< data distribution statistics.
         LoggingInterface* logger_; //!< logging interface
     public:
         /*!
@@ -82,13 +82,6 @@ namespace core
         virtual void* getInterface(const std::string& interfaceName) override;
 
         /*!
-        *   @brief Gets the distribution statistics regarding the passed/failed packages cnt.
-        *   @todo replace this method with one data return a structure that contains real statistics
-        * not just the pass / failed packages
-        */
-        void getDistributionStatistics(size_t& pass, size_t& fail);
-
-        /*!
         *   @brief Stop the data distribution. All the data sources that continue to send packages
         * will not be added into the distribution manager and not passed to any receiver.
         */
@@ -100,5 +93,7 @@ namespace core
         * the receivers pool.
         */
         bool isDistributing();
+
+        DataDistributionStatistics* getDistributionInterface();
     };
 }

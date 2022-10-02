@@ -4,18 +4,29 @@
 namespace core
 {
     DistributionManager::DistributionManager(InterfaceAccess* ifcAccess)
-        :   interfaceAccess_(ifcAccess)
-        ,   distributing_(true)
+        : interfaceAccess_(ifcAccess)
+        , distributing_(true)
+        , statistics_(nullptr)
     {
         logger_ = static_cast<LoggingInterface*>(interfaceAccess_->getInterface("LoggingInterface"));
         logger_->subscribe("DistributionManager", DISTRIBUTION_MGR_HANDLE);
+
+        statistics_ = new statistics::DistributionStatistics();
     }
     DistributionManager::~DistributionManager()
     {
-        std::lock_guard<std::mutex> lock(distributionLock_);
-        logger_->log("Destroying distribution manager", 2);
-        while(distributing_);
-        receiversPool_.clear();
+        logger_->log("Destroying distribution manager", DISTRIBUTION_MGR_HANDLE);
+        {
+            std::lock_guard<std::mutex> lock(distributionLock_);
+            distributing_ = false;
+            receiversPool_.clear();
+        }
+
+        if(statistics_)
+        {
+            logger_->log("Destroying distribution statistics", DISTRIBUTION_MGR_HANDLE);
+            delete statistics_;
+        }
     }
 
     bool DistributionManager::distributeData(DataPackageCPtr package)
@@ -30,12 +41,13 @@ namespace core
         {
             return false;
         }
+
         bool distributionResult = true;
         for(auto receiver : receiversPool_)
         {
             distributionResult &= receiver->validatePackage(package);
         }
-        statistics_.update(distributionResult);
+        statistics_->update(distributionResult);
         return distributionResult;
     }
     void DistributionManager::addReceiver(DataReceiverObjectPtr object)
@@ -51,15 +63,11 @@ namespace core
             return dynamic_cast<DataDistribution*>(this);
         if(interfaceName == "DistributionManagerPrivate")
             return dynamic_cast<DistributionManagerPrivate*>(this);
+        if(interfaceName == "DistributionManagerPrivate")
+            return dynamic_cast<DistributionManagerPrivate*>(this);
         if(interfaceAccess_)
             return interfaceAccess_->getInterface(interfaceName);
         return nullptr;
-    }
-
-    void DistributionManager::getDistributionStatistics(size_t& pass, size_t& fail)
-    {
-        std::lock_guard<std::mutex> lock(distributionLock_);
-        statistics_.reset(pass,fail);
     }
 
     void DistributionManager::stopDistribution()
@@ -74,5 +82,10 @@ namespace core
     {
         std::lock_guard<std::mutex> lock(distributionLock_);
         return distributing_;
+    }
+
+    DataDistributionStatistics* DistributionManager::getDistributionInterface()
+    {
+        return statistics_;
     }
 }

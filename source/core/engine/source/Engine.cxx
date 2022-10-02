@@ -62,6 +62,18 @@ namespace core
         {
             return std::dynamic_pointer_cast<DistributionManagerPrivate>(dataDistributionPtr_).get();
         }
+        if(ifcName == "ConfigurationParser")
+        {
+            return std::dynamic_pointer_cast<ConfigurationParser>(configMgr_).get();
+        }
+        if(ifcName == "ConfigurationFactory")
+        {
+            return configMgr_->getInterface(ifcName);
+        }
+        if(ifcName == "DataDistributionStatistics")
+        {
+            return dataDistributionPtr_->getDistributionInterface();
+        }
 
         return nullptr;
     }
@@ -94,16 +106,6 @@ namespace core
         configMgr_.reset();
         self_.reset();
         logger_.reset();
-    }
-
-    std::shared_ptr<ConfigurationManager>& Engine::getConfigurationManager()
-    {
-        return configMgr_;
-    }
-
-    void Engine::getDistributionStatistics(size_t& pass, size_t& fail)
-    {
-        dataDistributionPtr_->getDistributionStatistics(pass,fail);
     }
 
     bool Engine::isWatchDogActive()
