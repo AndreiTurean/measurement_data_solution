@@ -16,15 +16,15 @@ namespace core
             engine_->initialize();
             
         }
-        const auto& getSelf()
-        {
-            return engine_->self_;
-        }
+        // const auto& getSelf()
+        // {
+        //     return engine_->self_;
+        // }
 
-        void getFactory()
-        {
-            return engine_->configMgr_->factory_->scanForMeasurementObjects(std::filesystem::current_path());
-        }
+        // void getFactory()
+        // {
+        //     return engine_->configMgr_->factory_->scanForMeasurementObjects(std::filesystem::current_path());
+        // }
 
     }
 ;}

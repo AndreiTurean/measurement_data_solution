@@ -14,6 +14,7 @@
 #include <core/Engine.hpp>
 #include <imgui_stdlib.h>
 #include "DataVisualizer.hpp"
+#include "DistributionVisualizer.hpp"
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -100,7 +101,9 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     std::shared_ptr<core::Engine> engine = std::make_shared<core::Engine>();
     engine->initialize();
-    auto configMgr = engine->getConfigurationManager();
+    
+    ConfigurationParser* configMgr = static_cast<ConfigurationParser*>(engine->getInterface("ConfigurationParser"));
+    ConfigurationFactory* configFactory = static_cast<ConfigurationFactory*>(engine->getInterface("ConfigurationFactory"));
     bool showConfigMgr = false;
     uint8_t instanceNb = 0;
     bool showMetrics = true;
@@ -134,11 +137,16 @@ int main(int, char**)
             ImGui::Text("Logging active: %s", engine->isLoggerActive() ? "Yes" : "No");
             if (ImGui::Button("Reset"))
             {
+                for(auto& vis : visualizerPool)
+                {
+                    vis->Reset();
+                }
+                visualizerPool.clear();
                 engine->terminate();
                 engine.reset();
                 engine = std::make_shared<core::Engine>();
                 engine->initialize();
-                configMgr = engine->getConfigurationManager();
+                configMgr = static_cast<ConfigurationParser*>(engine->getInterface("ConfigurationParser"));;
             }
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             if (ImGui::Button(showConfigMgr ? "Close configuration manager" : "Open configuration manager"))
@@ -166,7 +174,7 @@ int main(int, char**)
         {
             auto moList = configMgr->getMOsAddedInConfig();
             ImGui::Begin("Configuration manager stats", &showConfigMgrStats, ImGuiWindowFlags_AlwaysAutoResize);
-            ImGui::Text("Available measurement object from factory: %zu", configMgr->getFactorySize());
+            ImGui::Text("Available measurement object from factory: %zu", configFactory->getFactorySize());
             ImGui::Text("Object added in the configuration manger: %zu", moList.size());
             if (ImGui::Button(showConfigMgr ? "Close configuration manager" : "Open configuration manager"))
             {
@@ -181,17 +189,22 @@ int main(int, char**)
             ImGui::Begin("Configuration manager", &showConfigMgr, ImGuiWindowFlags_AlwaysAutoResize);
             if(ImGui::TreeNode("Available measurement object to be created"))
             {
-                for(auto object : configMgr->getFactoryObjectList())
+                for(auto object : configFactory->getFactoryMap())
                 {
-                    if (ImGui::Button(object.c_str()))
+                    if (ImGui::Button(object.first.c_str()))
                     {
-                        configMgr->createMeasurementObject(object.c_str(), instanceNb++);
+                        configMgr->createMeasurementObject(object.first, instanceNb++);
                     }
                 }
 
                 if(ImGui::Button("Raw Data Visualizer"))
                 {
                     visualizerPool.insert(std::make_shared<application::DataVisualizer>("Raw Data Visualizer", instanceNb++));
+                }
+                if(ImGui::Button("Data Distribution Visualizer"))
+                {
+                    visualizerPool.insert(std::make_shared<application::DistributionVisualizer>("Data Distribution Visualizer", instanceNb++,
+                        static_cast<DataDistributionStatistics*>(engine->getInterface("DataDistributionStatistics"))));
                 }
             
                 ImGui::TreePop();

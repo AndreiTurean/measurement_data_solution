@@ -20,7 +20,7 @@ namespace application
         name_ = name_ + " #" + std::to_string(instanceNb_);
     }
 
-    void DataVisualizer::Show(std::shared_ptr<core::ConfigurationManager>& cfgMgr)
+    void DataVisualizer::Show(ConfigurationParser* cfgMgr)
     {
         if (visible_)
         {
@@ -67,6 +67,11 @@ namespace application
            
             ImGui::End();
         }
+    }
+
+    void DataVisualizer::Reset()
+    {
+        registeredReceiverMgr_ = nullptr;
     }
 
     bool DataVisualizer::notify(DataPackageCPtr pkg)

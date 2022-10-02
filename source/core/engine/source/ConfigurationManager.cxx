@@ -29,9 +29,17 @@ namespace core
     void* ConfigurationManager::getInterface(const std::string& interfaceName)
     {
         if(interfaceName == "ConfigurationParser")
+        {
             return dynamic_cast<ConfigurationParser*>(this);
+        }
+        if(interfaceName == "ConfigurationFactory")
+        {
+            return std::dynamic_pointer_cast<ConfigurationFactory>(factory_).get();
+        }
         if(interfaceAccess_)
+        {
             return interfaceAccess_->getInterface(interfaceName);
+        }
         return nullptr;
     }
 
@@ -90,16 +98,6 @@ namespace core
     const MeasurementObjectList& ConfigurationManager::getMOsAddedInConfig()
     {
         return measurementObjectList_;
-    }
-
-    size_t ConfigurationManager::getFactorySize()
-    {
-        return factory_->getExtractedFuncSize();
-    }
-
-    std::vector<std::string> ConfigurationManager::getFactoryObjectList()
-    {
-        return factory_->getFactoryList();
     }
 
     bool ConfigurationManager::createMeasurementObject(MeasurementObjectPtr object)

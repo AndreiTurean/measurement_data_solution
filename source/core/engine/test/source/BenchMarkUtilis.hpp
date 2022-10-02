@@ -66,14 +66,16 @@ public:
 
     void ASSERT_MEM_CONSUMPTION_MO_CREATED(const std::string& name, uint8_t instancenb = 0)
     {
+        ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
+        ASSERT_TRUE(conf != nullptr);
         std::this_thread::sleep_for(1s);
         std::cout << "before mo creation: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
         size_t memBefore = core::statistics::getCurrentMemUsage();
-        ASSERT_TRUE(engine_->getConfigurationManager()->createMeasurementObject(name, instancenb));
+        ASSERT_TRUE(conf->createMeasurementObject(name, instancenb));
         std::this_thread::sleep_for(1s);
         std::cout << "after mo creation: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
         std::cout<<"memory used to created MO: "<< core::statistics::getCurrentMemUsage() - memBefore << " (bytes)" << std::endl;
-        engine_->getConfigurationManager()->clearMeasurementObjectList();
+        conf->clearMeasurementObjectList();
         size_t memoryWasted = core::statistics::getCurrentMemUsage() > memBefore ?core::statistics::getCurrentMemUsage() - memBefore : 0;
         std::this_thread::sleep_for(1s);
         std::cout<<"memory leaked while created MO: "<< memoryWasted << " (bytes)" << std::endl;
@@ -87,7 +89,9 @@ public:
 
     void CREATE_MO(const std::string& name, uint8_t instancenb = 0)
     {
-        ASSERT_TRUE(engine_->getConfigurationManager()->createMeasurementObject(name, instancenb));
+        ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
+        ASSERT_TRUE(conf != nullptr);
+        ASSERT_TRUE(conf->createMeasurementObject(name, instancenb));
     }
 };
 
@@ -114,7 +118,9 @@ public:
 
     void DUMMY_DISTRIBUTION()
     {
-        ASSERT_TRUE(BenchmarkUtilis::engine_->getConfigurationManager()->createMeasurementObject("libprocessors_raw_debug.so", 0));
+        ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
+        ASSERT_TRUE(conf != nullptr);
+        ASSERT_TRUE(conf->createMeasurementObject("libprocessors_raw_debug.so", 0));
         DataDistribution* dataDistributionPtr = static_cast<DataDistribution*>(BenchmarkUtilis::engine_->getInterface("DataDistribution"));
         DataPackagePtr pkg = std::make_shared<DataPackage>();
         uint64_t timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -126,7 +132,9 @@ public:
 
     void SMALL_PACKAGE_DISTRIBUTION()
     {
-        ASSERT_TRUE(BenchmarkUtilis::engine_->getConfigurationManager()->createMeasurementObject("libprocessors_raw_debug.so", 0));
+        ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
+        ASSERT_TRUE(conf != nullptr);
+        ASSERT_TRUE(conf->createMeasurementObject("libprocessors_raw_debug.so", 0));
         DataDistribution* dataDistributionPtr = static_cast<DataDistribution*>(BenchmarkUtilis::engine_->getInterface("DataDistribution"));
         DataPackagePtr pkg = std::make_shared<DataPackage>();
         pkg->cycle_ = 1;
