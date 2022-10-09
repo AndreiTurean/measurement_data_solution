@@ -7,21 +7,22 @@ using namespace std::chrono_literals;
 class CoreTestFramework : public ::testing::Test
 {
 protected:
-    std::shared_ptr<core::Engine> engine_;
+    core::Engine* engine_;
     size_t moSize_;
     
 public:
     virtual void SetUp() override
     {
         moSize_ = 0;
-        engine_ = std::make_shared<core::Engine>(EngineInitFlag::performance);
+        engine_ = new core::Engine(EngineInitFlag::performance);
         ASSERT_TRUE(engine_ != nullptr);
     }
     virtual void TearDown() override
     {
         ASSERT_TRUE(engine_ != nullptr);
         engine_->terminate();
-        engine_.reset();
+        delete engine_;
+        engine_ = nullptr;
         ASSERT_TRUE(engine_ == nullptr);
     }
 

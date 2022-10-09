@@ -11,7 +11,6 @@ namespace processors
         public MeasurementObject,
         public DataReceiverObject,
         public InterfaceAccess,
-        public std::enable_shared_from_this<RawDataProcessor>,
         public ReceiverSinkManager
     {
         InterfaceAccess* interfaceAccess_;
@@ -43,10 +42,7 @@ namespace processors
     };
 }
 
-extern "C" 
+extern "C" DUMMY_API MeasurementObjectPtr createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
 {
-    std::shared_ptr<MeasurementObject> DUMMY_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
-    {
-        return std::make_shared<processors::RawDataProcessor>(interfaceAccess, instanceNb, name);
-    }
+    return new processors::RawDataProcessor(interfaceAccess, instanceNb, name);
 }

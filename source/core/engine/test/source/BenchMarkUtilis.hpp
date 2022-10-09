@@ -12,7 +12,7 @@ using namespace std::chrono_literals;
 class BenchmarkUtilis : public ::testing::Test
 {
 protected:
-    std::shared_ptr<core::Engine> engine_;
+    core::Engine* engine_;
     size_t initialMemory_;
     
 public:
@@ -34,10 +34,10 @@ public:
         if(engine_)
         {
             engine_->terminate();
-            engine_.reset();
+            delete engine_;
         }
         std::cout << "before engine creation: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
-        engine_ = std::make_shared<core::Engine>(EngineInitFlag::performance);
+        engine_ = new core::Engine(EngineInitFlag::performance);
         
         ASSERT_TRUE(engine_ != nullptr);
         std::this_thread::sleep_for(1s);
@@ -49,7 +49,8 @@ public:
         std::cout << "before engine termination: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
         ASSERT_TRUE(engine_ != nullptr);
         engine_->terminate();
-        engine_.reset();
+        delete engine_;
+        engine_ = nullptr;
         ASSERT_TRUE(engine_ == nullptr);
         std::this_thread::sleep_for(1s);
         std::cout << "after engine termination: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
@@ -103,16 +104,16 @@ public:
         if(BenchmarkUtilis::engine_)
         {
             BenchmarkUtilis::engine_->terminate();
-            BenchmarkUtilis::engine_.reset();
+            delete BenchmarkUtilis::engine_;
         }
 
-        BenchmarkUtilis::engine_ = std::make_shared<core::Engine>(EngineInitFlag::performance);
+        BenchmarkUtilis::engine_ = new core::Engine(EngineInitFlag::performance);
     }
     virtual void TearDown() override
     {
         ASSERT_TRUE(BenchmarkUtilis::engine_ != nullptr);
         BenchmarkUtilis::engine_->terminate();
-        BenchmarkUtilis::engine_.reset();
+        delete BenchmarkUtilis::engine_;
         ASSERT_TRUE(BenchmarkUtilis::engine_ == nullptr);
     }
 

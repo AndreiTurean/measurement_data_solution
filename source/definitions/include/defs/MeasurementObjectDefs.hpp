@@ -45,9 +45,9 @@ struct MeasurementObject
 };
 
 //! MO pointer
-using MeasurementObjectPtr = std::shared_ptr<MeasurementObject>;
+using MeasurementObjectPtr = MeasurementObject*;
 //! List of measurement objects
-using MeasurementObjectList = std::list<std::shared_ptr<MeasurementObject>>;
+using MeasurementObjectList = std::list<MeasurementObjectPtr>;
 
 using PropertyTable = std::map<std::string, std::string>;
 using PropertyPair= std::pair<std::string, std::string>;

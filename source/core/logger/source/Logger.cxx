@@ -69,4 +69,9 @@ namespace core
     {
         return logRegister_.removeHandle(handle);
     }
+
+    Logger::~Logger()
+    {
+
+    }
 }

@@ -42,10 +42,7 @@ namespace transmitters
     };
 }
 
-extern "C"
+extern "C" DUMMY_API MeasurementObjectPtr createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
 {
-    std::shared_ptr<MeasurementObject> DUMMY_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
-    {
-        return std::make_shared<transmitters::Dummy>(interfaceAccess, instanceNb, name);
-    }
+    return new transmitters::Dummy(interfaceAccess, instanceNb, name);
 }

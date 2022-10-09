@@ -17,7 +17,7 @@ struct DataReceiverObject
 };
 
 //! Data processor pointer
-using DataReceiverObjectPtr = std::shared_ptr<DataReceiverObject>;
+using DataReceiverObjectPtr = DataReceiverObject*;
 
 /*!
 *   @brief Interface used to notify all the subject registered using registerToReceiverSink method to a processor

@@ -34,7 +34,7 @@ namespace core
                             return;
                         }
                         processedPackagesPerSecond_ = processedPackagesCnt_ + failedPackagesCnt_;
-                        maxProcessedPackagesPerSecond_ = std::max(maxProcessedPackagesPerSecond_, processedPackagesPerSecond_);
+                        //maxProcessedPackagesPerSecond_ = std::max(maxProcessedPackagesPerSecond_, processedPackagesPerSecond_);
         
                         processedPackagesCnt_ = 0;
                         failedPackagesCnt_ = 0;

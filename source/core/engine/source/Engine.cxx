@@ -8,7 +8,10 @@
 namespace core
 {
     Engine::Engine(EngineInitFlag flag):
-        dataDistributionPtr_(nullptr)
+        dataDistributionPtr_(nullptr),
+        self_(nullptr),
+        watchdog_(nullptr),
+        configMgr_(nullptr)
     {
         bool silentLog = false;
         bool silenceWatchDog = false;
@@ -35,8 +38,8 @@ namespace core
         default:
             break;
         }
-        logger_ = std::make_shared<Logger>(this, silentLog);
-        dataDistributionPtr_ = std::make_shared<DistributionManager>(this);
+        logger_ = new Logger(this, silentLog);
+        dataDistributionPtr_ = new DistributionManager(this);
 
         if(!silenceWatchDog)
         {
@@ -45,6 +48,7 @@ namespace core
     }
     Engine::~Engine()
     {
+        terminate();
     }
 
 
@@ -52,19 +56,19 @@ namespace core
     {
         if(ifcName == "LoggingInterface")
         {
-            return std::dynamic_pointer_cast<LoggingInterface>(logger_).get();
+            return dynamic_cast<LoggingInterface*>(logger_);
         }
         if(ifcName == "DataDistribution")
         {
-            return std::dynamic_pointer_cast<DataDistribution>(dataDistributionPtr_).get();
+            return dynamic_cast<DataDistribution*>(dataDistributionPtr_);
         }
         if(ifcName == "DistributionManagerPrivate")
         {
-            return std::dynamic_pointer_cast<DistributionManagerPrivate>(dataDistributionPtr_).get();
+            return dynamic_cast<DistributionManagerPrivate*>(dataDistributionPtr_);
         }
         if(ifcName == "ConfigurationParser")
         {
-            return std::dynamic_pointer_cast<ConfigurationParser>(configMgr_).get();
+            return dynamic_cast<ConfigurationParser*>(configMgr_);
         }
         if(ifcName == "ConfigurationFactory")
         {
@@ -82,8 +86,8 @@ namespace core
     {
         logger_->log("Started initialization");
         std::shared_ptr<MeasurementObjectFactory> factory = std::make_shared<MeasurementObjectFactory>(this);
-        configMgr_ = std::make_shared<ConfigurationManager>(this, factory);
-        self_ = std::make_shared<EngineObject>();
+        configMgr_ = new ConfigurationManager(this, factory);
+        self_ = new EngineObject();
         if(!configMgr_->createMeasurementObject(self_))
         {
             logger_->log("Failed to introduce Engine Object in the configuration manager", ENGINE_HANDLE, severity::critical);
@@ -100,12 +104,24 @@ namespace core
             delete watchdog_;
         }
         
-        dataDistributionPtr_->stopDistribution();
-        dataDistributionPtr_.reset();
-        configMgr_->terminate();
-        configMgr_.reset();
-        self_.reset();
-        logger_.reset();
+        if (dataDistributionPtr_)
+        {
+            dataDistributionPtr_->stopDistribution();
+            delete dataDistributionPtr_;
+            dataDistributionPtr_ = nullptr;
+        }
+
+        if (configMgr_)
+        {
+            configMgr_->terminate();
+            delete configMgr_;
+            configMgr_ = nullptr;
+        }
+        if (self_)
+        {
+            delete self_;
+            self_ = nullptr;
+        }
     }
 
     bool Engine::isWatchDogActive()

@@ -16,6 +16,7 @@ namespace core
         std::mutex loggingGuard_;
     public:
         Logger(InterfaceAccess* interfaceAccess, bool ignoreDebug = false);
+        virtual ~Logger();
         void* getInterface(const std::string& interfaceName) override;
         void save() override;
         void log(const char* message,const uint64_t handle  = 0, const severity sev = severity::debug) override;

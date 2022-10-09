@@ -1,8 +1,18 @@
 #include <core/MeasurementObjectFactory.hpp>
 #include <cstring>
+#include <algorithm>
+#include <string>
 
 
-typedef std::shared_ptr<MeasurementObject> createMO_t(InterfaceAccess*, const uint8_t, const char*);
+typedef MeasurementObjectPtr createMO(InterfaceAccess*, const uint8_t, const char*);
+
+std::string getExePath() 
+{
+    TCHAR buffer[MAX_PATH] = { 0 };
+    GetModuleFileName(NULL, buffer, MAX_PATH);
+    std::wstring::size_type pos = std::string(buffer).find_last_of("\\/");
+    return std::string(buffer).substr(0, pos);
+}
 namespace core
 {
     MeasurementObjectFactory::MeasurementObjectFactory(InterfaceAccess* interfaceAccess):
@@ -14,7 +24,9 @@ namespace core
         logger_ = static_cast<LoggingInterface*>(interfaceAccess_->getInterface("LoggingInterface"));
         logger_->subscribe("MeasurementObjectFactory", FACTORY_HANDLE);
         utilityLibrary_ = utility::LibUtility(logger_);
-        scanForMeasurementObjects(std::filesystem::current_path());
+
+        std::filesystem::path curr_path = std::filesystem::path(getExePath());
+        scanForMeasurementObjects(curr_path);
     }
     void MeasurementObjectFactory::scanForMeasurementObjects(std::filesystem::path path)
     {
@@ -24,21 +36,17 @@ namespace core
 
         for(auto& obj : std::filesystem::recursive_directory_iterator(path))
         {
-            if(strcmp(obj.path().extension().c_str(), ".so") != 0)
-            {
-                continue;
-            }
 
-            void* func = utilityLibrary_.openLibrary(obj.path().c_str(), "createMO");
+            void* func = utilityLibrary_.openLibrary(obj.path().string(), "createMO");
 
             if(func)
             {
-                objectsMap_[obj.path().filename().c_str()] = func;
+                objectsMap_[obj.path().filename().u8string()] = func;
             }
         }
     }
 
-    std::shared_ptr<MeasurementObject> MeasurementObjectFactory::createMeasurementObject(const std::string& name, uint8_t instanceNb)
+    MeasurementObject* MeasurementObjectFactory::createMeasurementObject(const std::string& name, uint8_t instanceNb)
     {
         if(name.empty())
         {
@@ -51,7 +59,7 @@ namespace core
             return nullptr;
         }
 
-        createMO_t* mo = (createMO_t*)it->second;
+        createMO* mo = (createMO*)it->second;
 
         if(!mo)
         {

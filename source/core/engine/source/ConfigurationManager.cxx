@@ -49,6 +49,11 @@ namespace core
         logger_->log(msg.c_str(), 1);
         size_t sizeBeforeCreate = measurementObjectList_.size();
         MeasurementObjectPtr mo = factory_->createMeasurementObject(name, instanceNb);
+        if (!mo)
+        {
+            return false;
+        }
+
         if(std::any_of(measurementObjectList_.begin(), measurementObjectList_.end(), [&](const MeasurementObjectPtr obj)
             { 
                 return obj->getHandle() == mo->getHandle();
@@ -69,7 +74,7 @@ namespace core
                 return false;
             }
             auto ifc = static_cast<DistributionManagerPrivate*>(interfaceAccess_->getInterface("DistributionManagerPrivate"));
-            ifc->addReceiver(std::dynamic_pointer_cast<DataReceiverObject>(mo));
+            ifc->addReceiver(dynamic_cast<DataReceiverObjectPtr>(mo));
         }
 
         measurementObjectList_.push_back(mo);

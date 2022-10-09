@@ -23,14 +23,13 @@ namespace core
     */
     class Engine :
         public InterfaceAccess,
-        public EngineInit,
-        public std::enable_shared_from_this<Engine>
+        public EngineInit
     {
-        std::shared_ptr<ConfigurationManager> configMgr_; //!< configuration manager pointer
-        std::shared_ptr<DistributionManager> dataDistributionPtr_; //!< data distribution manager pointer
-        std::shared_ptr<LoggingInterface> logger_; //!< logging interface
+        ConfigurationManager* configMgr_; //!< configuration manager pointer
+        DistributionManager* dataDistributionPtr_; //!< data distribution manager pointer
+        LoggingInterface* logger_; //!< logging interface
         metrics::Watchdog* watchdog_; //!< watchdog pointer
-        std::shared_ptr<EngineObject> self_; //!< mds engine mirror as measurement object.
+        EngineObject* self_; //!< mds engine mirror as measurement object.
         
     public:
         /*!

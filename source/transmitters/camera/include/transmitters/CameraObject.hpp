@@ -52,10 +52,7 @@ namespace transmitters
     };
 }
 
-extern "C"
+extern "C" CAMERA_API MeasurementObjectPtr createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
 {
-    std::shared_ptr<MeasurementObject> CAMERA_API createMO(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const char* name)
-    {
-        return std::make_shared<transmitters::CameraObject>(interfaceAccess, instanceNb, name);
-    }
+    return new transmitters::CameraObject(interfaceAccess, instanceNb, name);
 }
