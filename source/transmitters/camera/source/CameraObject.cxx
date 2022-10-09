@@ -135,4 +135,15 @@ namespace transmitters
             }
         }
     }
+
+    void CameraObject::initializeObject()
+    {
+        startProcessing();
+        delete this;
+    }
+    void CameraObject::terminateObject()
+    {
+        endProcessing();
+        delete this;
+    }
 }

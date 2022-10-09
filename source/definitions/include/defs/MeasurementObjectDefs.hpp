@@ -61,3 +61,15 @@ struct ExtendedMeasurementObject : public MeasurementObject
     virtual const PropertyTable& getPropertyTable() = 0;
     virtual const std::string& getPropertyEntryValue(const std::string& entry) = 0;
 };
+
+struct SystemObject : public MeasurementObject
+{
+    virtual void initializeSystemObject() = 0;
+    virtual void terminateSystemObject() = 0;
+};
+
+struct ObjectControl
+{
+    virtual void initializeObject() = 0;
+    virtual void terminateObject() = 0;
+};

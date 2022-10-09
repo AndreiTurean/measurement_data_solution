@@ -15,7 +15,8 @@ namespace transmitters
     class CAMERA_API CameraObject :
         public InterfaceAccess,
         public ExtendedMeasurementObject,
-        public DataSenderObject
+        public DataSenderObject,
+        public ObjectControl
     {
         DataDistributionPtr dataDistributinonPtr_;
         InterfaceAccess* interfaceAccess_;
@@ -35,7 +36,7 @@ namespace transmitters
         
     public:
         CameraObject(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const std::string& name);
-        ~CameraObject();
+        virtual ~CameraObject();
         virtual void* getInterface(const std::string& interfaceName) override;
         virtual void startProcessing() override;
         virtual void endProcessing() override;
@@ -49,6 +50,8 @@ namespace transmitters
         virtual void clearPropertyTable() override;
         virtual const PropertyTable& getPropertyTable() override;
         virtual const std::string& getPropertyEntryValue(const std::string& entry) override;
+        virtual void initializeObject() override;
+        virtual void terminateObject() override;
     };
 }
 

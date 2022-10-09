@@ -17,8 +17,8 @@
     #define TRANSMITTER_LIB_NAME "transmitters_dummy.dll"
     #define RECEIVER_LIB_NAME "processors_raw.dll"
     #else
-    #define TRANSMITTER_LIB_NAME "libtransmitters_dummy.so"
-    #define RECEIVER_LIB_NAME "libprocessors_raw.so"
+    #define TRANSMITTER_LIB_NAME "libtransmitters_dummy_debug.so"
+    #define RECEIVER_LIB_NAME "libprocessors_raw_debug.so"
     #endif // WIN32
 #endif // DEBUG
 

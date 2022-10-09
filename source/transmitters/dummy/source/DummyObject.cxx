@@ -15,27 +15,11 @@ namespace transmitters
     {
         handle_ = (instanceNb + 1);
         handle_ = handle_ << 0x8 << 0x8;
-
-        if(interfaceAccess_)
-        {
-            std::lock_guard<std::mutex> lock(processingMtx_);
-            dataDistributionInterface_ = static_cast<DataDistribution*>(interfaceAccess_->getInterface("DataDistribution"));
-            processingThread_ = std::make_unique<std::thread>(&transmitters::Dummy::doFSMProcessing, this);
-        }
     }
 
     Dummy::~Dummy()
     {
-        {
-            std::lock_guard<std::mutex> lock(processingMtx_);
-            isProcessing_ = false;
-        }
-
-        if(processingThread_)
-        {
-            processingThread_->join();
-            processingThread_.reset();
-        }
+        endProcessing();
         dataDistributionInterface_ = nullptr;
     }
     void Dummy::doFSMProcessing()
@@ -87,7 +71,6 @@ namespace transmitters
         {
             processingThread_->join();
             processingThread_.reset();
-            delete this;
         }
     }
     const uint8_t& Dummy::getInstanceNumber()
@@ -105,5 +88,15 @@ namespace transmitters
     const std::string& Dummy::getName()
     {
         return name_;
+    }
+
+    void Dummy::initializeObject()
+    {
+        startProcessing();
+    }
+    void Dummy::terminateObject()
+    {
+        endProcessing();
+        delete this;
     }
 }

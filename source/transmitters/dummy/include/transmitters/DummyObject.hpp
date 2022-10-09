@@ -13,7 +13,8 @@ namespace transmitters
     class DUMMY_API Dummy :
         public InterfaceAccess,
         public MeasurementObject,
-        public DataSenderObject
+        public DataSenderObject,
+        public ObjectControl
     {
         DataDistributionPtr dataDistributinonPtr_;
         InterfaceAccess* interfaceAccess_;
@@ -32,13 +33,16 @@ namespace transmitters
     public:
         Dummy(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const std::string& name);
         virtual ~Dummy();
-        virtual void* getInterface(const std::string& interfaceName);
-        virtual void startProcessing();
-        virtual void endProcessing();
-        virtual const uint8_t& getInstanceNumber();
-        virtual const uint64_t& getHandle();
-        virtual const MeasurementObjectType& getType();
-        virtual const std::string& getName();
+        virtual void* getInterface(const std::string& interfaceName) override;
+        virtual void startProcessing() override;
+        virtual void endProcessing() override;
+        virtual const uint8_t& getInstanceNumber() override;
+        virtual const uint64_t& getHandle() override;
+        virtual const MeasurementObjectType& getType() override;
+        virtual const std::string& getName() override;
+        virtual void initializeObject() override;
+        virtual void terminateObject() override;
+        
     };
 }
 

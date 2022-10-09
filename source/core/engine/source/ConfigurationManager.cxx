@@ -47,7 +47,7 @@ namespace core
     bool ConfigurationManager::createMeasurementObject(const std::string& name, uint8_t instanceNb)
     {
         std::string msg = "Started creating object: " + name + " with instance number: " + std::to_string((int) instanceNb);
-        logger_->log(msg.c_str(), 1);
+        logger_->log(msg.c_str(), CONFIGURATION_MGR_HANDLE);
         size_t sizeBeforeCreate = measurementObjectList_.size();
         MeasurementObjectPtr mo = factory_->createMeasurementObject(name, instanceNb);
         if (!mo)
@@ -60,13 +60,13 @@ namespace core
                 return obj->getHandle() == mo->getHandle();
             }))
         {
-            auto ifcTrans = dynamic_cast<DataSenderObject*>(mo);
+            auto objectControlIfc = dynamic_cast<ObjectControl*>(mo);
 
-            if (ifcTrans)
+            if (objectControlIfc)
             {
-                ifcTrans->endProcessing();
+                objectControlIfc->terminateObject();
             }
-            logger_->log("Failed to create duplicate measurement object", 1, severity::error);
+            logger_->log("Failed to create duplicate measurement object", CONFIGURATION_MGR_HANDLE, severity::error);
             return false;
         }
 
@@ -77,7 +77,7 @@ namespace core
                 return obj->getName() == mo->getName();
             }))
             {
-                logger_->log("There is already a identical processor present in the configuration manager", 1, severity::error);
+                logger_->log("There is already a identical processor present in the configuration manager", CONFIGURATION_MGR_HANDLE, severity::error);
                 
                 return false;
             }
@@ -87,8 +87,15 @@ namespace core
 
         measurementObjectList_.push_back(mo);
 
+        auto objectControlIfc = dynamic_cast<ObjectControl*>(mo);
+
+        if (objectControlIfc)
+        {
+            objectControlIfc->initializeObject();
+        }
+
         std::string msg2 = "Finished creating object: " + name + " with instance number: " + std::to_string((int) instanceNb);
-        logger_->log(msg2.c_str(), 1);
+        logger_->log(msg2.c_str(), CONFIGURATION_MGR_HANDLE);
         return sizeBeforeCreate < measurementObjectList_.size();
     }
     bool ConfigurationManager::removeMeasurementObject(const std::string& name)
@@ -120,7 +127,7 @@ namespace core
                 return obj->getHandle() == object->getHandle();
             }))
         {
-            logger_->log("Failed to create duplicate measurement object", 1, severity::error);
+            logger_->log("Failed to create duplicate measurement object", CONFIGURATION_MGR_HANDLE, severity::error);
             return false;
         }
 
@@ -145,20 +152,11 @@ namespace core
         {
             try
             {
-                auto ifcTrans = dynamic_cast<DataSenderObject*>(object);
+                auto objectControlIfc = dynamic_cast<ObjectControl*>(object);
 
-                if (ifcTrans)
+                if (objectControlIfc)
                 {
-                    ifcTrans->endProcessing();
-                }
-                else if (dynamic_cast<DataReceiverObjectPtr>(object))
-                {
-                    // do nothing
-                }
-                else
-                {
-                    if (object)
-                        delete object;
+                    objectControlIfc->terminateObject();
                 }
             }
             catch (const std::exception& ex)

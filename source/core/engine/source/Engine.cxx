@@ -109,11 +109,13 @@ namespace core
         
         if (dataDistributionPtr_)
         {
+            logger_->log("Stopping data distribution", ENGINE_HANDLE, severity::information);
             dataDistributionPtr_->stopDistribution();
         }
 
         if (configMgr_)
         {
+            logger_->log("Destroying configuration manager", ENGINE_HANDLE, severity::information);
             configMgr_->terminate();
             delete configMgr_;
             configMgr_ = nullptr;
@@ -121,9 +123,12 @@ namespace core
 
         if (dataDistributionPtr_)
         {
+            logger_->log("Destroying data distribution manager", ENGINE_HANDLE, severity::information);
             delete dataDistributionPtr_;
             dataDistributionPtr_ = nullptr;
         }
+
+        logger_->log("Finished engine termination");
     }
 
     bool Engine::isWatchDogActive()

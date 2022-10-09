@@ -11,7 +11,8 @@ namespace processors
         public MeasurementObject,
         public DataReceiverObject,
         public InterfaceAccess,
-        public ReceiverSinkManager
+        public ReceiverSinkManager,
+        public ObjectControl
     {
         InterfaceAccess* interfaceAccess_;
         uint8_t instanceNb_;
@@ -38,7 +39,8 @@ namespace processors
 
         virtual bool registerToReceiverSink(NotifySubjects* subject);
         virtual bool unregisterToReceiverSink(NotifySubjects* subject);
-        
+        virtual void initializeObject() override;
+        virtual void terminateObject() override;
     };
 }
 
