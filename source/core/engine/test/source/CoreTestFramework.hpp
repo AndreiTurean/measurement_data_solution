@@ -33,7 +33,10 @@ public:
     {
         ASSERT_TRUE(engine_ != nullptr);
         engine_->initialize();
-        ASSERT_TRUE(engine_->getInterface("ConfigurationParser") != nullptr);
+        ConfigurationParser* ifc = engine_->getInterface<ConfigurationParser>();
+        ASSERT_TRUE(ifc != nullptr);
+        ConfigurationParser* ifc2 = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
+        EXPECT_EQ(ifc, ifc2);
     }
 
     void ASSERT_MO_CREATED(const std::string& name, uint8_t instancenb = 0)

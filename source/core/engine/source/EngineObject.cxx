@@ -28,6 +28,11 @@ namespace core
         return name_;
     }
 
+    EngineObject::~EngineObject()
+    {
+        
+    }
+
     bool EngineObject::hasPropertyTable()
     {
         return !propertyTable_.empty();

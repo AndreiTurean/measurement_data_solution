@@ -8,10 +8,12 @@
 namespace core
 {
     Engine::Engine(EngineInitFlag flag):
+        configMgr_(nullptr),
         dataDistributionPtr_(nullptr),
-        self_(nullptr),
+        logger_(nullptr),
         watchdog_(nullptr),
-        configMgr_(nullptr)
+        self_(nullptr),
+        interfaceHelperPtr_(nullptr)
     {
         bool silentLog = false;
         bool silenceWatchDog = false;
@@ -38,6 +40,7 @@ namespace core
         default:
             break;
         }
+        interfaceHelperPtr_ = new core::utility::InterfaceUtilityHelper(this);
         logger_ = new Logger(this, silentLog);
         dataDistributionPtr_ = new DistributionManager(this);
 
@@ -54,27 +57,27 @@ namespace core
 
     void* Engine::getInterface(const std::string& ifcName)
     {
-        if(ifcName == "LoggingInterface")
+        if(ifcName.find("LoggingInterface") != std::string::npos)
         {
             return dynamic_cast<LoggingInterface*>(logger_);
         }
-        if(ifcName == "DataDistribution")
+        if(ifcName.find("DataDistribution") != std::string::npos)
         {
             return dynamic_cast<DataDistribution*>(dataDistributionPtr_);
         }
-        if(ifcName == "DistributionManagerPrivate")
+        if(ifcName.find("DistributionManagerPrivate") != std::string::npos)
         {
             return dynamic_cast<DistributionManagerPrivate*>(dataDistributionPtr_);
         }
-        if(ifcName == "ConfigurationParser")
+        if(ifcName.find("ConfigurationParser") != std::string::npos)
         {
             return dynamic_cast<ConfigurationParser*>(configMgr_);
         }
-        if(ifcName == "ConfigurationFactory")
+        if(ifcName.find("ConfigurationFactory") != std::string::npos)
         {
             return configMgr_->getInterface(ifcName);
         }
-        if(ifcName == "DataDistributionStatistics")
+        if(ifcName.find("DataDistributionStatistics") != std::string::npos)
         {
             return dataDistributionPtr_->getDistributionInterface();
         }

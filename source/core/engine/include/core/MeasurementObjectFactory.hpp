@@ -26,6 +26,8 @@ namespace core
         *   @param path Path where all the shared libraries will be loaded.
         */
         void scanForMeasurementObjects(std::filesystem::path path);
+
+        std::string getExePath();
     public:
         /*!
         *   @brief Measurement object factory constructor

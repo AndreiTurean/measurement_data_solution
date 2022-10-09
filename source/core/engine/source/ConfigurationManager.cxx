@@ -126,6 +126,11 @@ namespace core
         factory_.reset();
     }
 
+    ConfigurationManager::~ConfigurationManager()
+    {
+        
+    }
+
     void ConfigurationManager::clearMeasurementObjectList()
     {
         measurementObjectList_.clear();

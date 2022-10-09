@@ -8,8 +8,7 @@ namespace core
 {
     class Logger:
         public InterfaceAccess,
-        public LoggingInterface,
-        public std::enable_shared_from_this<Logger>
+        public LoggingInterface
     {
         InterfaceAccess* interfaceAccess_;
         bool ignoreDebugMsg_;

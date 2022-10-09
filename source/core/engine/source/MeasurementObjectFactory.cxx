@@ -6,13 +6,6 @@
 
 typedef MeasurementObjectPtr createMO(InterfaceAccess*, const uint8_t, const char*);
 
-std::string getExePath() 
-{
-    TCHAR buffer[MAX_PATH] = { 0 };
-    GetModuleFileName(NULL, buffer, MAX_PATH);
-    std::wstring::size_type pos = std::string(buffer).find_last_of("\\/");
-    return std::string(buffer).substr(0, pos);
-}
 namespace core
 {
     MeasurementObjectFactory::MeasurementObjectFactory(InterfaceAccess* interfaceAccess):
@@ -28,6 +21,19 @@ namespace core
         std::filesystem::path curr_path = std::filesystem::path(getExePath());
         scanForMeasurementObjects(curr_path);
     }
+
+    std::string MeasurementObjectFactory::getExePath() 
+    {
+#ifdef WIN32
+        TCHAR buffer[MAX_PATH] = { 0 };
+        GetModuleFileName(NULL, buffer, MAX_PATH);
+        std::wstring::size_type pos = std::string(buffer).find_last_of("\\/");
+        return std::string(buffer).substr(0, pos);
+#else
+        return std::filesystem::current_path().string();
+#endif
+    }
+
     void MeasurementObjectFactory::scanForMeasurementObjects(std::filesystem::path path)
     {
         
@@ -36,6 +42,12 @@ namespace core
 
         for(auto& obj : std::filesystem::recursive_directory_iterator(path))
         {
+            auto extension = obj.path().filename().extension().string();
+
+            if(extension != ".so" && extension != "dll")
+            {
+                continue;
+            }
 
             void* func = utilityLibrary_.openLibrary(obj.path().string(), "createMO");
 
@@ -52,6 +64,7 @@ namespace core
         {
             return nullptr;
         }
+
         auto it = objectsMap_.find(name.c_str());
 
         if(it == objectsMap_.end())

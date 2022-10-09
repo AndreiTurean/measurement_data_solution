@@ -20,6 +20,8 @@ namespace core
         */
         EngineObject();
 
+        virtual ~EngineObject();
+
         /*!
         *   @brief Get MDS engine measurement object instance number.
         *   @return engine instance number.

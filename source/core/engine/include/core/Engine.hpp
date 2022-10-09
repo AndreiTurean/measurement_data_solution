@@ -4,6 +4,7 @@
 #include <core/EngineObject.hpp>
 #include <core/DistributionManager.hpp>
 #include <core/ConfigurationManager.hpp>
+#include <utilis/InterfaceUtilityHelper.hpp>
 
 namespace core
 {
@@ -28,8 +29,9 @@ namespace core
         ConfigurationManager* configMgr_; //!< configuration manager pointer
         DistributionManager* dataDistributionPtr_; //!< data distribution manager pointer
         LoggingInterface* logger_; //!< logging interface
-        metrics::Watchdog* watchdog_; //!< watchdog pointer
+        metrics::Watchdog* watchdog_; //!< watchdog pointerinterfaceHelperPtr_
         EngineObject* self_; //!< mds engine mirror as measurement object.
+        core::utility::InterfaceUtilityHelper* interfaceHelperPtr_; //!< engine interface helper
         
     public:
         /*!
@@ -82,6 +84,11 @@ namespace core
         *   @return Return true if the data aquisition is performed, false otherwise.
         */
         bool isPerformingDataAquisition();
+
+        template <typename ifc> ifc* getInterface()
+        {
+            return interfaceHelperPtr_->getInteface<ifc>();
+        }
 
         friend class EngineUtilis; //!< for didactic usage only
     };
