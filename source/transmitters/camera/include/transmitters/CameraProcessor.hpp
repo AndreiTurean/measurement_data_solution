@@ -1,14 +1,17 @@
 #pragma once
 #include <defs/DataPackage.hpp>
-#include <queue>
-#include <functional>
+#include <transmitters/CameraAquisition.hpp>
+
 namespace transmitters
 {
     class CameraProcessor
     {
-        std::priority_queue<DataPackagePtr> queue_;
+        CameraAquisition caAPI_;
     public:
+        CameraProcessor();
+        DataPackageCPtr getPackage();
 
-        DataPackageCPtr getPackageFromQueue();
+    private:
+        VideoHeader* getRawPackage();
     };
 }

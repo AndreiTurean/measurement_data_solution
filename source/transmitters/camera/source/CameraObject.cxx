@@ -1,4 +1,9 @@
 #include <transmitters/CameraObject.hpp>
+#include <opencv2/opencv.hpp>
+
+using namespace cv;
+
+using namespace std::chrono_literals;
 
 namespace transmitters
 {
@@ -14,6 +19,7 @@ namespace transmitters
         handle_ = handle_ << 0x8 << 0x8;
 
         propertyTable_["Is processing"] = "No";
+        startProcessing();
     }
 
     CameraObject::~CameraObject()
@@ -121,12 +127,14 @@ namespace transmitters
                     break;
                 }
             }
-                DataPackageCPtr pkg = processor_->getPackageFromQueue(); //get the package from the camera processor.
+                DataPackageCPtr pkg = processor_->getPackage();
+
+                std::this_thread::sleep_for(10ms);
             {
                 std::lock_guard<std::mutex> lock(processingMtx_);
                 if(dataDistributionInterface_)
                 {
-                    dataDistributionInterface_->distributeData(pkg);
+                    //dataDistributionInterface_->distributeData(pkg);
                 }
                 else
                 {

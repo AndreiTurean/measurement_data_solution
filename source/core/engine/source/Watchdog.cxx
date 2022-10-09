@@ -13,9 +13,12 @@ namespace core
             while(alive_)
             {
                 uint64_t timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    
-                if(lastTimestamp_ != 0 && timestamp - lastTimestamp_ > 2000)
-                    logger_->log("Timegap detected. Possible hardware deadlock.", 3, severity::warning);
+                auto timeGap = timestamp - lastTimestamp_;
+                if(lastTimestamp_ != 0 &&  timeGap > 5000)
+                {
+                    std::string message = "Timegap detected. Possible hardware deadlock. Timegap delta of " + std::to_string(timeGap) + " microseconds";
+                    logger_->log(message.c_str(), WATCHDOG_HANDLE, severity::warning);
+                }
 
                 lastTimestamp_ = timestamp;
                 std::this_thread::sleep_for(1ms);

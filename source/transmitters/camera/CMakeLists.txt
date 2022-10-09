@@ -6,7 +6,8 @@ cmake_minimum_required(VERSION 3.22.0)
 
 add_library(${PROJECT_NAME}_camera MODULE
 source/CameraObject.cxx
-source/CameraProcessor.cxx)
+source/CameraProcessor.cxx
+source/CameraAquisition.cxx)
 
 #   add the include directory to our target as PUBLIC
 target_include_directories(${PROJECT_NAME}_camera PUBLIC
@@ -15,6 +16,10 @@ target_include_directories(${PROJECT_NAME}_camera PUBLIC
 )
 
 target_link_libraries(${PROJECT_NAME}_camera PRIVATE defs)
+
+find_package(OpenCV REQUIRED)
+target_include_directories(${PROJECT_NAME}_camera PRIVATE ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME}_camera PRIVATE ${OpenCV_LIBS})
 
 #######################################################
 # setting target compile feature/options              #

@@ -26,3 +26,10 @@ struct DataPackage
 using DataPackagePtr = std::shared_ptr<DataPackage>;
 //! Const data package pointer
 using DataPackageCPtr = std::shared_ptr<const DataPackage>;
+
+struct VideoHeader
+{
+    size_t sizeX;
+    size_t sizeY;
+    void* data;
+};

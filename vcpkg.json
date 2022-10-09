@@ -29,6 +29,12 @@
     {
       "name": "openmpi",
       "platform": "!windows"
+    },
+    {
+      "name": "opencv"
+    },
+    {
+      "name": "gtk"
     }
   ]
 }
