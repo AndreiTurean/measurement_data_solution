@@ -38,9 +38,11 @@ struct ConfigurationParser
     virtual const MeasurementObjectList& getMOsAddedInConfig() = 0;
 };
 
+using FactoryMap = std::map<const std::string, void*>;
+
 struct ConfigurationFactory
 {
-    virtual const std::map<const std::string, void*>& getFactoryMap() = 0;
+    virtual const FactoryMap& getFactoryMap() = 0;
 
     /*!
     *   @brief Get the factory size. The factory size represents the number of unique measurement

@@ -56,7 +56,7 @@ namespace core
                 handle = LoadLibrary(libName.c_str());
                 if (!handle)
                 {
-                    DWORD str(GetLastError());
+                    logger_->log("Failed to load library!", FACTORY_HANDLE, severity::debug);
                     return nullptr;
                 }
 #endif
@@ -64,9 +64,7 @@ namespace core
 #ifndef _WIN32
                 return dlsym(handle, libSymbols);
 #else
-                FARPROC add = GetProcAddress((HMODULE)handle, libSymbols);
-                DWORD str(GetLastError());
-                return add;
+                return GetProcAddress((HMODULE)handle, libSymbols);
 #endif     
             }
 

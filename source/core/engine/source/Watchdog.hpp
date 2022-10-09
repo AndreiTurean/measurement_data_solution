@@ -16,7 +16,7 @@ namespace core
             void watch();
         public:
             explicit Watchdog(LoggingInterface* loger);
-            ~Watchdog();
+            virtual ~Watchdog();
             Watchdog(const Watchdog& lhs) = delete;
             const Watchdog& operator=(const Watchdog& lhs) = delete;
         };

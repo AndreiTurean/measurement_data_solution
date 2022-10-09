@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <core/DistributionManager.hpp>
 #include <defs/Receiver.hpp>
+#include <defs/Transmitter.hpp>
 
 namespace core
 {
@@ -59,6 +60,12 @@ namespace core
                 return obj->getHandle() == mo->getHandle();
             }))
         {
+            auto ifcTrans = dynamic_cast<DataSenderObject*>(mo);
+
+            if (ifcTrans)
+            {
+                ifcTrans->endProcessing();
+            }
             logger_->log("Failed to create duplicate measurement object", 1, severity::error);
             return false;
         }
@@ -71,6 +78,7 @@ namespace core
             }))
             {
                 logger_->log("There is already a identical processor present in the configuration manager", 1, severity::error);
+                
                 return false;
             }
             auto ifc = static_cast<DistributionManagerPrivate*>(interfaceAccess_->getInterface("DistributionManagerPrivate"));
@@ -122,17 +130,42 @@ namespace core
 
     void ConfigurationManager::terminate()
     {
-        measurementObjectList_.clear();
+        clearMeasurementObjectList();
         factory_.reset();
     }
 
     ConfigurationManager::~ConfigurationManager()
     {
-        
+        clearMeasurementObjectList();
     }
 
     void ConfigurationManager::clearMeasurementObjectList()
     {
+        for (MeasurementObjectPtr object : measurementObjectList_)
+        {
+            try
+            {
+                auto ifcTrans = dynamic_cast<DataSenderObject*>(object);
+
+                if (ifcTrans)
+                {
+                    ifcTrans->endProcessing();
+                }
+                else if (dynamic_cast<DataReceiverObjectPtr>(object))
+                {
+                    // do nothing
+                }
+                else
+                {
+                    if (object)
+                        delete object;
+                }
+            }
+            catch (const std::exception& ex)
+            {
+                logger_->log(ex.what(), CONFIGURATION_MGR_HANDLE, severity::critical);
+            }
+        }
         measurementObjectList_.clear();
     }
 }

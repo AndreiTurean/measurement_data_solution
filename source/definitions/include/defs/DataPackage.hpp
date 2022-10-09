@@ -23,6 +23,6 @@ struct DataPackage
     void* payload; //!< pointer to where the package payload starts.
 };
 //! Data package pointer
-using DataPackagePtr = std::shared_ptr<DataPackage>;
+using DataPackagePtr = DataPackage*;
 //! Const data package pointer
-using DataPackageCPtr = std::shared_ptr<const DataPackage>;
+using DataPackageCPtr = const DataPackage*;

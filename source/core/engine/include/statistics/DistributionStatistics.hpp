@@ -74,12 +74,12 @@ namespace core
             virtual const uint64_t& getNumberOfProcessedPackagesPerSecond()
             {
                 std::lock_guard<std::mutex> lock2(updateMtx_);
-                return maxProcessedPackagesPerSecond_;
+                return processedPackagesPerSecond_;
             }
             virtual const uint64_t& getMaximumProcessedPackagesPerSecond()
             {
                 std::lock_guard<std::mutex> lock2(updateMtx_);
-                return maxProcessedPackagesPerSecond_;
+                return processedPackagesPerSecond_;
             }
         };
     }

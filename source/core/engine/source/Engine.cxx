@@ -61,13 +61,17 @@ namespace core
         {
             return dynamic_cast<LoggingInterface*>(logger_);
         }
+        if (ifcName.find("DataDistributionStatistics") != std::string::npos)
+        {
+            return dataDistributionPtr_->getDistributionInterface();
+        }
+        if (ifcName.find("DistributionManagerPrivate") != std::string::npos)
+        {
+            return dynamic_cast<DistributionManagerPrivate*>(dataDistributionPtr_);
+        }
         if(ifcName.find("DataDistribution") != std::string::npos)
         {
             return dynamic_cast<DataDistribution*>(dataDistributionPtr_);
-        }
-        if(ifcName.find("DistributionManagerPrivate") != std::string::npos)
-        {
-            return dynamic_cast<DistributionManagerPrivate*>(dataDistributionPtr_);
         }
         if(ifcName.find("ConfigurationParser") != std::string::npos)
         {
@@ -76,10 +80,6 @@ namespace core
         if(ifcName.find("ConfigurationFactory") != std::string::npos)
         {
             return configMgr_->getInterface(ifcName);
-        }
-        if(ifcName.find("DataDistributionStatistics") != std::string::npos)
-        {
-            return dataDistributionPtr_->getDistributionInterface();
         }
 
         return nullptr;
@@ -104,14 +104,12 @@ namespace core
         if(watchdog_)
         {
             logger_->log("Destroying the watchdog");
-            delete watchdog_;
+            //delete watchdog_;
         }
         
         if (dataDistributionPtr_)
         {
             dataDistributionPtr_->stopDistribution();
-            delete dataDistributionPtr_;
-            dataDistributionPtr_ = nullptr;
         }
 
         if (configMgr_)
@@ -120,10 +118,11 @@ namespace core
             delete configMgr_;
             configMgr_ = nullptr;
         }
-        if (self_)
+
+        if (dataDistributionPtr_)
         {
-            delete self_;
-            self_ = nullptr;
+            delete dataDistributionPtr_;
+            dataDistributionPtr_ = nullptr;
         }
     }
 
