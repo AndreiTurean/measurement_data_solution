@@ -25,7 +25,12 @@ target_link_libraries(${PROJECT_NAME} imgui::imgui)
 
 find_package(SDL2 CONFIG REQUIRED)
 target_link_libraries(${PROJECT_NAME} SDL2::SDL2)
-target_link_libraries(${PROJECT_NAME} SDL2::SDL2 SDL2::SDL2main SDL2::SDL2-static)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_link_libraries(${PROJECT_NAME} SDL2::SDL2main)
+else()
+    target_link_libraries(${PROJECT_NAME} SDL2::SDL2-static)
+endif()
 
 find_package(GLEW REQUIRED)
 target_link_libraries(${PROJECT_NAME} GLEW::GLEW)
