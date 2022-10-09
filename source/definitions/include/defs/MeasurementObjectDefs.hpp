@@ -45,9 +45,9 @@ struct MeasurementObject
 };
 
 //! MO pointer
-using MeasurementObjectPtr = std::shared_ptr<MeasurementObject>;
+using MeasurementObjectPtr = MeasurementObject*;
 //! List of measurement objects
-using MeasurementObjectList = std::list<std::shared_ptr<MeasurementObject>>;
+using MeasurementObjectList = std::list<MeasurementObjectPtr>;
 
 using PropertyTable = std::map<std::string, std::string>;
 using PropertyPair= std::pair<std::string, std::string>;
@@ -60,4 +60,16 @@ struct ExtendedMeasurementObject : public MeasurementObject
     virtual void clearPropertyTable() = 0;
     virtual const PropertyTable& getPropertyTable() = 0;
     virtual const std::string& getPropertyEntryValue(const std::string& entry) = 0;
+};
+
+struct SystemObject : public MeasurementObject
+{
+    virtual void initializeSystemObject() = 0;
+    virtual void terminateSystemObject() = 0;
+};
+
+struct ObjectControl
+{
+    virtual void initializeObject() = 0;
+    virtual void terminateObject() = 0;
 };

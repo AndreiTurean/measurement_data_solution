@@ -8,7 +8,12 @@
 namespace core
 {
     Engine::Engine(EngineInitFlag flag):
-        dataDistributionPtr_(nullptr)
+        configMgr_(nullptr),
+        dataDistributionPtr_(nullptr),
+        logger_(nullptr),
+        watchdog_(nullptr),
+        self_(nullptr),
+        interfaceHelperPtr_(nullptr)
     {
         bool silentLog = false;
         bool silenceWatchDog = false;
@@ -35,8 +40,9 @@ namespace core
         default:
             break;
         }
-        logger_ = std::make_shared<Logger>(this, silentLog);
-        dataDistributionPtr_ = std::make_shared<DistributionManager>(this);
+        interfaceHelperPtr_ = new core::utility::InterfaceUtilityHelper(this);
+        logger_ = new Logger(this, silentLog);
+        dataDistributionPtr_ = new DistributionManager(this);
 
         if(!silenceWatchDog)
         {
@@ -45,34 +51,35 @@ namespace core
     }
     Engine::~Engine()
     {
+        terminate();
     }
 
 
     void* Engine::getInterface(const std::string& ifcName)
     {
-        if(ifcName == "LoggingInterface")
+        if(ifcName.find("LoggingInterface") != std::string::npos)
         {
-            return std::dynamic_pointer_cast<LoggingInterface>(logger_).get();
+            return dynamic_cast<LoggingInterface*>(logger_);
         }
-        if(ifcName == "DataDistribution")
-        {
-            return std::dynamic_pointer_cast<DataDistribution>(dataDistributionPtr_).get();
-        }
-        if(ifcName == "DistributionManagerPrivate")
-        {
-            return std::dynamic_pointer_cast<DistributionManagerPrivate>(dataDistributionPtr_).get();
-        }
-        if(ifcName == "ConfigurationParser")
-        {
-            return std::dynamic_pointer_cast<ConfigurationParser>(configMgr_).get();
-        }
-        if(ifcName == "ConfigurationFactory")
-        {
-            return configMgr_->getInterface(ifcName);
-        }
-        if(ifcName == "DataDistributionStatistics")
+        if (ifcName.find("DataDistributionStatistics") != std::string::npos)
         {
             return dataDistributionPtr_->getDistributionInterface();
+        }
+        if (ifcName.find("DistributionManagerPrivate") != std::string::npos)
+        {
+            return dynamic_cast<DistributionManagerPrivate*>(dataDistributionPtr_);
+        }
+        if(ifcName.find("DataDistribution") != std::string::npos)
+        {
+            return dynamic_cast<DataDistribution*>(dataDistributionPtr_);
+        }
+        if(ifcName.find("ConfigurationParser") != std::string::npos)
+        {
+            return dynamic_cast<ConfigurationParser*>(configMgr_);
+        }
+        if(ifcName.find("ConfigurationFactory") != std::string::npos)
+        {
+            return configMgr_->getInterface(ifcName);
         }
 
         return nullptr;
@@ -82,8 +89,8 @@ namespace core
     {
         logger_->log("Started initialization");
         std::shared_ptr<MeasurementObjectFactory> factory = std::make_shared<MeasurementObjectFactory>(this);
-        configMgr_ = std::make_shared<ConfigurationManager>(this, factory);
-        self_ = std::make_shared<EngineObject>();
+        configMgr_ = new ConfigurationManager(this, factory);
+        self_ = new EngineObject();
         if(!configMgr_->createMeasurementObject(self_))
         {
             logger_->log("Failed to introduce Engine Object in the configuration manager", ENGINE_HANDLE, severity::critical);
@@ -97,15 +104,31 @@ namespace core
         if(watchdog_)
         {
             logger_->log("Destroying the watchdog");
-            delete watchdog_;
+            //delete watchdog_;
         }
         
-        dataDistributionPtr_->stopDistribution();
-        dataDistributionPtr_.reset();
-        configMgr_->terminate();
-        configMgr_.reset();
-        self_.reset();
-        logger_.reset();
+        if (dataDistributionPtr_)
+        {
+            logger_->log("Stopping data distribution", ENGINE_HANDLE, severity::information);
+            dataDistributionPtr_->stopDistribution();
+        }
+
+        if (configMgr_)
+        {
+            logger_->log("Destroying configuration manager", ENGINE_HANDLE, severity::information);
+            configMgr_->terminate();
+            delete configMgr_;
+            configMgr_ = nullptr;
+        }
+
+        if (dataDistributionPtr_)
+        {
+            logger_->log("Destroying data distribution manager", ENGINE_HANDLE, severity::information);
+            delete dataDistributionPtr_;
+            dataDistributionPtr_ = nullptr;
+        }
+
+        logger_->log("Finished engine termination");
     }
 
     bool Engine::isWatchDogActive()
@@ -120,5 +143,10 @@ namespace core
     bool Engine::isPerformingDataAquisition()
     {
         return dataDistributionPtr_->isDistributing();
+    }
+
+    core::utility::InterfaceUtilityHelper* Engine::getInterfaceHelper()
+    {
+        return interfaceHelperPtr_;
     }
 }

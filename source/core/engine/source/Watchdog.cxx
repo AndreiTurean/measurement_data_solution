@@ -22,7 +22,7 @@ namespace core
             }
         }
 
-        Watchdog::Watchdog(std::shared_ptr<LoggingInterface> logger):
+        Watchdog::Watchdog(LoggingInterface* logger):
             logger_(logger),
             alive_(true),
             lastTimestamp_(0)

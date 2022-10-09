@@ -5,6 +5,7 @@
 #include <chrono>
 #include <thread>
 #include <malloc.h>
+#include "CoreTestFramework.hpp"
 
 #pragma warning(disable: 4996)
 
@@ -12,7 +13,7 @@ using namespace std::chrono_literals;
 class BenchmarkUtilis : public ::testing::Test
 {
 protected:
-    std::shared_ptr<core::Engine> engine_;
+    core::Engine* engine_;
     size_t initialMemory_;
     
 public:
@@ -34,10 +35,10 @@ public:
         if(engine_)
         {
             engine_->terminate();
-            engine_.reset();
+            delete engine_;
         }
         std::cout << "before engine creation: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
-        engine_ = std::make_shared<core::Engine>(EngineInitFlag::performance);
+        engine_ = new core::Engine(EngineInitFlag::performance);
         
         ASSERT_TRUE(engine_ != nullptr);
         std::this_thread::sleep_for(1s);
@@ -49,7 +50,8 @@ public:
         std::cout << "before engine termination: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
         ASSERT_TRUE(engine_ != nullptr);
         engine_->terminate();
-        engine_.reset();
+        delete engine_;
+        engine_ = nullptr;
         ASSERT_TRUE(engine_ == nullptr);
         std::this_thread::sleep_for(1s);
         std::cout << "after engine termination: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
@@ -103,16 +105,16 @@ public:
         if(BenchmarkUtilis::engine_)
         {
             BenchmarkUtilis::engine_->terminate();
-            BenchmarkUtilis::engine_.reset();
+            delete BenchmarkUtilis::engine_;
         }
 
-        BenchmarkUtilis::engine_ = std::make_shared<core::Engine>(EngineInitFlag::performance);
+        BenchmarkUtilis::engine_ = new core::Engine(EngineInitFlag::performance);
     }
     virtual void TearDown() override
     {
         ASSERT_TRUE(BenchmarkUtilis::engine_ != nullptr);
         BenchmarkUtilis::engine_->terminate();
-        BenchmarkUtilis::engine_.reset();
+        delete BenchmarkUtilis::engine_;
         ASSERT_TRUE(BenchmarkUtilis::engine_ == nullptr);
     }
 
@@ -120,9 +122,9 @@ public:
     {
         ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
         ASSERT_TRUE(conf != nullptr);
-        ASSERT_TRUE(conf->createMeasurementObject("libprocessors_raw_debug.so", 0));
+        ASSERT_TRUE(conf->createMeasurementObject(RECEIVER_LIB_NAME, 0));
         DataDistribution* dataDistributionPtr = static_cast<DataDistribution*>(BenchmarkUtilis::engine_->getInterface("DataDistribution"));
-        DataPackagePtr pkg = std::make_shared<DataPackage>();
+        DataPackagePtr pkg = new DataPackage();
         uint64_t timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         dataDistributionPtr->distributeData(pkg);
 
@@ -134,9 +136,9 @@ public:
     {
         ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
         ASSERT_TRUE(conf != nullptr);
-        ASSERT_TRUE(conf->createMeasurementObject("libprocessors_raw_debug.so", 0));
+        ASSERT_TRUE(conf->createMeasurementObject(RECEIVER_LIB_NAME, 0));
         DataDistribution* dataDistributionPtr = static_cast<DataDistribution*>(BenchmarkUtilis::engine_->getInterface("DataDistribution"));
-        DataPackagePtr pkg = std::make_shared<DataPackage>();
+        DataPackagePtr pkg = new DataPackage();
         pkg->cycle_ = 1;
         pkg->payload = static_cast<void*>(new uint8_t[1024]);
         pkg->size = 1;

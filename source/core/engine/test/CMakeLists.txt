@@ -14,6 +14,5 @@ target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gmock GTest::gtest GTe
 gtest_add_tests(TARGET ${PROJECT_NAME}_test)
 
 target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME}::${PROJECT_NAME}) #link against the alias library
-target_compile_options(${PROJECT_NAME}_test PRIVATE -Wdeprecated-declarations)
 
 install(TARGETS ${PROJECT_NAME}_test)

@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.22.0)
 #   line interface
 #   https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html
 
-add_library(logger STATIC
+add_library(logger
 source/Logger.cxx
 source/LogRegistry.cxx)
 

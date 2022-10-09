@@ -14,10 +14,9 @@ namespace core
     *   @brief Measurement object factory definition
     */
     class MeasurementObjectFactory:
-        public ConfigurationFactory,
-        public std::enable_shared_from_this<MeasurementObjectFactory>
+        public ConfigurationFactory
     {
-        std::map<const std::string, void*> objectsMap_; //!< map containing factory defs and their shared library name
+        FactoryMap objectsMap_; //!< map containing factory defs and their shared library name
         core::utility::LibUtility utilityLibrary_; //!< utility library instance. Use to achive cross platform compilation
         InterfaceAccess* interfaceAccess_; //!< interface access pointer
         LoggingInterface* logger_;
@@ -27,6 +26,8 @@ namespace core
         *   @param path Path where all the shared libraries will be loaded.
         */
         void scanForMeasurementObjects(std::filesystem::path path);
+
+        std::string getExePath();
     public:
         /*!
         *   @brief Measurement object factory constructor
@@ -41,7 +42,7 @@ namespace core
         *   @param instanceNb Measurement object instance number.
         *   @return Return a shared instance of the measurement object.
         */
-        std::shared_ptr<MeasurementObject> createMeasurementObject(const std::string& name, uint8_t instanceNb);
+        MeasurementObjectPtr createMeasurementObject(const std::string& name, uint8_t instanceNb);
 
         /*!
         *   @brief Method use to retreive the factory func size.
@@ -49,6 +50,6 @@ namespace core
         */
         virtual size_t getFactorySize() override;
 
-        virtual const std::map<const std::string, void*>& getFactoryMap() override;
+        virtual const FactoryMap& getFactoryMap() override;
     };
 }

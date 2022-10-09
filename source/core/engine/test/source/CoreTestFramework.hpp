@@ -3,25 +3,45 @@
 #include <gtest/gtest.h>
 #include <chrono>
 #include <thread>
+
+#ifdef _DEBUG
+    #ifdef WIN32
+    #define TRANSMITTER_LIB_NAME "transmitters_dummy_debug.dll"
+    #define RECEIVER_LIB_NAME "processors_raw_debug.dll"
+    #else
+    #define TRANSMITTER_LIB_NAME "libtransmitters_dummy_debug.so"
+    #define RECEIVER_LIB_NAME "libprocessors_raw_debug.so"
+    #endif // WIN32
+#else
+    #ifdef WIN32
+    #define TRANSMITTER_LIB_NAME "transmitters_dummy.dll"
+    #define RECEIVER_LIB_NAME "processors_raw.dll"
+    #else
+    #define TRANSMITTER_LIB_NAME "libtransmitters_dummy_debug.so"
+    #define RECEIVER_LIB_NAME "libprocessors_raw_debug.so"
+    #endif // WIN32
+#endif // DEBUG
+
 using namespace std::chrono_literals;
 class CoreTestFramework : public ::testing::Test
 {
 protected:
-    std::shared_ptr<core::Engine> engine_;
+    core::Engine* engine_;
     size_t moSize_;
     
 public:
     virtual void SetUp() override
     {
         moSize_ = 0;
-        engine_ = std::make_shared<core::Engine>(EngineInitFlag::performance);
+        engine_ = new core::Engine(EngineInitFlag::no_metrics);
         ASSERT_TRUE(engine_ != nullptr);
     }
     virtual void TearDown() override
     {
         ASSERT_TRUE(engine_ != nullptr);
         engine_->terminate();
-        engine_.reset();
+        delete engine_;
+        engine_ = nullptr;
         ASSERT_TRUE(engine_ == nullptr);
     }
 
@@ -32,7 +52,10 @@ public:
     {
         ASSERT_TRUE(engine_ != nullptr);
         engine_->initialize();
-        ASSERT_TRUE(engine_->getInterface("ConfigurationParser") != nullptr);
+        ConfigurationParser* ifc = engine_->getInterface<ConfigurationParser>();
+        ASSERT_TRUE(ifc != nullptr);
+        ConfigurationParser* ifc2 = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
+        EXPECT_EQ(ifc, ifc2);
     }
 
     void ASSERT_MO_CREATED(const std::string& name, uint8_t instancenb = 0)
@@ -88,7 +111,7 @@ public:
     
     void ASSERT_DATA_IS_PROCESSED()
     {
-        bool skip = true;
+        bool skip = false;
         if(skip)
         {
             return;
@@ -96,10 +119,12 @@ public:
 
         int i = 0 ;
         std::this_thread::sleep_for(1s);
-        while(i< 500)
+        while(i< 50)
         {
-            std::this_thread::sleep_for(100ms);
+            std::this_thread::sleep_for(1000ms);
             DataDistributionStatistics* stat = static_cast<DataDistributionStatistics*>(engine_->getInterface("DataDistributionStatistics"));
+            if (!stat)
+                break;
             auto r1 = stat->getNumberOfProcessedPackagesPerSecond();
             auto r2 = stat->getMaximumProcessedPackagesPerSecond();
 

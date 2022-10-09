@@ -51,12 +51,12 @@ namespace transmitters
         {
             processingThread_->join();
             processingThread_.reset();
-            propertyTable_["Is processing"] = "Yes";
+            propertyTable_["Is processing"] = "No";
             propertyTable_["Status"] = "Ok";
         }
         else
         {
-            propertyTable_["Is processing"] = "No";
+            propertyTable_["Is processing"] = "No known";
             propertyTable_["Status"] = "Critical";
         }
     }
@@ -134,5 +134,16 @@ namespace transmitters
                 }
             }
         }
+    }
+
+    void CameraObject::initializeObject()
+    {
+        startProcessing();
+        delete this;
+    }
+    void CameraObject::terminateObject()
+    {
+        endProcessing();
+        delete this;
     }
 }

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <core/DistributionManager.hpp>
 #include <defs/Receiver.hpp>
+#include <defs/Transmitter.hpp>
 
 namespace core
 {
@@ -46,15 +47,26 @@ namespace core
     bool ConfigurationManager::createMeasurementObject(const std::string& name, uint8_t instanceNb)
     {
         std::string msg = "Started creating object: " + name + " with instance number: " + std::to_string((int) instanceNb);
-        logger_->log(msg.c_str(), 1);
+        logger_->log(msg.c_str(), CONFIGURATION_MGR_HANDLE);
         size_t sizeBeforeCreate = measurementObjectList_.size();
         MeasurementObjectPtr mo = factory_->createMeasurementObject(name, instanceNb);
+        if (!mo)
+        {
+            return false;
+        }
+
         if(std::any_of(measurementObjectList_.begin(), measurementObjectList_.end(), [&](const MeasurementObjectPtr obj)
             { 
                 return obj->getHandle() == mo->getHandle();
             }))
         {
-            logger_->log("Failed to create duplicate measurement object", 1, severity::error);
+            auto objectControlIfc = dynamic_cast<ObjectControl*>(mo);
+
+            if (objectControlIfc)
+            {
+                objectControlIfc->terminateObject();
+            }
+            logger_->log("Failed to create duplicate measurement object", CONFIGURATION_MGR_HANDLE, severity::error);
             return false;
         }
 
@@ -65,17 +77,25 @@ namespace core
                 return obj->getName() == mo->getName();
             }))
             {
-                logger_->log("There is already a identical processor present in the configuration manager", 1, severity::error);
+                logger_->log("There is already a identical processor present in the configuration manager", CONFIGURATION_MGR_HANDLE, severity::error);
+                
                 return false;
             }
             auto ifc = static_cast<DistributionManagerPrivate*>(interfaceAccess_->getInterface("DistributionManagerPrivate"));
-            ifc->addReceiver(std::dynamic_pointer_cast<DataReceiverObject>(mo));
+            ifc->addReceiver(dynamic_cast<DataReceiverObjectPtr>(mo));
         }
 
         measurementObjectList_.push_back(mo);
 
+        auto objectControlIfc = dynamic_cast<ObjectControl*>(mo);
+
+        if (objectControlIfc)
+        {
+            objectControlIfc->initializeObject();
+        }
+
         std::string msg2 = "Finished creating object: " + name + " with instance number: " + std::to_string((int) instanceNb);
-        logger_->log(msg2.c_str(), 1);
+        logger_->log(msg2.c_str(), CONFIGURATION_MGR_HANDLE);
         return sizeBeforeCreate < measurementObjectList_.size();
     }
     bool ConfigurationManager::removeMeasurementObject(const std::string& name)
@@ -107,7 +127,7 @@ namespace core
                 return obj->getHandle() == object->getHandle();
             }))
         {
-            logger_->log("Failed to create duplicate measurement object", 1, severity::error);
+            logger_->log("Failed to create duplicate measurement object", CONFIGURATION_MGR_HANDLE, severity::error);
             return false;
         }
 
@@ -117,12 +137,33 @@ namespace core
 
     void ConfigurationManager::terminate()
     {
-        measurementObjectList_.clear();
+        clearMeasurementObjectList();
         factory_.reset();
+    }
+
+    ConfigurationManager::~ConfigurationManager()
+    {
+        clearMeasurementObjectList();
     }
 
     void ConfigurationManager::clearMeasurementObjectList()
     {
+        for (MeasurementObjectPtr object : measurementObjectList_)
+        {
+            try
+            {
+                auto objectControlIfc = dynamic_cast<ObjectControl*>(object);
+
+                if (objectControlIfc)
+                {
+                    objectControlIfc->terminateObject();
+                }
+            }
+            catch (const std::exception& ex)
+            {
+                logger_->log(ex.what(), CONFIGURATION_MGR_HANDLE, severity::critical);
+            }
+        }
         measurementObjectList_.clear();
     }
 }

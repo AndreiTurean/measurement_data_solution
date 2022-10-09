@@ -14,8 +14,7 @@ namespace core
     */
     class ConfigurationManager :
         public ConfigurationParser,
-        public InterfaceAccess,
-        public std::enable_shared_from_this<ConfigurationManager>
+        public InterfaceAccess
     {
         InterfaceAccess* interfaceAccess_; //!< interface access pointer
         MeasurementObjectList measurementObjectList_; //!< list containing all the measurement objects.
@@ -28,6 +27,8 @@ namespace core
         *   @param factory  shared instance of the measurement object factory that is responsible for creating the measurement objects.
         */
         ConfigurationManager(InterfaceAccess* interfaceAccess, std::shared_ptr<MeasurementObjectFactory> factory);
+
+        virtual ~ConfigurationManager();
 
         /*!
         *   @brief Loads a predefined configuration. Information for the engine will be taken from here and all the system components will be reseted.

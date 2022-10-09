@@ -41,24 +41,30 @@ namespace core
             *   @param libSymbols library simbol name
             *   @return a pointer to library function
             */
-            void* openLibrary(const char* libName, const char* libSymbols)
+            void* openLibrary(const std::string& libName, const char* libSymbols)
             {
                 void* handle = nullptr;
 #ifndef _WIN32
-                handle = dlopen(libName, RTLD_NOW);
+                handle = dlopen(libName.c_str(), RTLD_NOW);
 
                 if(!handle)
                 {
                     logger_->log(dlerror(), FACTORY_HANDLE, severity::debug);
+                    return nullptr;
                 }
 #else
-                handle = LoadLibrary(libName);
+                handle = LoadLibrary(libName.c_str());
+                if (!handle)
+                {
+                    logger_->log("Failed to load library!", FACTORY_HANDLE, severity::debug);
+                    return nullptr;
+                }
 #endif
                 handleContainer_.push_back(handle);
 #ifndef _WIN32
                 return dlsym(handle, libSymbols);
 #else
-                return (void *)GetProcAddress((HMODULE)handle, libSymbols);
+                return GetProcAddress((HMODULE)handle, libSymbols);
 #endif     
             }
 

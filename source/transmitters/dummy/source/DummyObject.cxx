@@ -15,27 +15,11 @@ namespace transmitters
     {
         handle_ = (instanceNb + 1);
         handle_ = handle_ << 0x8 << 0x8;
-
-        if(interfaceAccess_)
-        {
-            std::lock_guard<std::mutex> lock(processingMtx_);
-            dataDistributionInterface_ = reinterpret_cast<DataDistribution*>(interfaceAccess_->getInterface("DataDistribution"));
-            processingThread_ = std::make_unique<std::thread>(&transmitters::Dummy::doFSMProcessing, this);
-        }
     }
 
     Dummy::~Dummy()
     {
-        {
-            std::lock_guard<std::mutex> lock(processingMtx_);
-            isProcessing_ = false;
-        }
-
-        if(processingThread_)
-        {
-            processingThread_->join();
-            processingThread_.reset();
-        }
+        endProcessing();
         dataDistributionInterface_ = nullptr;
     }
     void Dummy::doFSMProcessing()
@@ -43,21 +27,21 @@ namespace transmitters
         uint64_t cnt = 0;
         while(true)
         {
+            DataPackagePtr pkg = new DataPackage(); //create a blank package
+            pkg->sourceHandle = this->handle_;
+            pkg->size = 1024;
+            pkg->timestamp = cnt++;
             {
                 std::lock_guard<std::mutex> lock(processingMtx_);
+                
                 if(!isProcessing_)
                 {
                     break;
                 }
-
-                DataPackagePtr pkg = std::make_shared<DataPackage>(); //create a blank package
-                pkg->sourceHandle = this->handle_;
-                pkg->size = 1024;
-                pkg->timestamp = cnt++;
                 dataDistributionInterface_->distributeData(pkg);
-                pkg.reset();
+                
             }
-
+            delete pkg;
             std::this_thread::sleep_for(1ms);
         }
     }
@@ -104,5 +88,15 @@ namespace transmitters
     const std::string& Dummy::getName()
     {
         return name_;
+    }
+
+    void Dummy::initializeObject()
+    {
+        startProcessing();
+    }
+    void Dummy::terminateObject()
+    {
+        endProcessing();
+        delete this;
     }
 }

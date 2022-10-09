@@ -8,14 +8,14 @@ namespace core
 {
     class Logger:
         public InterfaceAccess,
-        public LoggingInterface,
-        public std::enable_shared_from_this<Logger>
+        public LoggingInterface
     {
         InterfaceAccess* interfaceAccess_;
         bool ignoreDebugMsg_;
         std::mutex loggingGuard_;
     public:
         Logger(InterfaceAccess* interfaceAccess, bool ignoreDebug = false);
+        virtual ~Logger();
         void* getInterface(const std::string& interfaceName) override;
         void save() override;
         void log(const char* message,const uint64_t handle  = 0, const severity sev = severity::debug) override;

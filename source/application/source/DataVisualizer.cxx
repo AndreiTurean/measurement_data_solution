@@ -37,7 +37,7 @@ namespace application
 
                             if(ImGui::Button(processorName_.c_str()))
                             {
-                                auto ifc = std::dynamic_pointer_cast<InterfaceAccess>(mo);
+                                auto ifc = dynamic_cast<InterfaceAccess*>(mo);
                                 registeredReceiverMgr_ = static_cast<ReceiverSinkManager*>(ifc->getInterface("ReceiverSinkManager"));
 
                                 if(!registeredReceiverMgr_)
