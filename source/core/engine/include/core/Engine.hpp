@@ -90,6 +90,8 @@ namespace core
             return interfaceHelperPtr_->getInteface<ifc>();
         }
 
+        core::utility::InterfaceUtilityHelper* getInterfaceHelper();
+
         friend class EngineUtilis; //!< for didactic usage only
     };
 }

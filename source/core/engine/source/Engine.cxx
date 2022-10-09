@@ -140,4 +140,9 @@ namespace core
     {
         return dataDistributionPtr_->isDistributing();
     }
+
+    core::utility::InterfaceUtilityHelper* Engine::getInterfaceHelper()
+    {
+        return interfaceHelperPtr_;
+    }
 }
