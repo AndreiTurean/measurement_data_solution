@@ -5,6 +5,7 @@
 #include <chrono>
 #include <thread>
 #include <malloc.h>
+#include "CoreTestFramework.hpp"
 
 #pragma warning(disable: 4996)
 
@@ -121,9 +122,9 @@ public:
     {
         ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
         ASSERT_TRUE(conf != nullptr);
-        ASSERT_TRUE(conf->createMeasurementObject("libprocessors_raw_debug.so", 0));
+        ASSERT_TRUE(conf->createMeasurementObject(RECEIVER_LIB_NAME, 0));
         DataDistribution* dataDistributionPtr = static_cast<DataDistribution*>(BenchmarkUtilis::engine_->getInterface("DataDistribution"));
-        DataPackagePtr pkg = std::make_shared<DataPackage>();
+        DataPackagePtr pkg = new DataPackage();
         uint64_t timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         dataDistributionPtr->distributeData(pkg);
 
@@ -135,9 +136,9 @@ public:
     {
         ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
         ASSERT_TRUE(conf != nullptr);
-        ASSERT_TRUE(conf->createMeasurementObject("libprocessors_raw_debug.so", 0));
+        ASSERT_TRUE(conf->createMeasurementObject(RECEIVER_LIB_NAME, 0));
         DataDistribution* dataDistributionPtr = static_cast<DataDistribution*>(BenchmarkUtilis::engine_->getInterface("DataDistribution"));
-        DataPackagePtr pkg = std::make_shared<DataPackage>();
+        DataPackagePtr pkg = new DataPackage();
         pkg->cycle_ = 1;
         pkg->payload = static_cast<void*>(new uint8_t[1024]);
         pkg->size = 1;

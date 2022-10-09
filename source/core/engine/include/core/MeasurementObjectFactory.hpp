@@ -16,7 +16,7 @@ namespace core
     class MeasurementObjectFactory:
         public ConfigurationFactory
     {
-        std::map<const std::string, void*> objectsMap_; //!< map containing factory defs and their shared library name
+        FactoryMap objectsMap_; //!< map containing factory defs and their shared library name
         core::utility::LibUtility utilityLibrary_; //!< utility library instance. Use to achive cross platform compilation
         InterfaceAccess* interfaceAccess_; //!< interface access pointer
         LoggingInterface* logger_;
@@ -50,6 +50,6 @@ namespace core
         */
         virtual size_t getFactorySize() override;
 
-        virtual const std::map<const std::string, void*>& getFactoryMap() override;
+        virtual const FactoryMap& getFactoryMap() override;
     };
 }

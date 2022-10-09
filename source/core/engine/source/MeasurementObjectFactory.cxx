@@ -44,7 +44,7 @@ namespace core
         {
             auto extension = obj.path().filename().extension().string();
 
-            if(extension != ".so" && extension != "dll")
+            if(extension != ".so" && extension != ".dll")
             {
                 continue;
             }
@@ -87,7 +87,7 @@ namespace core
         return objectsMap_.size();
     }
 
-    const std::map<const std::string, void*>& MeasurementObjectFactory::getFactoryMap()
+    const FactoryMap& MeasurementObjectFactory::getFactoryMap()
     {
         return objectsMap_;
     }

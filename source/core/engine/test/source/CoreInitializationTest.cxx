@@ -15,39 +15,39 @@ TEST_F(CoreTestFramework, FactoryPoolShouldBeGreated)
 TEST_F(CoreTestFramework, ConfigurationManagerShouldBeVisible)
 {
     ASSERT_ENGINE_INITIALIZED();
-    ASSERT_MO_CREATED("transmitters_dummy_debug.dll");
+    ASSERT_MO_CREATED(TRANSMITTER_LIB_NAME);
 }
 
 TEST_F(CoreTestFramework, EngineShouldBeAbleToCreateMultipleMOs)
 {
     ASSERT_ENGINE_INITIALIZED();
-    ASSERT_MULTIPLE_MOS_CREATED("transmitters_dummy_debug.dll", 10);
+    ASSERT_MULTIPLE_MOS_CREATED(TRANSMITTER_LIB_NAME, 10);
 }
 
 TEST_F(CoreTestFramework, ConfigurationManagerShouldAcceptOnlyUniqueMos)
 {
     ASSERT_ENGINE_INITIALIZED();
-    ASSERT_CREATE_DUPLICATE_MO("transmitters_dummy_debug.dll");
+    ASSERT_CREATE_DUPLICATE_MO(TRANSMITTER_LIB_NAME);
 }
 
 TEST_F(CoreTestFramework, ConfigurationManagerShouldBeVisibleForReceivers)
 {
     ASSERT_ENGINE_INITIALIZED();
-    ASSERT_MO_CREATED("processors_raw_debug.dll");
+    ASSERT_MO_CREATED(RECEIVER_LIB_NAME);
 }
 
 TEST_F(CoreTestFramework, ReceiversShouldAcceptData)
 {
     ASSERT_ENGINE_INITIALIZED();
-    ASSERT_MULTIPLE_MOS_CREATED("transmitters_dummy_debug.dll", 5);
-    ASSERT_MO_CREATED("processors_raw_debug.dll");
+    ASSERT_MULTIPLE_MOS_CREATED(TRANSMITTER_LIB_NAME, 5);
+    ASSERT_MO_CREATED(RECEIVER_LIB_NAME);
     ASSERT_DATA_IS_PROCESSED();
 }
 
 TEST_F(CoreTestFramework, ReceiversShouldAcceptDataUnderStress)
 {
     ASSERT_ENGINE_INITIALIZED();
-    ASSERT_MULTIPLE_MOS_CREATED("transmitters_dummy_debug.dll", 255);
-    ASSERT_MO_CREATED("processors_raw_debug.dll");
+    ASSERT_MULTIPLE_MOS_CREATED(TRANSMITTER_LIB_NAME, 255);
+    ASSERT_MO_CREATED(RECEIVER_LIB_NAME);
     ASSERT_DATA_IS_PROCESSED();
 }

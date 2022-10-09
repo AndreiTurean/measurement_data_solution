@@ -31,7 +31,7 @@ namespace transmitters
         
     public:
         Dummy(InterfaceAccess* interfaceAccess, const uint8_t instanceNb, const std::string& name);
-        ~Dummy();
+        virtual ~Dummy();
         virtual void* getInterface(const std::string& interfaceName);
         virtual void startProcessing();
         virtual void endProcessing();
