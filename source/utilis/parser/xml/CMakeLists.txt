@@ -1,11 +1,8 @@
 cmake_minimum_required(VERSION 3.22.0)
 
 #######################################################
-# project definition                                  #
+# target definition                                   #
 #######################################################
-#   setting the project name, version and language
-#project(dummy VERSION 0.1.0)
-
 #   add a normal library and control how it is build using the BUILD_SHARED_LIB flag from the command
 #   line interface
 #   https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html

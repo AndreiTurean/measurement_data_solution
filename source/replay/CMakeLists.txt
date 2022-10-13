@@ -4,16 +4,19 @@ cmake_minimum_required(VERSION 3.22.0)
 # project definition                                  #
 #######################################################
 #   setting the project name, version and language
-project(player VERSION 0.1.0)
+project(player     VERSION 0.1.0
+	DESCRIPTION "Project description"
+	HOMEPAGE_URL "https://github.com/AndreiTurean/measurement_data_solution"
+	LANGUAGES CXX)
 
 #   add a normal library and control how it is build using the BUILD_SHARED_LIB flag from the command
 #   line interface
 #   https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html
 
 add_library(${PROJECT_NAME}
-source/Player.cxx
-source/PlayerDataBuffer.cxx
-source/PlayerObject.cxx)
+	source/Player.cxx
+	source/PlayerDataBuffer.cxx
+	source/PlayerObject.cxx)
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
@@ -39,9 +42,9 @@ endif()
 
 
 target_compile_options(${PROJECT_NAME} PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/W4> # setting the W4 warning level for MSVC compilers
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror> # setting the Wall for other compilers
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fms-extensions>
+	$<$<CXX_COMPILER_ID:MSVC>:/W4> # setting the W4 warning level for MSVC compilers
+	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror> # setting the Wall for other compilers
+	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fms-extensions>
 )
 
 #######################################################

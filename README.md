@@ -1,5 +1,7 @@
 # MDS readme
 
+The project was delivered under the following [license.](./LICENSE)
+
 ## Project scope and objective
 
 ### The scope of the project is to learn the following:

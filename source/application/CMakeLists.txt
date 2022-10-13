@@ -4,16 +4,19 @@ cmake_minimum_required(VERSION 3.22.0)
 # project definition                                  #
 #######################################################
 #   setting the project name, version and language
-project(mds VERSION 0.1.0)
+project(mds     VERSION 0.1.0
+	DESCRIPTION "Project description"
+	HOMEPAGE_URL "https://github.com/AndreiTurean/measurement_data_solution"
+	LANGUAGES CXX)
 
 #   add a normal library and control how it is build using the BUILD_SHARED_LIB flag from the command
 #   line interface
 #   https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html
 
 add_executable(${PROJECT_NAME}
-source/main.cxx
-source/DataVisualizer.cxx
-source/DistributionVisualizer.cxx
+	source/main.cxx
+	source/DataVisualizer.cxx
+	source/DistributionVisualizer.cxx
 )
 
 target_link_libraries(${PROJECT_NAME} defs)
