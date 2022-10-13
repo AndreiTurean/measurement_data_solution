@@ -1838,7 +1838,7 @@ LATEX_MAKEINDEX_CMD    = makeindex
 # The default value is: NO.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
 
-COMPACT_LATEX          = NO
+COMPACT_LATEX          = YES
 
 # The PAPER_TYPE tag can be used to set the paper type that is used by the
 # printer.
@@ -1950,7 +1950,7 @@ LATEX_HIDE_INDICES     = NO
 # The default value is: NO.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
 
-LATEX_SOURCE_CODE      = NO
+LATEX_SOURCE_CODE      = YES
 
 # The LATEX_BIB_STYLE tag can be used to specify the style to use for the
 # bibliography, e.g. plainnat, or ieeetr. See
@@ -1966,7 +1966,7 @@ LATEX_BIB_STYLE        = plain
 # The default value is: NO.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
 
-LATEX_TIMESTAMP        = NO
+LATEX_TIMESTAMP        = YES
 
 # The LATEX_EMOJI_DIRECTORY tag is used to specify the (relative or absolute)
 # path from which the emoji images will be read. If a relative path is entered,
@@ -1974,7 +1974,7 @@ LATEX_TIMESTAMP        = NO
 # LATEX_OUTPUT directory will be used.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
 
-LATEX_EMOJI_DIRECTORY  =
+LATEX_EMOJI_DIRECTORY  = YES
 
 #---------------------------------------------------------------------------
 # Configuration options related to the RTF output
@@ -1985,7 +1985,7 @@ LATEX_EMOJI_DIRECTORY  =
 # readers/editors.
 # The default value is: NO.
 
-GENERATE_RTF           = NO
+GENERATE_RTF           = YES
 
 # The RTF_OUTPUT tag is used to specify where the RTF docs will be put. If a
 # relative path is entered the value of OUTPUT_DIRECTORY will be put in front of
@@ -2001,7 +2001,7 @@ RTF_OUTPUT             = rtf
 # The default value is: NO.
 # This tag requires that the tag GENERATE_RTF is set to YES.
 
-COMPACT_RTF            = NO
+COMPACT_RTF            = YES
 
 # If the RTF_HYPERLINKS tag is set to YES, the RTF that is generated will
 # contain hyperlink fields. The RTF file will contain links (just like the HTML
@@ -2040,7 +2040,7 @@ RTF_EXTENSIONS_FILE    =
 # The default value is: NO.
 # This tag requires that the tag GENERATE_RTF is set to YES.
 
-RTF_SOURCE_CODE        = NO
+RTF_SOURCE_CODE        = YES
 
 #---------------------------------------------------------------------------
 # Configuration options related to the man page output

@@ -1,23 +1,20 @@
 cmake_minimum_required(VERSION 3.22.0)
 
 #######################################################
-# project definition                                  #
+# target definition                                   #
 #######################################################
-#   setting the project name, version and language
-#project(core VERSION 0.1.0)
-
 #   add a normal library and control how it is build using the BUILD_SHARED_LIB flag from the command
 #   line interface
 #   https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html
 
 add_library(${PROJECT_NAME}
 source/ConfigurationManager.cxx
-source/DistributionManager.cxx
-source/Engine.cxx
-source/MeasurementObjectFactory.cxx
-source/Watchdog.cxx
-source/Watchdog.hpp
-source/EngineObject.cxx
+	source/DistributionManager.cxx
+	source/Engine.cxx
+	source/MeasurementObjectFactory.cxx
+	source/Watchdog.cxx
+	source/Watchdog.hpp
+	source/EngineObject.cxx
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
