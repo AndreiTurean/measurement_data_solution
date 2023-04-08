@@ -1,5 +1,5 @@
+#include "pch.h"
 #include <core/DistributionManager.hpp>
-#include <iostream>
 
 namespace core
 {
@@ -87,5 +87,15 @@ namespace core
     DataDistributionStatistics* DistributionManager::getDistributionInterface()
     {
         return statistics_;
+    }
+
+    void DistributionManager::show()
+    {
+
+    }
+
+    void DistributionManager::hide()
+    {
+
     }
 }

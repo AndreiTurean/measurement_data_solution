@@ -8,13 +8,14 @@ cmake_minimum_required(VERSION 3.22.0)
 #   https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html
 
 add_library(${PROJECT_NAME}
-source/ConfigurationManager.cxx
+  source/ConfigurationManager.cxx
 	source/DistributionManager.cxx
 	source/Engine.cxx
 	source/MeasurementObjectFactory.cxx
 	source/Watchdog.cxx
 	source/Watchdog.hpp
 	source/EngineObject.cxx
+  source/pch.h
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -32,6 +33,21 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} utilis::utilis::xml)
 target_link_libraries(${PROJECT_NAME} defs)
 target_link_libraries(${PROJECT_NAME} logger::logger)
+find_package(imgui)
+target_link_libraries(${PROJECT_NAME} imgui::imgui)
+find_package(SDL2 CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} SDL2::SDL2)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_link_libraries(${PROJECT_NAME} SDL2::SDL2main)
+else()
+    target_link_libraries(${PROJECT_NAME} SDL2::SDL2-static)
+endif()
+
+find_package(GLEW REQUIRED)
+target_link_libraries(${PROJECT_NAME} GLEW::GLEW)
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} glfw)
 
 #######################################################
 # setting target compile feature/options              #

@@ -1,8 +1,5 @@
+#include "pch.h"
 #include <core/MeasurementObjectFactory.hpp>
-#include <cstring>
-#include <algorithm>
-#include <string>
-
 
 typedef MeasurementObjectPtr createMO(InterfaceAccess*, const uint8_t, const char*);
 
@@ -90,5 +87,13 @@ namespace core
     const FactoryMap& MeasurementObjectFactory::getFactoryMap()
     {
         return objectsMap_;
+    }
+
+    void MeasurementObjectFactory::show()
+    {
+    }
+
+    void MeasurementObjectFactory::hide()
+    {
     }
 }

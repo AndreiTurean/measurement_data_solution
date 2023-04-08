@@ -24,7 +24,8 @@ namespace core
     */
     class Engine :
         public InterfaceAccess,
-        public EngineInit
+        public EngineInit,
+        public GuiControlIfc
     {
         ConfigurationManager* configMgr_; //!< configuration manager pointer
         DistributionManager* dataDistributionPtr_; //!< data distribution manager pointer
@@ -90,8 +91,20 @@ namespace core
             return interfaceHelperPtr_->getInteface<ifc>();
         }
 
+        /*!
+        *   @brief Method that retreive the engine interface helper.
+        *   @return Return a pointer to the engine interface helper.
+        */
         core::utility::InterfaceUtilityHelper* getInterfaceHelper();
 
-        friend class EngineUtilis; //!< for didactic usage only
+        /*!
+        *  @brief Method used to show the gui object.
+        */
+        void show() override;
+
+        /*!
+        *  @brief Method used to hide the gui object.
+        */
+        void hide() override;
     };
 }

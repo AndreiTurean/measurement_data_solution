@@ -14,7 +14,8 @@ namespace core
     */
     class ConfigurationManager :
         public ConfigurationParser,
-        public InterfaceAccess
+        public InterfaceAccess,
+        public GuiControlIfc
     {
         InterfaceAccess* interfaceAccess_; //!< interface access pointer
         MeasurementObjectList measurementObjectList_; //!< list containing all the measurement objects.
@@ -81,14 +82,18 @@ namespace core
         void clearMeasurementObjectList();
 
         /*!
-        *   @brief Return the name of all the loaded measurement object list.
-        *   @todo To be deleted and replaced with a return of the factory map reference since there
-        * is no need to populate a vector and to call twice the copy contructor. This cannot scale with
-        * a big vector that contain big data strings.
-        *   @return a copy of the measurement object that passed the dlopen.
+        *   @brief Method used to terminate the configuration manager. This will terminate all the measurement objects
         */
-        std::vector<std::string> getFactoryObjectList();
         void terminate();
-        friend class EngineUtilis; //!< Frined class used for creating a module test
+
+        /*!
+        *  @brief Method used to show the gui object.
+        */
+        void show() override;
+
+        /*!
+        *  @brief Method used to hide the gui object.
+        */
+        void hide() override;
     };
 }

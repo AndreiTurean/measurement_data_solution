@@ -1,7 +1,7 @@
 #include <core/Engine.hpp>
+#include "pch.h"
 #include <core/MeasurementObjectFactory.hpp>
 #include <core/DistributionManager.hpp>
-#include <cstring>
 #include <Logger.hpp>
 #include "Watchdog.hpp"
 
@@ -148,5 +148,17 @@ namespace core
     core::utility::InterfaceUtilityHelper* Engine::getInterfaceHelper()
     {
         return interfaceHelperPtr_;
+    }
+
+    void Engine::show()
+    {
+        configMgr_->show();
+        dataDistributionPtr_->show();
+    }
+
+    void Engine::hide()
+    {
+        configMgr_->hide();
+        dataDistributionPtr_->hide();
     }
 }

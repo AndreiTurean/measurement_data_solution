@@ -34,7 +34,8 @@ namespace core
         public InterfaceAccess,
         public DataDistribution,
         public DistributionManagerPrivate,
-        public std::enable_shared_from_this<DistributionManager>
+        public std::enable_shared_from_this<DistributionManager>,
+        public GuiControlIfc
     {
         InterfaceAccess* interfaceAccess_; //!< interface access to parent interfaces
         std::set<DataReceiverObjectPtr> receiversPool_; //!< receivers pool that contains measuremet ojbect that can receive and process data
@@ -94,6 +95,19 @@ namespace core
         */
         bool isDistributing();
 
+        /*!
+        *   @brief Method that retreive the data distribution statistics interface.
+        */
         DataDistributionStatistics* getDistributionInterface();
+
+        /*!
+        *  @brief Method used to show the gui object.
+        */
+        void show() override;
+
+        /*!
+        *  @brief Method used to hide the gui object.
+        */
+        void hide() override;
     };
 }

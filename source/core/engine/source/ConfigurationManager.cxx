@@ -1,3 +1,4 @@
+#include "pch.h"
 #include <core/ConfigurationManager.hpp>
 #include <XmlWrapper.hpp>
 #include <algorithm>
@@ -165,5 +166,13 @@ namespace core
             }
         }
         measurementObjectList_.clear();
+    }
+
+    void ConfigurationManager::show()
+    {
+    }
+
+    void ConfigurationManager::hide()
+    {
     }
 }

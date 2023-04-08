@@ -14,7 +14,8 @@ namespace core
     *   @brief Measurement object factory definition
     */
     class MeasurementObjectFactory:
-        public ConfigurationFactory
+        public ConfigurationFactory,
+        public GuiControlIfc
     {
         FactoryMap objectsMap_; //!< map containing factory defs and their shared library name
         core::utility::LibUtility utilityLibrary_; //!< utility library instance. Use to achive cross platform compilation
@@ -50,6 +51,20 @@ namespace core
         */
         virtual size_t getFactorySize() override;
 
+        /*!
+        *   @brief Method use to retreive the factory map.
+        *   @return Return factory map.
+        */
         virtual const FactoryMap& getFactoryMap() override;
+
+        /*!
+        *  @brief Method used to show the gui object.
+        */
+        void show() override;
+
+        /*!
+        *  @brief Method used to hide the gui object.
+        */
+        void hide() override;
     };
 }

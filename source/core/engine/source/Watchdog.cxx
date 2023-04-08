@@ -1,3 +1,4 @@
+#include "pch.h"
 #include <chrono>
 #include <cstdint>
 #include "Watchdog.hpp"

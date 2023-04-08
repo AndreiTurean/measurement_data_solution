@@ -1,4 +1,6 @@
+#include "pch.h"
 #include <core/EngineObject.hpp>
+
 
 namespace core
 {
@@ -65,5 +67,22 @@ namespace core
     const std::string& EngineObject::getPropertyEntryValue(const std::string& entry)
     {
         return propertyTable_[entry];
+    }
+
+    void EngineObject::show()
+    {
+        ImGui::Begin(name_.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+
+        for(const auto& entry : propertyTable_)
+        {
+            ImGui::Text("%s : %s", entry.first.c_str(), entry.second.c_str());
+        }
+
+        ImGui::End();
+    }
+
+    void EngineObject::hide()
+    {
+
     }
 }
