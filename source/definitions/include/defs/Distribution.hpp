@@ -18,8 +18,20 @@ struct DataDistribution
 //! Data distribution pointer
 using DataDistributionPtr = std::shared_ptr<DataDistribution>;
 
+/*!
+* @brief Inteface used to retreive data distribution statistics
+*/
 struct DataDistributionStatistics
 {
+    /*!
+    *  @brief Method used to retreive the number of processed packages per second.
+    *  @return Return the number of processed packages per second.
+    */
     virtual const uint64_t& getNumberOfProcessedPackagesPerSecond() = 0;
+
+    /*!
+    * @brief Method used to retreive the maximum number of processed packages per second.
+    * @return Return the maximum number of processed packages per second. 
+    */
     virtual const uint64_t& getMaximumProcessedPackagesPerSecond() = 0;
 };

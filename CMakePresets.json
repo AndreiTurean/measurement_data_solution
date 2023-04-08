@@ -179,8 +179,8 @@
       }
     },
     {
-      "name": "mscv-windows-debug",
-      "displayName": "mscv-windows-debug-x64",
+      "name": "msvc-windows-debug",
+      "displayName": "msvc-windows-debug-x64",
       "description": "Sets MSVC generator, compilers, x64 architecture, build and install directory, debug build type",
       "generator": "Visual Studio 17 2022",
       "binaryDir": "${sourceDir}/build/${presetName}",
@@ -204,8 +204,8 @@
       }
     },
     {
-      "name": "mscv-windows-release",
-      "displayName": "mscv-windows-release-x64",
+      "name": "msvc-windows-release",
+      "displayName": "msvc-windows-release-x64",
       "description": "Sets MSVC generator, compilers, x64 architecture, build and install directory, release build type",
       "generator": "Visual Studio 17 2022",
       "binaryDir": "${sourceDir}/build/${presetName}",
@@ -275,8 +275,8 @@
       }
     },
     {
-      "name": "mscv-shared-windows-release",
-      "displayName": "mscv-shared-windows-release-x64",
+      "name": "msvc-shared-windows-release",
+      "displayName": "msvc-shared-windows-release-x64",
       "description": "Sets MSVC generator, compilers, x64 architecture, build and install directory, release build type",
       "generator": "Visual Studio 17 2022",
       "binaryDir": "${sourceDir}/build/${presetName}",
@@ -302,16 +302,16 @@
   ],
   "buildPresets": [
     {
-      "name": "mscv-build-preset-debug",
+      "name": "msvc-build-preset-debug",
       "description": "",
-      "displayName": "mscv-windows-build-preset-debug",
-      "configurePreset": "mscv-windows-debug"
+      "displayName": "msvc-windows-build-preset-debug",
+      "configurePreset": "msvc-windows-debug"
     },
     {
-      "name": "mscv-build-preset-release",
+      "name": "msvc-build-preset-release",
       "description": "",
-      "displayName": "mscv-windows-build-preset-release",
-      "configurePreset": "mscv-windows-release"
+      "displayName": "msvc-windows-build-preset-release",
+      "configurePreset": "msvc-windows-release"
     },
     {
       "name": "ninja-build-preset-debug",
@@ -362,24 +362,24 @@
       "configurePreset": "ninja-shared-linux-debug"
     },
     {
-      "name": "mscv-build-shared-preset-release",
+      "name": "msvc-build-shared-preset-release",
       "description": "",
-      "displayName": "mscv-build-shared-preset-release",
-      "configurePreset": "mscv-shared-windows-release"
+      "displayName": "msvc-build-shared-preset-release",
+      "configurePreset": "msvc-shared-windows-release"
     },
     {
-      "name": "mscv-build-shared-preset-debug",
+      "name": "msvc-build-shared-preset-debug",
       "description": "",
-      "displayName": "mscv-build-shared-preset-debug",
-      "configurePreset": "mscv-shared-windows-release"
+      "displayName": "msvc-build-shared-preset-debug",
+      "configurePreset": "msvc-shared-windows-release"
     }
   ],
   "testPresets": [
     {
-      "name": "mscv-test-preset-debug",
+      "name": "msvc-test-preset-debug",
       "description": "",
-      "displayName": "mscv-test-preset-debug-x64",
-      "configurePreset": "mscv-windows-debug",
+      "displayName": "msvc-test-preset-debug-x64",
+      "configurePreset": "msvc-windows-debug",
       "output": { "outputOnFailure": true },
       "execution": {
         "noTestsAction": "error",
@@ -387,10 +387,10 @@
       }
     },
     {
-      "name": "mscv-test-preset-release",
+      "name": "msvc-test-preset-release",
       "description": "",
-      "displayName": "mscv-test-preset-release-x64",
-      "configurePreset": "mscv-windows-release",
+      "displayName": "msvc-test-preset-release-x64",
+      "configurePreset": "msvc-windows-release",
       "output": { "outputOnFailure": true },
       "execution": {
         "noTestsAction": "error",
@@ -453,16 +453,16 @@
       }
     },
     {
-      "name": "mscv-test-shared-preset-release",
+      "name": "msvc-test-shared-preset-release",
       "description": "",
-      "displayName": "mscv-test-shared-preset-release",
-      "configurePreset": "mscv-shared-windows-release"
+      "displayName": "msvc-test-shared-preset-release",
+      "configurePreset": "msvc-shared-windows-release"
     },
     {
-      "name": "mscv-test-shared-preset-debug",
+      "name": "msvc-test-shared-preset-debug",
       "description": "",
-      "displayName": "mscv-test-shared-preset-debug",
-      "configurePreset": "mscv-shared-windows-release"
+      "displayName": "msvc-test-shared-preset-debug",
+      "configurePreset": "msvc-shared-windows-release"
     }
   ]
 }
