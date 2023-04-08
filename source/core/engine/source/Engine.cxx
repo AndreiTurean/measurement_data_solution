@@ -154,11 +154,15 @@ namespace core
     {
         configMgr_->show();
         dataDistributionPtr_->show();
+        watchdog_->show();
+        self_->show();
     }
 
     void Engine::hide()
     {
         configMgr_->hide();
         dataDistributionPtr_->hide();
+        watchdog_->hide();
+        self_->hide();
     }
 }

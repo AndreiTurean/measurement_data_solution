@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "Watchdog.hpp"
 #include <defs/MdsInterface.hpp>
+#include <inttypes.h>
 
 namespace core
 {
@@ -13,12 +14,17 @@ namespace core
         {
             while(alive_)
             {
-                uint64_t timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    
-                if(lastTimestamp_ != 0 && timestamp - lastTimestamp_ > 2000)
-                    logger_->log("Timegap detected. Possible hardware deadlock.", 3, severity::warning);
+                {
+                    std::lock_guard<std::mutex> lock(timestampGuard_);
+                    uint64_t timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+                    deltaTimestamp_ = timestamp - lastTimestamp_;
 
-                lastTimestamp_ = timestamp;
+                    if(lastTimestamp_ != 0 && deltaTimestamp_ > 50000)
+                        logger_->log("Timegap detected. Possible hardware deadlock.", 3, severity::warning);
+
+                    lastTimestamp_ = timestamp;
+                }
+
                 std::this_thread::sleep_for(1ms);
             }
         }
@@ -36,6 +42,68 @@ namespace core
             alive_ = false;
             watchThread_->join();
             watchThread_.reset();
+        }
+
+        void Watchdog::show()
+        {
+            std::lock_guard<std::mutex> lock(timestampGuard_);
+            ImGui::Begin("Watchdog", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::Text("Last timestamp: %" PRIu64, lastTimestamp_);
+            ImGui::Text("Delta timestamp: %" PRIu64, deltaTimestamp_);
+            ImGui::End();
+        }
+
+        void Watchdog::hide()
+        {
+            // Do nothing
+        }
+
+        const uint8_t& Watchdog::getInstanceNumber()
+        {
+            return instanceNumber_;
+        }
+
+        const uint64_t& Watchdog::getHandle()
+        {
+            return handle_;
+        }
+
+        const MeasurementObjectType& Watchdog::getType()
+        {
+            return type_;
+        }
+
+        const std::string& Watchdog::getName()
+        {
+            return name_;
+        }
+
+        bool Watchdog::hasPropertyTable()
+        {
+            return true;
+        }
+
+        bool Watchdog::insertEntry(const PropertyPair& entryPair)
+        {
+            return propertyTable_.insert(entryPair).second;
+        }
+
+        bool Watchdog::removeProperty(const std::string& propertyName)
+        {
+            return propertyTable_.erase(propertyName) > 0;
+        }
+
+        void Watchdog::clearPropertyTable()
+        {
+            propertyTable_.clear();
+        }
+        const PropertyTable& Watchdog::getPropertyTable()
+        {
+            return propertyTable_;
+        }
+        const std::string& Watchdog::getPropertyEntryValue(const std::string& entry)
+        {
+            return propertyTable_.at(entry);
         }
     }
 }

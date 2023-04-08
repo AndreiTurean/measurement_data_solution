@@ -126,6 +126,8 @@ int main(int, char**)
             {
                 ImGui::ShowMetricsWindow(&showMetrics);
             }
+
+            engine->show();
             ImGui::Begin("Engine stats", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
             ImGui::Text("Watchdog active: %s", engine->isWatchDogActive() ? "Yes" : "No");
             ImGui::Text("Data distribution active: %s", engine->isPerformingDataAquisition() ? "Yes" : "No");
