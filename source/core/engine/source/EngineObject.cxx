@@ -11,6 +11,9 @@ namespace core
         type_(MeasurementObjectType::system)
     {
         propertyTable_.insert(std::make_pair("Name", "Engine"));
+        propertyTable_.insert(std::make_pair("Type", "System"));
+        propertyTable_.insert(std::make_pair("Handle", std::to_string(ENGINE_HANDLE)));
+        propertyTable_.insert(std::make_pair("Instance", std::to_string(instanceNumber_)));
     }
 
     const uint8_t& EngineObject::getInstanceNumber()
@@ -71,14 +74,24 @@ namespace core
 
     void EngineObject::show()
     {
-        ImGui::Begin(name_.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-
-        for(const auto& entry : propertyTable_)
+        ImGui::Begin("MOs", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
+        if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
         {
-            ImGui::Text("%s : %s", entry.first.c_str(), entry.second.c_str());
+            for(const auto& entry : propertyTable_)
+            {
+                ImGui::Text("%s : %s", entry.first.c_str(), entry.second.c_str());
+            }
+            ImGui::EndTabItem();
         }
 
+        ImGui::EndTabBar();
         ImGui::End();
+        //ImGui::Begin(name_.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+
+        
+
+        //ImGui::End();
     }
 
     void EngineObject::hide()

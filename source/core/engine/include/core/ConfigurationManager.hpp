@@ -21,6 +21,9 @@ namespace core
         MeasurementObjectList measurementObjectList_; //!< list containing all the measurement objects.
         std::shared_ptr<MeasurementObjectFactory> factory_; //!< pointer to the MeasurementObjectFactory, responsable for generating measurement objects.
         LoggingInterface* logger_; //!< logging interface
+
+        std::string localMoName;
+        int localMoInstanceNb = 0;
     public:
         /*!
         *   @brief Configuration manager contructor definition.

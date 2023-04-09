@@ -55,7 +55,7 @@ namespace core
         }
     }
 
-    MeasurementObject* MeasurementObjectFactory::createMeasurementObject(const std::string& name, uint8_t instanceNb)
+    MeasurementObject* MeasurementObjectFactory::createMeasurementObject(const std::string& name, uint8_t instanceNb, const std::string& alias)
     {
         if(name.empty())
         {
@@ -76,7 +76,7 @@ namespace core
             return nullptr;
         }
 
-        return mo(interfaceAccess_, instanceNb, it->first.c_str());
+        return alias.empty() ? mo(interfaceAccess_, instanceNb, it->first.c_str()) : mo(interfaceAccess_, instanceNb, alias.c_str());
     }
 
     size_t MeasurementObjectFactory::getFactorySize()

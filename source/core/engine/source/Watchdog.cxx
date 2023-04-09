@@ -32,7 +32,12 @@ namespace core
         Watchdog::Watchdog(LoggingInterface* logger):
             logger_(logger),
             alive_(true),
-            lastTimestamp_(0)
+            lastTimestamp_(0),
+            deltaTimestamp_(0),
+            instanceNumber_(0),
+            handle_(WATCHDOG_HANDLE),
+            type_(MeasurementObjectType::system),
+            name_("Watchdog")
         {
             watchThread_ = std::make_unique<std::thread>(&Watchdog::watch, this);
             logger_->subscribe("Watchdog", WATCHDOG_HANDLE);
@@ -47,9 +52,17 @@ namespace core
         void Watchdog::show()
         {
             std::lock_guard<std::mutex> lock(timestampGuard_);
-            ImGui::Begin("Watchdog", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-            ImGui::Text("Last timestamp: %" PRIu64, lastTimestamp_);
-            ImGui::Text("Delta timestamp: %" PRIu64, deltaTimestamp_);
+            ImGui::Begin("MOs", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
+            if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
+            {
+                ImGui::Text("Last timestamp: %" PRIu64, lastTimestamp_);
+                ImGui::Text("Delta timestamp: %" PRIu64, deltaTimestamp_);
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+
             ImGui::End();
         }
 

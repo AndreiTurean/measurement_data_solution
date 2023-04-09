@@ -24,6 +24,21 @@ target_include_directories(logger PUBLIC
 
 # find_package(tinyxml2 CONFIG REQUIRED)
 target_link_libraries(logger PRIVATE defs)
+find_package(imgui)
+target_link_libraries(logger PRIVATE imgui::imgui)
+find_package(SDL2 CONFIG REQUIRED)
+target_link_libraries(logger PRIVATE SDL2::SDL2)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_link_libraries(logger PRIVATE SDL2::SDL2main)
+else()
+    target_link_libraries(logger PRIVATE SDL2::SDL2-static)
+endif()
+
+find_package(GLEW REQUIRED)
+target_link_libraries(logger PRIVATE GLEW::GLEW)
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(logger PRIVATE glfw)
 
 #######################################################
 # setting target compile feature/options              #

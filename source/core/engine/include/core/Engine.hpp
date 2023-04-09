@@ -15,6 +15,8 @@ namespace core
     {
         class Watchdog;
     }
+
+    class Logger;
 }
 namespace core
 {
@@ -29,7 +31,7 @@ namespace core
     {
         ConfigurationManager* configMgr_; //!< configuration manager pointer
         DistributionManager* dataDistributionPtr_; //!< data distribution manager pointer
-        LoggingInterface* logger_; //!< logging interface
+        Logger* logger_; //!< logging interface
         metrics::Watchdog* watchdog_; //!< watchdog pointerinterfaceHelperPtr_
         EngineObject* self_; //!< mds engine mirror as measurement object.
         core::utility::InterfaceUtilityHelper* interfaceHelperPtr_; //!< engine interface helper

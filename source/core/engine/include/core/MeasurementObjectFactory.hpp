@@ -43,7 +43,7 @@ namespace core
         *   @param instanceNb Measurement object instance number.
         *   @return Return a shared instance of the measurement object.
         */
-        MeasurementObjectPtr createMeasurementObject(const std::string& name, uint8_t instanceNb);
+        MeasurementObjectPtr createMeasurementObject(const std::string& name, uint8_t instanceNb, const std::string& alias = "");
 
         /*!
         *   @brief Method use to retreive the factory func size.

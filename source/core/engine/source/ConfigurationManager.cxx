@@ -5,6 +5,7 @@
 #include <core/DistributionManager.hpp>
 #include <defs/Receiver.hpp>
 #include <defs/Transmitter.hpp>
+#include <iostream>
 
 namespace core
 {
@@ -170,6 +171,53 @@ namespace core
 
     void ConfigurationManager::show()
     {
+        ImGui::Begin("Configuration manager", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::Text("Number of created measurement objects: %" PRIu64, measurementObjectList_.size());
+        
+        ImGui::Text("Measurement objects available in configuration manager:");
+
+        for (auto& entryMO : factory_->getFactoryMap())
+        {
+            std::string msg = "Create measurement object: " + entryMO.first;
+            if (ImGui::Button(entryMO.first.c_str()))
+            {
+                
+                ImGui::OpenPopup(msg.c_str());
+            }
+
+            if (ImGui::BeginPopupModal(msg.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                //std::cout<<localMoName<<std::endl;
+                if(ImGui::InputText("Measurement object name", &localMoName))
+                {
+                }
+                ImGui::InputInt("Measurement object instance number", &localMoInstanceNb);
+                
+                if (ImGui::Button("OK"))
+                {
+                    createMeasurementObject(factory_->createMeasurementObject(entryMO.first, localMoInstanceNb, localMoName));
+                    
+                    ImGui::CloseCurrentPopup();
+                    
+                }
+                ImGui::EndPopup();
+            }
+
+            
+        }
+        ImGui::Separator();
+        ImGui::End();
+
+        for (MeasurementObjectPtr object : measurementObjectList_)
+        {
+            auto objectControlIfc = dynamic_cast<GuiControlIfc*>(object);
+
+            if (objectControlIfc)
+            {
+                objectControlIfc->show();
+            }
+        }
+
     }
 
     void ConfigurationManager::hide()

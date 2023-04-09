@@ -91,20 +91,23 @@ namespace core
         std::shared_ptr<MeasurementObjectFactory> factory = std::make_shared<MeasurementObjectFactory>(this);
         configMgr_ = new ConfigurationManager(this, factory);
         self_ = new EngineObject();
+
         if(!configMgr_->createMeasurementObject(self_))
         {
             logger_->log("Failed to introduce Engine Object in the configuration manager", ENGINE_HANDLE, severity::critical);
         }
+
+        configMgr_->createMeasurementObject(watchdog_);
         logger_->log("Initialization finished");
     }
     
     void Engine::terminate()
     {
         logger_->log("Started engine termination");
+        
         if(watchdog_)
         {
             logger_->log("Destroying the watchdog");
-            //delete watchdog_;
         }
         
         if (dataDistributionPtr_)
@@ -154,15 +157,12 @@ namespace core
     {
         configMgr_->show();
         dataDistributionPtr_->show();
-        watchdog_->show();
-        self_->show();
+        logger_->show();
     }
 
     void Engine::hide()
     {
         configMgr_->hide();
         dataDistributionPtr_->hide();
-        watchdog_->hide();
-        self_->hide();
     }
 }

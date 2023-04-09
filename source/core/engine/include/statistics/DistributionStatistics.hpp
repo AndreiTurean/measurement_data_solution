@@ -34,7 +34,7 @@ namespace core
                             return;
                         }
                         processedPackagesPerSecond_ = processedPackagesCnt_ + failedPackagesCnt_;
-                        //maxProcessedPackagesPerSecond_ = std::max(maxProcessedPackagesPerSecond_, processedPackagesPerSecond_);
+                        maxProcessedPackagesPerSecond_ = std::max(maxProcessedPackagesPerSecond_, processedPackagesPerSecond_);
         
                         processedPackagesCnt_ = 0;
                         failedPackagesCnt_ = 0;
@@ -79,7 +79,7 @@ namespace core
             virtual const uint64_t& getMaximumProcessedPackagesPerSecond()
             {
                 std::lock_guard<std::mutex> lock2(updateMtx_);
-                return processedPackagesPerSecond_;
+                return maxProcessedPackagesPerSecond_;
             }
         };
     }

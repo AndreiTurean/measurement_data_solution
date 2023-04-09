@@ -14,6 +14,7 @@
 // C standard library
 #include <cstdint>
 #include <cstring>
+#include <inttypes.h>
 
 // ImGui library
 #include <imgui.h>
