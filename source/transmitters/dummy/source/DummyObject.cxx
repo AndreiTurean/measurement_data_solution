@@ -1,3 +1,4 @@
+#include "pch.h"
 #include <transmitters/DummyObject.hpp>
 #include <chrono>
 
@@ -98,5 +99,15 @@ namespace transmitters
     {
         endProcessing();
         delete this;
+    }
+
+    void Dummy::show(ImGuiContext* ctx)
+    {
+        ImGui::SetCurrentContext(ctx);
+        ImGui::ShowDemoWindow();
+    }
+
+    void Dummy::hide()
+    {
     }
 }

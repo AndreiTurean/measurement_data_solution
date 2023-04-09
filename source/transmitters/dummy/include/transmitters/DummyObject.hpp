@@ -14,7 +14,8 @@ namespace transmitters
         public InterfaceAccess,
         public MeasurementObject,
         public DataSenderObject,
-        public ObjectControl
+        public ObjectControl,
+        public GuiControlIfc
     {
         DataDistributionPtr dataDistributinonPtr_;
         InterfaceAccess* interfaceAccess_;
@@ -42,6 +43,8 @@ namespace transmitters
         virtual const std::string& getName() override;
         virtual void initializeObject() override;
         virtual void terminateObject() override;
+        void show(ImGuiContext* ctx) override;
+        void hide() override;
         
     };
 }

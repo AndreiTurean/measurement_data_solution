@@ -101,7 +101,6 @@ int main(int, char**)
     ConfigurationFactory* configFactory = static_cast<ConfigurationFactory*>(engine->getInterface("ConfigurationFactory"));
     bool showConfigMgr = false;
     uint8_t instanceNb = 0;
-    bool showMetrics = true;
     bool showConfigMgrStats = false;
     std::set<VisualizerPtr> visualizerPool;
 
@@ -122,12 +121,8 @@ int main(int, char**)
 
         // 2. Show engine stats
         {
-            if(showMetrics)
-            {
-                ImGui::ShowMetricsWindow(&showMetrics);
-            }
 
-            engine->show();
+            engine->show(ImGui::GetCurrentContext());
             ImGui::Begin("Engine stats", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
             ImGui::Text("Watchdog active: %s", engine->isWatchDogActive() ? "Yes" : "No");
             ImGui::Text("Data distribution active: %s", engine->isPerformingDataAquisition() ? "Yes" : "No");
@@ -153,10 +148,6 @@ int main(int, char**)
             if (ImGui::Button(showConfigMgrStats ? "Close configuration manager stats" : "Open configuration manager stats"))
             {
                 showConfigMgrStats = !showConfigMgrStats;
-            }
-            if(ImGui::Button(showMetrics ? "Close debug metrics" : "Open debug metrics"))
-            {
-                showMetrics = !showMetrics;
             }
 
             ImGui::End();

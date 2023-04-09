@@ -16,6 +16,7 @@ namespace core
         bool ignoreDebugMsg_;
         std::mutex loggingGuard_;
         std::vector<std::string> logBuffer_;
+        bool showGui_;
     public:
         Logger(InterfaceAccess* interfaceAccess, bool ignoreDebug = false);
         virtual ~Logger();
@@ -25,7 +26,7 @@ namespace core
         bool subscribe(const char* name = "Engine", const uint64_t handle = 0) override;
         bool unsubscribe(const uint64_t handle = 0) override;
 
-        void show() override;
+        void show(ImGuiContext* ctx) override;
         void hide() override;
 
     private:

@@ -13,7 +13,11 @@ namespace core
         logger_(nullptr),
         watchdog_(nullptr),
         self_(nullptr),
-        interfaceHelperPtr_(nullptr)
+        interfaceHelperPtr_(nullptr),
+        showLogger_(false),
+        showDistrMgr_(false),
+        showConfigMgr_(false),
+        showAbout_(false)
     {
         bool silentLog = false;
         bool silenceWatchDog = false;
@@ -153,11 +157,52 @@ namespace core
         return interfaceHelperPtr_;
     }
 
-    void Engine::show()
+    void Engine::show(ImGuiContext* ctx)
     {
-        configMgr_->show();
-        dataDistributionPtr_->show();
-        logger_->show();
+        ImGui::SetCurrentContext(ctx);
+        if(ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::BeginMenu("Show"))
+            {
+                if (ImGui::MenuItem("Show configuration manager", "Ctrl+m")) { showConfigMgr_ = !showConfigMgr_; }
+                if (ImGui::MenuItem("Show distribution manager", "Ctrl+d"))   { showDistrMgr_ = !showDistrMgr_; }
+                if (ImGui::MenuItem("Show logger", "Ctrl+l"))  { showLogger_ = !showLogger_; }
+                ImGui::EndMenu();
+            }
+
+            if (ImGui::BeginMenu("About"))
+            {
+                if (ImGui::MenuItem("About engine", "Ctrl+e")) 
+                {
+                    showAbout_ = true;
+                }
+                ImGui::EndMenu();
+            }
+        }
+        ImGui::EndMainMenuBar();
+
+        if(showAbout_)
+        {
+            ImGui::OpenPopup("About engine");
+            if(ImGui::BeginPopupModal("About engine", &showAbout_, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                ImGui::Text("Engine version: 0.1");
+                ImGui::Text("Engine build date: %s", __DATE__);
+                ImGui::Text("Engine build time: %s", __TIME__);
+                ImGui::Text("Engine build type: %s", "Debug");
+
+                if (ImGui::Button("OK"))
+                {
+                    showAbout_ = false;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
+            }
+        }
+        
+        showConfigMgr_ ? configMgr_->show(ctx) : configMgr_->hide();
+        showDistrMgr_ ? dataDistributionPtr_->show(ctx) : dataDistributionPtr_->hide();
+        showLogger_ ? logger_->show(ctx) : logger_->hide();
     }
 
     void Engine::hide()

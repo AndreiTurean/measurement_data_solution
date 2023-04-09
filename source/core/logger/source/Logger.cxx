@@ -2,6 +2,7 @@
 #include <iostream>
 #include <chrono>
 #include <sstream>
+#include <algorithm>
 
 // ImGui library
 #include <imgui.h>
@@ -18,7 +19,8 @@ namespace core
 {
     Logger::Logger(InterfaceAccess* interfaceAccess, bool ignoreDebug):
         interfaceAccess_(interfaceAccess),
-        ignoreDebugMsg_(ignoreDebug)
+        ignoreDebugMsg_(ignoreDebug),
+        showGui_(true)
     {
     }
     void* Logger::getInterface(const std::string& interfaceName)
@@ -97,17 +99,46 @@ namespace core
 
     }
 
-    void Logger::show()
+    void Logger::show(ImGuiContext* ctx)
     {
-        ImGui::Begin("Log", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::SetCurrentContext(ctx);
+        auto color = [&](auto msg)
+        {
+            if(msg.find("[DBG") != std::string::npos)
+            {
+                return ImVec4(0.0f, 1.0f, 0.1f, 0.3f);
+            }
+            if(msg.find("[INFO") != std::string::npos)
+            {
+                return ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
+            }
+            if(msg.find("[WARN") != std::string::npos)
+            {
+                return ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+            }
+            if(msg.find("[ERR") != std::string::npos)
+            {
+                return ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+            }
+            if(msg.find("[CRIT") != std::string::npos)
+            {
+                return ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+            }
+            return ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+        };
+
+        std::lock_guard<std::mutex> lock(loggingGuard_);
+        ImGui::Begin("Log", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
         for(auto& logMessage : logBuffer_)
         {
-            ImGui::Text("%s",logMessage.c_str());
+            ImGui::PushStyleColor(ImGuiCol_Text, color(logMessage));
+            ImGui::Text("%s", logMessage.c_str());
+            ImGui::PopStyleColor();
         }
         ImGui::End();
     }
     void Logger::hide()
     {
-
+        showGui_ = false;
     }
 }

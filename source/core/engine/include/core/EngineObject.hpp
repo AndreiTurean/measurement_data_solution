@@ -15,6 +15,7 @@ namespace core
         std::string name_; //!< engine name
         MeasurementObjectType type_; //!< engine type.
         PropertyTable propertyTable_;
+        bool showGui_;
     public:
         /*!
         *   @brief MDS engine measurement object constructor.
@@ -54,7 +55,7 @@ namespace core
         /*!
         *  @brief Method used to show the gui object.
         */
-        void show() override;
+        void show(ImGuiContext* ctx) override;
 
         /*!
         *  @brief Method used to hide the gui object.

@@ -8,7 +8,8 @@ namespace core
         instanceNumber_(0),
         handle_(ENGINE_HANDLE),
         name_("Engine"),
-        type_(MeasurementObjectType::system)
+        type_(MeasurementObjectType::system),
+        showGui_(false)
     {
         propertyTable_.insert(std::make_pair("Name", "Engine"));
         propertyTable_.insert(std::make_pair("Type", "System"));
@@ -72,30 +73,40 @@ namespace core
         return propertyTable_[entry];
     }
 
-    void EngineObject::show()
+    void EngineObject::show(ImGuiContext* ctx)
     {
-        ImGui::Begin("MOs", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-        ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
-        if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
+        ImGui::SetCurrentContext(ctx);
+        if(ImGui::BeginMainMenuBar())
         {
-            for(const auto& entry : propertyTable_)
+            if (ImGui::BeginMenu("Show"))
             {
-                ImGui::Text("%s : %s", entry.first.c_str(), entry.second.c_str());
+                if (ImGui::MenuItem("Show engine MO", "Ctrl+w")) { showGui_ = !showGui_; }
+                
+                ImGui::EndMenu();
             }
-            ImGui::EndTabItem();
         }
+        ImGui::EndMainMenuBar();
 
-        ImGui::EndTabBar();
-        ImGui::End();
-        //ImGui::Begin(name_.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+        if(showGui_)
+        {
+            ImGui::Begin("MOs", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
+            if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
+            {
+                for(const auto& entry : propertyTable_)
+                {
+                    ImGui::Text("%s : %s", entry.first.c_str(), entry.second.c_str());
+                }
+                ImGui::EndTabItem();
+            }
 
-        
-
-        //ImGui::End();
+            ImGui::EndTabBar();
+            ImGui::End();
+        }
     }
 
     void EngineObject::hide()
     {
-
+        showGui_ = false;
     }
 }

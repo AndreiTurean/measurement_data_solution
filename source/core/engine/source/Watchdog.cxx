@@ -19,8 +19,8 @@ namespace core
                     uint64_t timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
                     deltaTimestamp_ = timestamp - lastTimestamp_;
 
-                    if(lastTimestamp_ != 0 && deltaTimestamp_ > 50000)
-                        logger_->log("Timegap detected. Possible hardware deadlock.", 3, severity::warning);
+                    if(lastTimestamp_ != 0 && deltaTimestamp_ > (uint64_t)maxDuration_)
+                        logger_->log(("Timegap of:" + std::to_string(deltaTimestamp_) + " was detected. Possible hardware deadlock.").c_str(), 3, severity::warning);
 
                     lastTimestamp_ = timestamp;
                 }
@@ -37,33 +37,54 @@ namespace core
             instanceNumber_(0),
             handle_(WATCHDOG_HANDLE),
             type_(MeasurementObjectType::system),
-            name_("Watchdog")
+            name_("Watchdog"),
+            showWatchdog_(false),
+            maxDuration_(0xffff)
         {
             watchThread_ = std::make_unique<std::thread>(&Watchdog::watch, this);
             logger_->subscribe("Watchdog", WATCHDOG_HANDLE);
+            logger_->log("Watchdog started", WATCHDOG_HANDLE, severity::information);
         }
         Watchdog::~Watchdog()
         {
+            logger_->log("Watchdog stopped", WATCHDOG_HANDLE, severity::information);
+            logger_->unsubscribe(WATCHDOG_HANDLE);
             alive_ = false;
             watchThread_->join();
             watchThread_.reset();
         }
 
-        void Watchdog::show()
+        void Watchdog::show(ImGuiContext* ctx)
         {
-            std::lock_guard<std::mutex> lock(timestampGuard_);
-            ImGui::Begin("MOs", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-            ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
-            if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
+            ImGui::SetCurrentContext(ctx);
+            if(ImGui::BeginMainMenuBar())
             {
-                ImGui::Text("Last timestamp: %" PRIu64, lastTimestamp_);
-                ImGui::Text("Delta timestamp: %" PRIu64, deltaTimestamp_);
-                ImGui::EndTabItem();
+                if (ImGui::BeginMenu("Show"))
+                {
+                    if (ImGui::MenuItem("Show watchdog MO", "Ctrl+w")) { showWatchdog_ = !showWatchdog_; }
+                    
+                    ImGui::EndMenu();
+                }
             }
+            ImGui::EndMainMenuBar();
 
-            ImGui::EndTabBar();
+            if (showWatchdog_)
+            {
+                std::lock_guard<std::mutex> lock(timestampGuard_);
+                ImGui::Begin("MOs", &showWatchdog_, ImGuiWindowFlags_AlwaysAutoResize);
+                ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
+                if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
+                {
+                    ImGui::Text("Last timestamp: %" PRIu64, lastTimestamp_);
+                    ImGui::Text("Delta timestamp (microseconds): %" PRIu64, deltaTimestamp_);
+                    ImGui::SliderInt("Max duration",&maxDuration_, 0, 0xffff);
+                    ImGui::EndTabItem();
+                }
 
-            ImGui::End();
+                ImGui::EndTabBar();
+
+                ImGui::End();
+            }
         }
 
         void Watchdog::hide()

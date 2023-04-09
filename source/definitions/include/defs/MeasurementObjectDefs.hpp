@@ -129,7 +129,7 @@ interface ObjectControl
     */
     virtual void terminateObject() = 0;
 };
-
+class ImGuiContext;
 /*!
 * @brief Interface for controlling the gui object behaviour
 */
@@ -138,7 +138,7 @@ interface GuiControlIfc
     /*!
     *  @brief Method used to show the gui object.
     */
-    virtual void show() = 0;
+    virtual void show(ImGuiContext* ctx) = 0;
 
     /*!
     *  @brief Method used to hide the gui object.
