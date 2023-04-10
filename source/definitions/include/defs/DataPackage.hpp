@@ -20,7 +20,7 @@ struct DataPackage
     size_t size; //!< package size
     uint8_t cycle_; //!< package cycle
     PackageType type; //!< package type
-    void* payload; //!< pointer to where the package payload starts.
+    const void* payload; //!< pointer to where the package payload starts.
 };
 //! Data package pointer
 using DataPackagePtr = DataPackage*;

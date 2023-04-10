@@ -28,6 +28,9 @@ namespace transmitters
     private:
         std::mutex processingMtx_;
         bool isProcessing_;
+        bool showGui_;
+        int sleepDuration_;
+        std::string payload_;
         std::unique_ptr<std::thread> processingThread_;
         void doFSMProcessing();
         
