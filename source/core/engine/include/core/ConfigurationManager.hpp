@@ -24,6 +24,9 @@ namespace core
 
         std::string localMoName;
         int localMoInstanceNb = 0;
+
+    private:
+        void displayInferiors(ImGuiContext* ctx);
     public:
         /*!
         *   @brief Configuration manager contructor definition.
@@ -57,7 +60,7 @@ namespace core
         *   @param instanceNb Measurement object instance number
         *   @return Return true if the object was created succesfully, false otherwise.
         */
-        virtual bool createMeasurementObject(const std::string& name, uint8_t instanceNb) override;
+        virtual bool createMeasurementObject(const std::string& name, uint8_t instanceNb, const std::string& alias = "") override;
         /*!
         *   @brief Method used to introduce an already created measurement object into the configuration manager.
         *   @param object Already created measurement object that will be inserted into the configuration manager.
@@ -92,7 +95,7 @@ namespace core
         /*!
         *  @brief Method used to show the gui object.
         */
-        void show() override;
+        void show(ImGuiContext* ctx) override;
 
         /*!
         *  @brief Method used to hide the gui object.

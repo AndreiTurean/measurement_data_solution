@@ -33,16 +33,21 @@ namespace core
 
     void MeasurementObjectFactory::scanForMeasurementObjects(std::filesystem::path path)
     {
-        
+        logger_->log("Started scanning for measurement objects", FACTORY_HANDLE);
+
         if(!std::filesystem::exists(path))
+        {
+            logger_->log("Path does not exist", FACTORY_HANDLE, severity::error);
             return;
+        }
 
         for(auto& obj : std::filesystem::recursive_directory_iterator(path))
         {
             auto extension = obj.path().filename().extension().string();
 
             if(extension != ".so" && extension != ".dll")
-            {
+            {   
+                logger_->log(("Skipping file: " + obj.path().filename().string()).c_str(), FACTORY_HANDLE);
                 continue;
             }
 
@@ -50,13 +55,19 @@ namespace core
 
             if(func)
             {
+                logger_->log(("Loaded library: " + obj.path().filename().string()).c_str(), FACTORY_HANDLE, severity::information);
                 objectsMap_[obj.path().filename().u8string()] = func;
+            }
+            else
+            {
+                logger_->log(("Failed to load library: " + obj.path().filename().string()).c_str(), FACTORY_HANDLE, severity::warning);
             }
         }
     }
 
     MeasurementObject* MeasurementObjectFactory::createMeasurementObject(const std::string& name, uint8_t instanceNb, const std::string& alias)
     {
+        logger_->log(("Started creating object: " + name + " with instance number: " + std::to_string((int) instanceNb)).c_str(), FACTORY_HANDLE);
         if(name.empty())
         {
             return nullptr;
@@ -75,7 +86,7 @@ namespace core
         {
             return nullptr;
         }
-
+        logger_->log(("Finished creating object: " + name + " with instance number: " + std::to_string((int) instanceNb)).c_str(), FACTORY_HANDLE, severity::information);
         return alias.empty() ? mo(interfaceAccess_, instanceNb, it->first.c_str()) : mo(interfaceAccess_, instanceNb, alias.c_str());
     }
 
@@ -89,8 +100,9 @@ namespace core
         return objectsMap_;
     }
 
-    void MeasurementObjectFactory::show()
+    void MeasurementObjectFactory::show(ImGuiContext* ctx)
     {
+        ImGui::SetCurrentContext(ctx);
     }
 
     void MeasurementObjectFactory::hide()

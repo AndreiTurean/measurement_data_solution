@@ -5,7 +5,7 @@
 #include <core/DistributionManager.hpp>
 #include <defs/Receiver.hpp>
 #include <defs/Transmitter.hpp>
-#include <iostream>
+#include <sstream>
 
 namespace core
 {
@@ -46,12 +46,12 @@ namespace core
         return nullptr;
     }
 
-    bool ConfigurationManager::createMeasurementObject(const std::string& name, uint8_t instanceNb)
+    bool ConfigurationManager::createMeasurementObject(const std::string& name, uint8_t instanceNb, const std::string& alias)
     {
         std::string msg = "Started creating object: " + name + " with instance number: " + std::to_string((int) instanceNb);
         logger_->log(msg.c_str(), CONFIGURATION_MGR_HANDLE);
         size_t sizeBeforeCreate = measurementObjectList_.size();
-        MeasurementObjectPtr mo = factory_->createMeasurementObject(name, instanceNb);
+        MeasurementObjectPtr mo = factory_->createMeasurementObject(name, instanceNb, alias);
         if (!mo)
         {
             return false;
@@ -169,58 +169,55 @@ namespace core
         measurementObjectList_.clear();
     }
 
-    void ConfigurationManager::show()
+    void ConfigurationManager::show(ImGuiContext* ctx)
     {
+        ImGui::SetCurrentContext(ctx);
         ImGui::Begin("Configuration manager", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-        ImGui::Text("Number of created measurement objects: %" PRIu64, measurementObjectList_.size());
-        
         ImGui::Text("Measurement objects available in configuration manager:");
 
         for (auto& entryMO : factory_->getFactoryMap())
         {
-            std::string msg = "Create measurement object: " + entryMO.first;
             if (ImGui::Button(entryMO.first.c_str()))
             {
                 
-                ImGui::OpenPopup(msg.c_str());
+                ImGui::OpenPopup(("Create measurement object" + entryMO.first).c_str());
             }
 
-            if (ImGui::BeginPopupModal(msg.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+            if (ImGui::BeginPopupModal(("Create measurement object" + entryMO.first).c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
-                //std::cout<<localMoName<<std::endl;
-                if(ImGui::InputText("Measurement object name", &localMoName))
-                {
-                }
+                ImGui::InputText("Measurement object name", &localMoName);
                 ImGui::InputInt("Measurement object instance number", &localMoInstanceNb);
                 
                 if (ImGui::Button("OK"))
                 {
-                    createMeasurementObject(factory_->createMeasurementObject(entryMO.first, localMoInstanceNb, localMoName));
+                    createMeasurementObject(entryMO.first, localMoInstanceNb, localMoName);
                     
                     ImGui::CloseCurrentPopup();
                     
                 }
                 ImGui::EndPopup();
             }
-
-            
         }
-        ImGui::Separator();
+
         ImGui::End();
 
+        displayInferiors(ctx);
+    }
+
+    void ConfigurationManager::hide()
+    {
+    }
+
+    void ConfigurationManager::displayInferiors(ImGuiContext* ctx)
+    {
         for (MeasurementObjectPtr object : measurementObjectList_)
         {
             auto objectControlIfc = dynamic_cast<GuiControlIfc*>(object);
 
             if (objectControlIfc)
             {
-                objectControlIfc->show();
+                objectControlIfc->show(ctx);
             }
         }
-
-    }
-
-    void ConfigurationManager::hide()
-    {
     }
 }

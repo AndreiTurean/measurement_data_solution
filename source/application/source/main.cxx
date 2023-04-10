@@ -97,12 +97,11 @@ int main(int, char**)
     std::shared_ptr<core::Engine> engine = std::make_shared<core::Engine>();
     engine->initialize();
     
-    ConfigurationParser* configMgr = static_cast<ConfigurationParser*>(engine->getInterface("ConfigurationParser"));
-    ConfigurationFactory* configFactory = static_cast<ConfigurationFactory*>(engine->getInterface("ConfigurationFactory"));
-    bool showConfigMgr = false;
-    uint8_t instanceNb = 0;
-    bool showMetrics = true;
-    bool showConfigMgrStats = false;
+    // ConfigurationParser* configMgr = static_cast<ConfigurationParser*>(engine->getInterface("ConfigurationParser"));
+    // ConfigurationFactory* configFactory = static_cast<ConfigurationFactory*>(engine->getInterface("ConfigurationFactory"));
+    // bool showConfigMgr = false;
+    // uint8_t instanceNb = 0;
+    // bool showConfigMgrStats = false;
     std::set<VisualizerPtr> visualizerPool;
 
     // Main loop
@@ -122,12 +121,8 @@ int main(int, char**)
 
         // 2. Show engine stats
         {
-            if(showMetrics)
-            {
-                ImGui::ShowMetricsWindow(&showMetrics);
-            }
 
-            engine->show();
+            engine->show(ImGui::GetCurrentContext());
             ImGui::Begin("Engine stats", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
             ImGui::Text("Watchdog active: %s", engine->isWatchDogActive() ? "Yes" : "No");
             ImGui::Text("Data distribution active: %s", engine->isPerformingDataAquisition() ? "Yes" : "No");
@@ -143,190 +138,178 @@ int main(int, char**)
                 engine.reset();
                 engine = std::make_shared<core::Engine>();
                 engine->initialize();
-                configMgr = static_cast<ConfigurationParser*>(engine->getInterface("ConfigurationParser"));;
+                //configMgr = static_cast<ConfigurationParser*>(engine->getInterface("ConfigurationParser"));;
             }
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            if (ImGui::Button(showConfigMgr ? "Close configuration manager" : "Open configuration manager"))
-            {
-                showConfigMgr = !showConfigMgr;
-            }
-            if (ImGui::Button(showConfigMgrStats ? "Close configuration manager stats" : "Open configuration manager stats"))
-            {
-                showConfigMgrStats = !showConfigMgrStats;
-            }
-            if(ImGui::Button(showMetrics ? "Close debug metrics" : "Open debug metrics"))
-            {
-                showMetrics = !showMetrics;
-            }
 
             ImGui::End();
         }
 
-        for(auto& vis : visualizerPool)
-        {
-            vis->Show(configMgr);
-        }
+        // for(auto& vis : visualizerPool)
+        // {
+        //     vis->Show(configMgr);
+        // }
 
-        if(showConfigMgrStats)
-        {
-            auto moList = configMgr->getMOsAddedInConfig();
-            ImGui::Begin("Configuration manager stats", &showConfigMgrStats, ImGuiWindowFlags_AlwaysAutoResize);
-            ImGui::Text("Available measurement object from factory: %zu", configFactory->getFactorySize());
-            ImGui::Text("Object added in the configuration manger: %zu", moList.size());
-            if (ImGui::Button(showConfigMgr ? "Close configuration manager" : "Open configuration manager"))
-            {
-                showConfigMgr = !showConfigMgr;
-            }
+        // if(showConfigMgrStats)
+        // {
+        //     auto moList = configMgr->getMOsAddedInConfig();
+        //     ImGui::Begin("Configuration manager stats", &showConfigMgrStats, ImGuiWindowFlags_AlwaysAutoResize);
+        //     ImGui::Text("Available measurement object from factory: %zu", configFactory->getFactorySize());
+        //     ImGui::Text("Object added in the configuration manger: %zu", moList.size());
+        //     if (ImGui::Button(showConfigMgr ? "Close configuration manager" : "Open configuration manager"))
+        //     {
+        //         showConfigMgr = !showConfigMgr;
+        //     }
            
-            ImGui::End();
-        }
+        //     ImGui::End();
+        // }
 
-        if (showConfigMgr)
-        {
-            ImGui::Begin("Configuration manager", &showConfigMgr, ImGuiWindowFlags_AlwaysAutoResize);
-            if(ImGui::TreeNode("Available measurement object to be created"))
-            {
-                for(auto object : configFactory->getFactoryMap())
-                {
-                    if (ImGui::Button(object.first.c_str()))
-                    {
-                        configMgr->createMeasurementObject(object.first, instanceNb++);
-                    }
-                }
+        // if (showConfigMgr)
+        // {
+        //     ImGui::Begin("Configuration manager", &showConfigMgr, ImGuiWindowFlags_AlwaysAutoResize);
+        //     if(ImGui::TreeNode("Available measurement object to be created"))
+        //     {
+        //         for(auto object : configFactory->getFactoryMap())
+        //         {
+        //             if (ImGui::Button(object.first.c_str()))
+        //             {
+        //                 configMgr->createMeasurementObject(object.first, instanceNb++);
+        //             }
+        //         }
 
-                if(ImGui::Button("Raw Data Visualizer"))
-                {
-                    visualizerPool.insert(std::make_shared<application::DataVisualizer>("Raw Data Visualizer", instanceNb++));
-                }
-                if(ImGui::Button("Data Distribution Visualizer"))
-                {
-                    visualizerPool.insert(std::make_shared<application::DistributionVisualizer>("Data Distribution Visualizer", instanceNb++,
-                        static_cast<DataDistributionStatistics*>(engine->getInterface("DataDistributionStatistics"))));
-                }
+        //         if(ImGui::Button("Raw Data Visualizer"))
+        //         {
+        //             visualizerPool.insert(std::make_shared<application::DataVisualizer>("Raw Data Visualizer", instanceNb++));
+        //         }
+        //         if(ImGui::Button("Data Distribution Visualizer"))
+        //         {
+        //             visualizerPool.insert(std::make_shared<application::DistributionVisualizer>("Data Distribution Visualizer", instanceNb++,
+        //                 static_cast<DataDistributionStatistics*>(engine->getInterface("DataDistributionStatistics"))));
+        //         }
             
-                ImGui::TreePop();
-            }
-            if(ImGui::TreeNode("Created Measurement Objects"))
-            {
-                if(ImGui::TreeNode("Data processors"))
-                {
-                    for(auto object :configMgr->getMOsAddedInConfig())
-                    {
-                        std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
+        //         ImGui::TreePop();
+        //     }
+        //     if(ImGui::TreeNode("Created Measurement Objects"))
+        //     {
+        //         if(ImGui::TreeNode("Data processors"))
+        //         {
+        //             for(auto object :configMgr->getMOsAddedInConfig())
+        //             {
+        //                 std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
 
-                        if(object->getType() == MeasurementObjectType::data_receiver)
-                        {
-                            if(ImGui::TreeNode(nodeName.c_str()))
-                            {
-                                ImGui::Text("Handle: %lX", object->getHandle());
-                                ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
-                                ImGui::Text("Type: Receiver");
-                                ImGui::TreePop();
-                            }
-                        }
-                    }
-                    ImGui::TreePop();
-                }
-                if(ImGui::TreeNode("Data transmitters"))
-                {
-                    for(auto object :configMgr->getMOsAddedInConfig())
-                    {
-                        std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
+        //                 if(object->getType() == MeasurementObjectType::data_receiver)
+        //                 {
+        //                     if(ImGui::TreeNode(nodeName.c_str()))
+        //                     {
+        //                         ImGui::Text("Handle: %lX", object->getHandle());
+        //                         ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
+        //                         ImGui::Text("Type: Receiver");
+        //                         ImGui::TreePop();
+        //                     }
+        //                 }
+        //             }
+        //             ImGui::TreePop();
+        //         }
+        //         if(ImGui::TreeNode("Data transmitters"))
+        //         {
+        //             for(auto object :configMgr->getMOsAddedInConfig())
+        //             {
+        //                 std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
 
-                        if(object->getType() == MeasurementObjectType::data_source)
-                        {
-                            if(ImGui::TreeNode(nodeName.c_str()))
-                            {
-                                ImGui::Text("Handle: %lX", object->getHandle());
-                                ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
-                                ImGui::Text("Type: Transmitter");
-                                ImGui::TreePop();
-                            }
-                        }
-                    }
-                    ImGui::TreePop();
-                }
+        //                 if(object->getType() == MeasurementObjectType::data_source)
+        //                 {
+        //                     if(ImGui::TreeNode(nodeName.c_str()))
+        //                     {
+        //                         ImGui::Text("Handle: %lX", object->getHandle());
+        //                         ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
+        //                         ImGui::Text("Type: Transmitter");
+        //                         ImGui::TreePop();
+        //                     }
+        //                 }
+        //             }
+        //             ImGui::TreePop();
+        //         }
 
-                if(ImGui::TreeNode("Player"))
-                {
-                    for(auto object :configMgr->getMOsAddedInConfig())
-                    {
-                        std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
+        //         if(ImGui::TreeNode("Player"))
+        //         {
+        //             for(auto object :configMgr->getMOsAddedInConfig())
+        //             {
+        //                 std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
 
-                        if(object->getType() == MeasurementObjectType::player)
-                        {
-                            if(ImGui::TreeNode(nodeName.c_str()))
-                            {
-                                ImGui::Text("Handle: %lX", object->getHandle());
-                                ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
-                                ImGui::Text("Type: Player");
-                                ImGui::TreePop();
-                            }
-                        }
-                    }
-                    ImGui::TreePop();
-                }
+        //                 if(object->getType() == MeasurementObjectType::player)
+        //                 {
+        //                     if(ImGui::TreeNode(nodeName.c_str()))
+        //                     {
+        //                         ImGui::Text("Handle: %lX", object->getHandle());
+        //                         ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
+        //                         ImGui::Text("Type: Player");
+        //                         ImGui::TreePop();
+        //                     }
+        //                 }
+        //             }
+        //             ImGui::TreePop();
+        //         }
 
-                if(ImGui::TreeNode("Recorder"))
-                {
-                    for(auto object :configMgr->getMOsAddedInConfig())
-                    {
-                        std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
+        //         if(ImGui::TreeNode("Recorder"))
+        //         {
+        //             for(auto object :configMgr->getMOsAddedInConfig())
+        //             {
+        //                 std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
 
-                        if(object->getType() == MeasurementObjectType::recorder)
-                        {
-                            if(ImGui::TreeNode(nodeName.c_str()))
-                            {
-                                ImGui::Text("Handle: %lX", object->getHandle());
-                                ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
-                                ImGui::Text("Type: Recorder");
-                                ImGui::TreePop();
-                            }
-                        }
-                    }
-                    ImGui::TreePop();
-                }
+        //                 if(object->getType() == MeasurementObjectType::recorder)
+        //                 {
+        //                     if(ImGui::TreeNode(nodeName.c_str()))
+        //                     {
+        //                         ImGui::Text("Handle: %lX", object->getHandle());
+        //                         ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
+        //                         ImGui::Text("Type: Recorder");
+        //                         ImGui::TreePop();
+        //                     }
+        //                 }
+        //             }
+        //             ImGui::TreePop();
+        //         }
 
-                if(ImGui::TreeNode("System"))
-                {
-                    for(auto object :configMgr->getMOsAddedInConfig())
-                    {
-                        std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
+        //         if(ImGui::TreeNode("System"))
+        //         {
+        //             for(auto object :configMgr->getMOsAddedInConfig())
+        //             {
+        //                 std::string nodeName = object->getName() + std::to_string(object->getInstanceNumber());
 
-                        if(object->getType() == MeasurementObjectType::system)
-                        {
-                            if(ImGui::TreeNode(nodeName.c_str()))
-                            {
-                                ImGui::Text("Handle: %lX", object->getHandle());
-                                ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
-                                ImGui::Text("Type: System");
-                                ImGui::TreePop();
-                            }
-                        }
-                    }
-                    ImGui::TreePop();
-                }
+        //                 if(object->getType() == MeasurementObjectType::system)
+        //                 {
+        //                     if(ImGui::TreeNode(nodeName.c_str()))
+        //                     {
+        //                         ImGui::Text("Handle: %lX", object->getHandle());
+        //                         ImGui::Text("Instance number: %d", (int)object->getInstanceNumber());
+        //                         ImGui::Text("Type: System");
+        //                         ImGui::TreePop();
+        //                     }
+        //                 }
+        //             }
+        //             ImGui::TreePop();
+        //         }
 
-                if(ImGui::TreeNode("Visualization"))
-                {
-                    for(const auto& visMo : visualizerPool)
-                    {
-                        auto mo = std::dynamic_pointer_cast<MeasurementObject>(visMo);
-                        if(ImGui::TreeNode(mo->getName().c_str()))
-                        {
-                            ImGui::Text("Handle: %lX", mo->getHandle());
-                            ImGui::Text("Instance number: %d", (int)mo->getInstanceNumber());
-                            ImGui::Text("Type: Visualization");
-                            ImGui::TreePop();
-                        }
-                    }
-                    ImGui::TreePop();
-                }
+        //         if(ImGui::TreeNode("Visualization"))
+        //         {
+        //             for(const auto& visMo : visualizerPool)
+        //             {
+        //                 auto mo = std::dynamic_pointer_cast<MeasurementObject>(visMo);
+        //                 if(ImGui::TreeNode(mo->getName().c_str()))
+        //                 {
+        //                     ImGui::Text("Handle: %lX", mo->getHandle());
+        //                     ImGui::Text("Instance number: %d", (int)mo->getInstanceNumber());
+        //                     ImGui::Text("Type: Visualization");
+        //                     ImGui::TreePop();
+        //                 }
+        //             }
+        //             ImGui::TreePop();
+        //         }
 
-                ImGui::TreePop();
-            }
-            ImGui::End();
-        }
+        //         ImGui::TreePop();
+        //     }
+        //     ImGui::End();
+        // }
 
         // Rendering
         ImGui::Render();

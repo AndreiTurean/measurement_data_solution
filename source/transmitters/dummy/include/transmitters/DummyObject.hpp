@@ -14,7 +14,8 @@ namespace transmitters
         public InterfaceAccess,
         public MeasurementObject,
         public DataSenderObject,
-        public ObjectControl
+        public ObjectControl,
+        public GuiControlIfc
     {
         DataDistributionPtr dataDistributinonPtr_;
         InterfaceAccess* interfaceAccess_;
@@ -27,6 +28,9 @@ namespace transmitters
     private:
         std::mutex processingMtx_;
         bool isProcessing_;
+        bool showGui_;
+        int sleepDuration_;
+        std::string payload_;
         std::unique_ptr<std::thread> processingThread_;
         void doFSMProcessing();
         
@@ -42,6 +46,8 @@ namespace transmitters
         virtual const std::string& getName() override;
         virtual void initializeObject() override;
         virtual void terminateObject() override;
+        void show(ImGuiContext* ctx) override;
+        void hide() override;
         
     };
 }

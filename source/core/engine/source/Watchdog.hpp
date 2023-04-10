@@ -25,6 +25,8 @@ namespace core
             PropertyTable propertyTable_;
             std::mutex timestampGuard_;
             void watch();
+            bool showWatchdog_;
+            int maxDuration_;
         public:
             explicit Watchdog(LoggingInterface* loger);
             virtual ~Watchdog();
@@ -62,7 +64,7 @@ namespace core
             /*!
             *  @brief Method used to show the gui object.
             */
-            void show() override;
+            void show(ImGuiContext* ctx) override;
 
             /*!
             *  @brief Method used to hide the gui object.

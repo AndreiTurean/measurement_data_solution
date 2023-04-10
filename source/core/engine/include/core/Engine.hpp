@@ -35,6 +35,11 @@ namespace core
         metrics::Watchdog* watchdog_; //!< watchdog pointerinterfaceHelperPtr_
         EngineObject* self_; //!< mds engine mirror as measurement object.
         core::utility::InterfaceUtilityHelper* interfaceHelperPtr_; //!< engine interface helper
+
+        bool showLogger_;
+        bool showDistrMgr_;
+        bool showConfigMgr_;
+        bool showAbout_;
         
     public:
         /*!
@@ -102,7 +107,7 @@ namespace core
         /*!
         *  @brief Method used to show the gui object.
         */
-        void show() override;
+        void show(ImGuiContext* ctx) override;
 
         /*!
         *  @brief Method used to hide the gui object.

@@ -14,7 +14,7 @@ struct ConfigurationParser
     *   @note When loading a configuration, engine will be reseted and reinitialized.
     */
     virtual const MeasurementObjectList& loadConfiguration(std::filesystem::path path) = 0;
-    virtual bool createMeasurementObject(const std::string& name, uint8_t instanceNb) = 0;
+    virtual bool createMeasurementObject(const std::string& name, uint8_t instanceNb, const std::string& alias = "") = 0;
     /*!
     *   @brief Method used to introduce an already created measurement object into the configuration manager.
     *   @param object Already created measurement object that will be inserted into the configuration manager.

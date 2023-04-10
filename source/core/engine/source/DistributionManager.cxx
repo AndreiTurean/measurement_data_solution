@@ -32,13 +32,16 @@ namespace core
     bool DistributionManager::distributeData(DataPackageCPtr package)
     {
         std::lock_guard<std::mutex> lock(distributionLock_);
+
         if(!distributing_)
         {
+            logger_->log("Distribution manager is not distributing", DISTRIBUTION_MGR_HANDLE, severity::warning);
             return false;
         }
 
         if(receiversPool_.empty())
         {
+            logger_->log("No receivers in pool", DISTRIBUTION_MGR_HANDLE, severity::warning);
             return false;
         }
 
@@ -89,8 +92,9 @@ namespace core
         return statistics_;
     }
 
-    void DistributionManager::show()
+    void DistributionManager::show(ImGuiContext* ctx)
     {
+        ImGui::SetCurrentContext(ctx);
         std::lock_guard<std::mutex> lock(distributionLock_);
         ImGui::Begin("Distribution manager", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::Text("Distribution status: %s", distributing_ ? "enabled" : "disabled");
