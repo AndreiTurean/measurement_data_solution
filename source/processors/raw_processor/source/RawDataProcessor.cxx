@@ -1,5 +1,5 @@
+#include "pch.h"
 #include <RawDataProcessor.hpp>
-#include <iostream>
 
 namespace processors
 {
@@ -8,7 +8,8 @@ namespace processors
         instanceNb_(nb),
         handle_(INVALID_HANDLE),
         name_(name),
-        type_(MeasurementObjectType::data_receiver)
+        type_(MeasurementObjectType::data_receiver),
+        showGui_(false)
     {
         handle_ = (instanceNb_ + 1);
         handle_ = handle_ << 0x8;
@@ -38,10 +39,11 @@ namespace processors
 
     bool RawDataProcessor::validatePackage(DataPackageCPtr pkg)
     {
-        for(auto const& subject : subjects_)
-        {
-            subject->notify(pkg);
-        }
+        packagesBuffer_.push_back(pkg);
+        // for(auto const& subject : subjects_)
+        // {
+        //     subject->notify(pkg);
+        // }
         return true;
     }
 
@@ -83,5 +85,52 @@ namespace processors
     {
         subjects_.clear();
         delete this;
+    }
+
+    void RawDataProcessor::show(ImGuiContext* ctx)
+    {
+        ImGui::SetCurrentContext(ctx);
+
+        ImGui::SetCurrentContext(ctx);
+        if(ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::BeginMenu("Show"))
+            {
+                if (ImGui::MenuItem(("Show "+ name_ +" MO").c_str(), "Ctrl+r")) { showGui_ = !showGui_; }
+                
+                ImGui::EndMenu();
+            }
+        }
+        ImGui::EndMainMenuBar();
+
+        if(showGui_)
+        {
+            ImGui::Begin("MOs", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
+            if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
+            {
+                // for(const auto& entry : propertyTable_)
+                // {
+                //     ImGui::Text("%s : %s", entry.first.c_str(), entry.second.c_str());
+                // }
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+            ImGui::End();
+
+            ImGui::Begin("RawDataProcessor", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
+
+            ImGui::Text("Timestamp, \tCycle, \tType, \tSize, \tData");
+            for(auto const& pkg : packagesBuffer_)
+            {
+                std::string msg((char*)pkg->payload, pkg->size);
+                ImGui::Text("%" PRIu64 "\t %" PRIu8 "\t %" PRIu8 "\t %" PRIu64 "\t %s", pkg->timestamp, pkg->cycle_, (uint8_t)pkg->type, pkg->size, msg.c_str());
+            }
+            ImGui::End();
+        }
+    }
+    void RawDataProcessor::hide()
+    {
     }
 }

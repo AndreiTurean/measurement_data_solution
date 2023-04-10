@@ -12,7 +12,8 @@ namespace processors
         public DataReceiverObject,
         public InterfaceAccess,
         public ReceiverSinkManager,
-        public ObjectControl
+        public ObjectControl,
+        public GuiControlIfc
     {
         InterfaceAccess* interfaceAccess_;
         uint8_t instanceNb_;
@@ -20,6 +21,8 @@ namespace processors
         std::string name_;
         MeasurementObjectType type_;
         std::set<NotifySubjects*> subjects_;
+        std::vector<DataPackageCPtr> packagesBuffer_;
+        bool showGui_;
 
     public:
         RawDataProcessor(InterfaceAccess* interfaceAccess, uint8_t nb, const std::string& name);
@@ -41,6 +44,9 @@ namespace processors
         virtual bool unregisterToReceiverSink(NotifySubjects* subject);
         virtual void initializeObject() override;
         virtual void terminateObject() override;
+
+        void show(ImGuiContext* ctx) override;
+        void hide() override;
     };
 }
 
