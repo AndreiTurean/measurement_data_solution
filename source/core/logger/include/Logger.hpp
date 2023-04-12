@@ -27,7 +27,6 @@ namespace core
         bool unsubscribe(const uint64_t handle = 0) override;
 
         void show(ImGuiContext* ctx) override;
-        void hide() override;
 
     private:
         LogRegister logRegister_;

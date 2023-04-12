@@ -87,11 +87,6 @@ namespace core
             }
         }
 
-        void Watchdog::hide()
-        {
-            // Do nothing
-        }
-
         const uint8_t& Watchdog::getInstanceNumber()
         {
             return instanceNumber_;

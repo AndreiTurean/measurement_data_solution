@@ -4,6 +4,7 @@
 #include <defs/MeasurementObjectDefs.hpp>
 #include <defs/Receiver.hpp>
 #include <set>
+#include <mutex>
 
 namespace processors
 {
@@ -21,8 +22,10 @@ namespace processors
         std::string name_;
         MeasurementObjectType type_;
         std::set<NotifySubjects*> subjects_;
-        std::vector<DataPackageCPtr> packagesBuffer_;
+        std::vector<DataPackagePtr> packagesBuffer_;
         bool showGui_;
+        std::mutex mtx_;
+        int maxPkgInBuffer_;
 
     public:
         RawDataProcessor(InterfaceAccess* interfaceAccess, uint8_t nb, const std::string& name);
@@ -46,7 +49,6 @@ namespace processors
         virtual void terminateObject() override;
 
         void show(ImGuiContext* ctx) override;
-        void hide() override;
     };
 }
 

@@ -103,9 +103,4 @@ namespace core
         ImGui::Text("Actual packages distributed per second: %" PRIu64, statistics_->getNumberOfProcessedPackagesPerSecond());
         ImGui::End();
     }
-
-    void DistributionManager::hide()
-    {
-
-    }
 }

@@ -137,8 +137,4 @@ namespace core
         }
         ImGui::End();
     }
-    void Logger::hide()
-    {
-        showGui_ = false;
-    }
 }

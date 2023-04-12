@@ -26,3 +26,6 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 #include <imgui_stdlib.h>
+
+#define VERSION_MAJOR 0
+#define VERSION_MINOR 1

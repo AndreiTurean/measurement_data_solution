@@ -104,9 +104,4 @@ namespace core
             ImGui::End();
         }
     }
-
-    void EngineObject::hide()
-    {
-        showGui_ = false;
-    }
 }

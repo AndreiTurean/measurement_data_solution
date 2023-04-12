@@ -172,44 +172,6 @@ namespace core
     void ConfigurationManager::show(ImGuiContext* ctx)
     {
         ImGui::SetCurrentContext(ctx);
-        ImGui::Begin("Configuration manager", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-        ImGui::Text("Measurement objects available in configuration manager:");
-
-        for (auto& entryMO : factory_->getFactoryMap())
-        {
-            if (ImGui::Button(entryMO.first.c_str()))
-            {
-                
-                ImGui::OpenPopup(("Create measurement object" + entryMO.first).c_str());
-            }
-
-            if (ImGui::BeginPopupModal(("Create measurement object" + entryMO.first).c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-            {
-                ImGui::InputText("Measurement object name", &localMoName);
-                ImGui::InputInt("Measurement object instance number", &localMoInstanceNb);
-                
-                if (ImGui::Button("OK"))
-                {
-                    createMeasurementObject(entryMO.first, localMoInstanceNb, localMoName);
-                    
-                    ImGui::CloseCurrentPopup();
-                    
-                }
-                ImGui::EndPopup();
-            }
-        }
-
-        ImGui::End();
-
-        displayInferiors(ctx);
-    }
-
-    void ConfigurationManager::hide()
-    {
-    }
-
-    void ConfigurationManager::displayInferiors(ImGuiContext* ctx)
-    {
         for (MeasurementObjectPtr object : measurementObjectList_)
         {
             auto objectControlIfc = dynamic_cast<GuiControlIfc*>(object);

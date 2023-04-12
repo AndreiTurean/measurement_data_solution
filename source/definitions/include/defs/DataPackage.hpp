@@ -15,14 +15,21 @@ enum class PackageType : uint8_t
 */
 struct DataPackage
 {
+    ~DataPackage()
+    {
+        if (payload)
+        {
+            delete[] reinterpret_cast<char*>(payload);
+        }
+    }
     uint64_t timestamp; //!< package timestamp
     uint64_t sourceHandle; //!< package source handle
     size_t size; //!< package size
     uint8_t cycle_; //!< package cycle
     PackageType type; //!< package type
-    const void* payload; //!< pointer to where the package payload starts.
+    void* payload; //!< pointer to where the package payload starts.
 };
 //! Data package pointer
-using DataPackagePtr = DataPackage*;
+using DataPackagePtr = std::shared_ptr<DataPackage>;
 //! Const data package pointer
-using DataPackageCPtr = const DataPackage*;
+using DataPackageCPtr = const DataPackagePtr;
