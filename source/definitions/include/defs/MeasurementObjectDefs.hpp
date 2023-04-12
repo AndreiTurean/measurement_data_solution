@@ -139,9 +139,9 @@ interface GuiControlIfc
     *  @brief Method used to show the gui object.
     */
     virtual void show(ImGuiContext* ctx) = 0;
+};
 
-    /*!
-    *  @brief Method used to hide the gui object.
-    */
-    virtual void hide() = 0;
+interface GuiControlIfcExtended : public GuiControlIfc
+{
+    virtual bool showModal(ImGuiContext* ctx) = 0;
 };

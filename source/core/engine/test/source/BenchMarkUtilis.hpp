@@ -124,7 +124,7 @@ public:
         ASSERT_TRUE(conf != nullptr);
         ASSERT_TRUE(conf->createMeasurementObject(RECEIVER_LIB_NAME, 0));
         DataDistribution* dataDistributionPtr = static_cast<DataDistribution*>(BenchmarkUtilis::engine_->getInterface("DataDistribution"));
-        DataPackagePtr pkg = new DataPackage();
+        DataPackagePtr pkg = std::make_shared<DataPackage>();
         uint64_t timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         dataDistributionPtr->distributeData(pkg);
 
@@ -138,7 +138,7 @@ public:
         ASSERT_TRUE(conf != nullptr);
         ASSERT_TRUE(conf->createMeasurementObject(RECEIVER_LIB_NAME, 0));
         DataDistribution* dataDistributionPtr = static_cast<DataDistribution*>(BenchmarkUtilis::engine_->getInterface("DataDistribution"));
-        DataPackagePtr pkg = new DataPackage();
+        DataPackagePtr pkg = std::make_shared<DataPackage>();
         pkg->cycle_ = 1;
         pkg->payload = static_cast<void*>(new uint8_t[1024]);
         pkg->size = 1;

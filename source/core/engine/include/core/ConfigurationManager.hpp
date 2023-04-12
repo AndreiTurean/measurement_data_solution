@@ -15,7 +15,7 @@ namespace core
     class ConfigurationManager :
         public ConfigurationParser,
         public InterfaceAccess,
-        public GuiControlIfc
+        public GuiControlIfcExtended
     {
         InterfaceAccess* interfaceAccess_; //!< interface access pointer
         MeasurementObjectList measurementObjectList_; //!< list containing all the measurement objects.
@@ -25,8 +25,6 @@ namespace core
         std::string localMoName;
         int localMoInstanceNb = 0;
 
-    private:
-        void displayInferiors(ImGuiContext* ctx);
     public:
         /*!
         *   @brief Configuration manager contructor definition.
@@ -97,9 +95,6 @@ namespace core
         */
         void show(ImGuiContext* ctx) override;
 
-        /*!
-        *  @brief Method used to hide the gui object.
-        */
-        void hide() override;
+        bool showModal(ImGuiContext* ctx) override;
     };
 }

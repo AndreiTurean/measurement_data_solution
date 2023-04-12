@@ -56,11 +56,5 @@ namespace core
         *  @brief Method used to show the gui object.
         */
         void show(ImGuiContext* ctx) override;
-
-        /*!
-        *  @brief Method used to hide the gui object.
-        */
-        void hide() override;
-
     };
 }

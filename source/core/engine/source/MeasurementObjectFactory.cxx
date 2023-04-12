@@ -104,8 +104,4 @@ namespace core
     {
         ImGui::SetCurrentContext(ctx);
     }
-
-    void MeasurementObjectFactory::hide()
-    {
-    }
 }

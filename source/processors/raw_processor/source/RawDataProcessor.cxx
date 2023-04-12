@@ -9,7 +9,8 @@ namespace processors
         handle_(INVALID_HANDLE),
         name_(name),
         type_(MeasurementObjectType::data_receiver),
-        showGui_(false)
+        showGui_(false),
+        maxPkgInBuffer_(1024)
     {
         handle_ = (instanceNb_ + 1);
         handle_ = handle_ << 0x8;
@@ -39,11 +40,13 @@ namespace processors
 
     bool RawDataProcessor::validatePackage(DataPackageCPtr pkg)
     {
+        std::lock_guard<std::mutex> lock(mtx_);
         packagesBuffer_.push_back(pkg);
-        // for(auto const& subject : subjects_)
-        // {
-        //     subject->notify(pkg);
-        // }
+
+        if(packagesBuffer_.size() > (size_t)maxPkgInBuffer_)
+        {
+            packagesBuffer_.erase(packagesBuffer_.begin());
+        }
         return true;
     }
 
@@ -109,6 +112,7 @@ namespace processors
             ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
             if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
             {
+                ImGui::InputInt("Max packages in buffer", &maxPkgInBuffer_);
                 // for(const auto& entry : propertyTable_)
                 // {
                 //     ImGui::Text("%s : %s", entry.first.c_str(), entry.second.c_str());
@@ -122,6 +126,7 @@ namespace processors
             ImGui::Begin("RawDataProcessor", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
 
             ImGui::Text("Timestamp, \tCycle, \tType, \tSize, \tData");
+            std::lock_guard<std::mutex> lock(mtx_);
             for(auto const& pkg : packagesBuffer_)
             {
                 std::string msg((char*)pkg->payload, pkg->size);
@@ -129,8 +134,5 @@ namespace processors
             }
             ImGui::End();
         }
-    }
-    void RawDataProcessor::hide()
-    {
     }
 }

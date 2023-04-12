@@ -14,7 +14,7 @@ namespace transmitters
         type_(MeasurementObjectType::data_source),
         isProcessing_(true),
         showGui_(false),
-        sleepDuration_(1)
+        sleepDuration_(1000)
     {
         handle_ = (instanceNb + 1);
         handle_ = handle_ << 0x8 << 0x8;
@@ -29,11 +29,13 @@ namespace transmitters
     {
         while(true)
         {
-            DataPackagePtr pkg = new DataPackage(); //create a blank package
+            DataPackagePtr pkg = std::make_shared<DataPackage>(); //create a blank package
             pkg->sourceHandle = this->handle_;
             pkg->size = payload_.size();
             pkg->timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-            pkg->payload = payload_.c_str();
+            pkg->payload = new char[payload_.size()];
+            std::memcpy(pkg->payload, payload_.c_str(), payload_.size());
+            
             {
                 std::lock_guard<std::mutex> lock(processingMtx_);
                 
@@ -44,7 +46,6 @@ namespace transmitters
                 dataDistributionInterface_->distributeData(pkg);
                 
             }
-            delete pkg;
             std::this_thread::sleep_for(std::chrono::milliseconds(sleepDuration_));
         }
     }
@@ -67,6 +68,7 @@ namespace transmitters
     {
         {
             std::lock_guard<std::mutex> lock(processingMtx_);
+            sleepDuration_ = 0;
             isProcessing_ = false;
         }
 
@@ -121,11 +123,11 @@ namespace transmitters
         {
             ImGui::Begin("MOs", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
             ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
-            if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
+            if(ImGui::BeginTabItem((name_ + " # " + std::to_string((int)instanceNumber_)).c_str() , nullptr, ImGuiTabItemFlags_None))
             {
                
                 ImGui::Text("Processing status: %s", isProcessing_ ? "enabled" : "dissabled");
-                ImGui::SliderInt("Sleep duration",&sleepDuration_, 0, 60000);
+                ImGui::SliderInt("Sleep duration",&sleepDuration_, 1, 1000);
                 ImGui::InputText("Payload", &payload_);
                 
                 ImGui::EndTabItem();
@@ -134,9 +136,5 @@ namespace transmitters
             ImGui::EndTabBar();
             ImGui::End();
         }
-    }
-
-    void Dummy::hide()
-    {
     }
 }

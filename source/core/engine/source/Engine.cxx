@@ -17,7 +17,8 @@ namespace core
         showLogger_(false),
         showDistrMgr_(false),
         showConfigMgr_(false),
-        showAbout_(false)
+        showAbout_(false),
+        showConfigurationManager_(false)
     {
         bool silentLog = false;
         bool silenceWatchDog = false;
@@ -162,9 +163,16 @@ namespace core
         ImGui::SetCurrentContext(ctx);
         if(ImGui::BeginMainMenuBar())
         {
+            if (ImGui::BeginMenu("File"))
+            {
+                if (ImGui::MenuItem("Open configuration manager", "Ctrl+o")) { showConfigurationManager_ = true; }
+                
+                ImGui::EndMenu();
+            }
+
             if (ImGui::BeginMenu("Show"))
             {
-                if (ImGui::MenuItem("Show configuration manager", "Ctrl+m")) { showConfigMgr_ = !showConfigMgr_; }
+                //if (ImGui::MenuItem("Show configuration manager", "Ctrl+m")) { showConfigMgr_ = !showConfigMgr_; }
                 if (ImGui::MenuItem("Show distribution manager", "Ctrl+d"))   { showDistrMgr_ = !showDistrMgr_; }
                 if (ImGui::MenuItem("Show logger", "Ctrl+l"))  { showLogger_ = !showLogger_; }
                 ImGui::EndMenu();
@@ -180,6 +188,12 @@ namespace core
             }
         }
         ImGui::EndMainMenuBar();
+
+        if(showConfigurationManager_)
+        {
+            showConfigMgr_ = false;
+            showConfigurationManager_ = configMgr_->showModal(ctx);
+        }
 
         if(showAbout_)
         {
@@ -200,14 +214,8 @@ namespace core
             }
         }
         
-        showConfigMgr_ ? configMgr_->show(ctx) : configMgr_->hide();
-        showDistrMgr_ ? dataDistributionPtr_->show(ctx) : dataDistributionPtr_->hide();
-        showLogger_ ? logger_->show(ctx) : logger_->hide();
-    }
-
-    void Engine::hide()
-    {
-        configMgr_->hide();
-        dataDistributionPtr_->hide();
+        configMgr_->show(ctx);
+        if(showDistrMgr_) dataDistributionPtr_->show(ctx);
+        if(showLogger_) logger_->show(ctx);
     }
 }
