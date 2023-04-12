@@ -145,3 +145,8 @@ interface GuiControlIfc
     */
     virtual void hide() = 0;
 };
+
+interface GuiControlIfcExtended : public GuiControlIfc
+{
+    virtual bool showModal(ImGuiContext* ctx) = 0;
+};

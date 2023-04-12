@@ -220,4 +220,53 @@ namespace core
             }
         }
     }
+
+    bool ConfigurationManager::showModal(ImGuiContext* ctx)
+    {
+        ImGui::SetCurrentContext(ctx);
+        bool modalResult = true;
+        ImGui::OpenPopup("Configuration manager");
+        if (ImGui::BeginPopupModal("Configuration manager", &modalResult, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            if(ImGui::TreeNode("Measurement objects available in configuration manager"))
+            {
+                for (auto& entryMO : factory_->getFactoryMap())
+                {
+                    if (ImGui::Button(entryMO.first.c_str()))
+                    {
+                        
+                        ImGui::OpenPopup(("Create measurement object" + entryMO.first).c_str());
+                    }
+
+                    if (ImGui::BeginPopupModal(("Create measurement object" + entryMO.first).c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                    {
+                        ImGui::InputText("Measurement object name", &localMoName);
+                        ImGui::InputInt("Measurement object instance number", &localMoInstanceNb);
+                        
+                        if (ImGui::Button("OK"))
+                        {
+                            createMeasurementObject(entryMO.first, localMoInstanceNb, localMoName);
+                            
+                            ImGui::CloseCurrentPopup();
+                            
+                        }
+                        ImGui::EndPopup();
+                    }
+                }
+                ImGui::TreePop();
+            }
+
+            if(ImGui::TreeNode("Existing measurement objects"))
+            {
+                for (MeasurementObjectPtr object : measurementObjectList_)
+                {
+                    ImGui::Text("%s", object->getName().c_str());
+                }
+                ImGui::TreePop();
+            }
+
+            ImGui::EndPopup();
+        }
+        return modalResult;
+    }
 }

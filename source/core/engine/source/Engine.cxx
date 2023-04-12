@@ -17,7 +17,8 @@ namespace core
         showLogger_(false),
         showDistrMgr_(false),
         showConfigMgr_(false),
-        showAbout_(false)
+        showAbout_(false),
+        showConfigurationManager_(false)
     {
         bool silentLog = false;
         bool silenceWatchDog = false;
@@ -162,6 +163,13 @@ namespace core
         ImGui::SetCurrentContext(ctx);
         if(ImGui::BeginMainMenuBar())
         {
+            if (ImGui::BeginMenu("File"))
+            {
+                if (ImGui::MenuItem("Open configuration manager", "Ctrl+o")) { showConfigurationManager_ = true; }
+                
+                ImGui::EndMenu();
+            }
+
             if (ImGui::BeginMenu("Show"))
             {
                 if (ImGui::MenuItem("Show configuration manager", "Ctrl+m")) { showConfigMgr_ = !showConfigMgr_; }
@@ -180,6 +188,11 @@ namespace core
             }
         }
         ImGui::EndMainMenuBar();
+
+        if(showConfigurationManager_)
+        {
+            showConfigurationManager_ = configMgr_->showModal(ctx);
+        }
 
         if(showAbout_)
         {

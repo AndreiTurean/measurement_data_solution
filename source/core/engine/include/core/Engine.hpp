@@ -40,7 +40,7 @@ namespace core
         bool showDistrMgr_;
         bool showConfigMgr_;
         bool showAbout_;
-        
+        bool showConfigurationManager_;
     public:
         /*!
         *   @brief MDS engine contructor.

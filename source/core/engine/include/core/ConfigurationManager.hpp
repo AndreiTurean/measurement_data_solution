@@ -15,7 +15,7 @@ namespace core
     class ConfigurationManager :
         public ConfigurationParser,
         public InterfaceAccess,
-        public GuiControlIfc
+        public GuiControlIfcExtended
     {
         InterfaceAccess* interfaceAccess_; //!< interface access pointer
         MeasurementObjectList measurementObjectList_; //!< list containing all the measurement objects.
@@ -101,5 +101,7 @@ namespace core
         *  @brief Method used to hide the gui object.
         */
         void hide() override;
+
+        bool showModal(ImGuiContext* ctx) override;
     };
 }
