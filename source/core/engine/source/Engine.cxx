@@ -14,7 +14,7 @@ namespace core
         watchdog_(nullptr),
         self_(nullptr),
         interfaceHelperPtr_(nullptr),
-        showLogger_(false),
+        showLogger_(true),
         showDistrMgr_(false),
         showConfigMgr_(false),
         showAbout_(false),
@@ -200,10 +200,10 @@ namespace core
             ImGui::OpenPopup("About engine");
             if(ImGui::BeginPopupModal("About engine", &showAbout_, ImGuiWindowFlags_AlwaysAutoResize))
             {
-                ImGui::Text("Engine version: 0.1");
+                ImGui::Text("Engine version: %d.%d", VERSION_MAJOR, VERSION_MINOR);
                 ImGui::Text("Engine build date: %s", __DATE__);
                 ImGui::Text("Engine build time: %s", __TIME__);
-                ImGui::Text("Engine build type: %s", "Debug");
+                ImGui::Text("Engine build type: %s", PROJECT_TYPE);
 
                 if (ImGui::Button("OK"))
                 {

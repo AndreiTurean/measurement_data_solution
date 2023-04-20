@@ -28,6 +28,10 @@ namespace core
         */
         void scanForMeasurementObjects(std::filesystem::path path);
 
+        /*!
+        *   @brief Method use to retreive the executable path.
+        *   @return Return the executable path.
+        */
         std::string getExePath();
     public:
         /*!
@@ -49,13 +53,13 @@ namespace core
         *   @brief Method use to retreive the factory func size.
         *   @return Return factory func size.
         */
-        virtual size_t getFactorySize() override;
+        size_t getFactorySize() override;
 
         /*!
         *   @brief Method use to retreive the factory map.
         *   @return Return factory map.
         */
-        virtual const FactoryMap& getFactoryMap() override;
+        const FactoryMap& getFactoryMap() override;
 
         /*!
         *  @brief Method used to show the gui object.

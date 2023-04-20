@@ -28,6 +28,21 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 #target_link_libraries(${PROJECT_NAME} PRIVATE core)
 target_link_libraries(${PROJECT_NAME} PRIVATE defs)
+find_package(imgui)
+target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui)
+find_package(SDL2 CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main)
+else()
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2-static)
+endif()
+
+find_package(GLEW REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW)
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 
 #######################################################
 # setting target compile feature/options              #
@@ -59,6 +74,7 @@ install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     COMPONENT DEVELOPMENT
 )
+install(TARGETS ${PROJECT_NAME} RUNTIME_DEPENDENCIES DESTINATION ${CMAKE_INSTALL_BINDIR})
 #######################################################
 # test step                                           #
 #######################################################

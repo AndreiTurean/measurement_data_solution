@@ -16,3 +16,4 @@ gtest_add_tests(TARGET ${PROJECT_NAME}_test)
 target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME}::${PROJECT_NAME}) #link against the alias library
 
 install(TARGETS ${PROJECT_NAME}_test)
+install(TARGETS ${PROJECT_NAME}_test RUNTIME_DEPENDENCIES DESTINATION ${CMAKE_INSTALL_BINDIR})

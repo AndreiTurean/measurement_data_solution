@@ -129,6 +129,7 @@ interface ObjectControl
     */
     virtual void terminateObject() = 0;
 };
+
 class ImGuiContext;
 /*!
 * @brief Interface for controlling the gui object behaviour
@@ -137,11 +138,20 @@ interface GuiControlIfc
 {
     /*!
     *  @brief Method used to show the gui object.
+    *  @param ctx ImGui context.
     */
     virtual void show(ImGuiContext* ctx) = 0;
 };
 
+/*!
+* @brief Interface for controling modal gui objects
+*/
 interface GuiControlIfcExtended : public GuiControlIfc
 {
+    /*!
+    *  @brief Method used to show the modal gui object.
+    *  @param ctx ImGui context.
+    * @return Return true if the modal object was closed, false otherwise.
+    */
     virtual bool showModal(ImGuiContext* ctx) = 0;
 };

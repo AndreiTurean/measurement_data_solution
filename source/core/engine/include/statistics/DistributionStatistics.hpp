@@ -3,24 +3,32 @@
 #include <thread>
 #include <cstdint>
 #include <defs/Distribution.hpp>
+
 using namespace std::chrono_literals;
+
 namespace core
 {
     namespace statistics
     {
+        /*!
+        *   @brief Data distribution statistics class.
+        */
         class DistributionStatistics:
             public DataDistributionStatistics
         {
-            uint64_t processedPackagesPerSecond_;
-            uint64_t maxProcessedPackagesPerSecond_;
-            uint64_t failedPackagesCnt_;
-            uint64_t processedPackagesCnt_;
-            bool alive_;
+            uint64_t processedPackagesPerSecond_; //!< Number of processed packages per second.
+            uint64_t maxProcessedPackagesPerSecond_; //!< Maximum number of processed packages per second.
+            uint64_t failedPackagesCnt_; //!< Number of failed packages.
+            uint64_t processedPackagesCnt_; //!< Number of processed packages.
+            bool alive_; //!< Flag used to stop the counting thread.
 
-            std::mutex countingMtx_;
-            std::mutex updateMtx_;
-            std::unique_ptr<std::thread> countingThread_;
+            std::mutex countingMtx_; //!< Mutex used to protect the counting variables.
+            std::mutex updateMtx_; //!< Mutex used to protect the update of the statistics variables.
+            std::unique_ptr<std::thread> countingThread_; //!< Thread used to count the number of processed packages per second.
 
+            /*!
+            *   @brief Counting thread function.
+            */
             void count()
             {
                 while(true)
@@ -44,6 +52,9 @@ namespace core
                 }
             }
         public:
+            /*!
+            *   @brief Distribution statistics constructor.
+            */
             DistributionStatistics():
                 processedPackagesPerSecond_(0),
                 maxProcessedPackagesPerSecond_(0),
@@ -53,7 +64,9 @@ namespace core
             {
                 countingThread_ = std::make_unique<std::thread>(&DistributionStatistics::count, this);
             }
-
+            /*!
+            *   @brief Distribution statistics destructor.
+            */
             virtual ~DistributionStatistics()
             {
                 {
@@ -65,18 +78,35 @@ namespace core
                 countingThread_.reset();
             }
 
+            /*!
+            *   @brief Update the statistics.
+            *   @param processed Flag used to indicate if the package was processed or not.
+            *   @note If the package was not processed, the failedPackagesCnt_ will be incremented.
+            *   @note If the package was processed, the processedPackagesCnt_ will be incremented.
+            */
             void update(bool processed = true)
             {
                 std::lock_guard<std::mutex> lock(countingMtx_);
                 processed ? processedPackagesCnt_++ : failedPackagesCnt_++;
             }
 
-            virtual const uint64_t& getNumberOfProcessedPackagesPerSecond()
+            /*!
+            *   @brief Method used to retreive the number of processed packages per second.
+            *   @return Return the number of processed packages per second.
+            *   @note This method is thread safe.
+            */
+            const uint64_t& getNumberOfProcessedPackagesPerSecond() override
             {
                 std::lock_guard<std::mutex> lock2(updateMtx_);
                 return processedPackagesPerSecond_;
             }
-            virtual const uint64_t& getMaximumProcessedPackagesPerSecond()
+
+            /*!
+            *   @brief Method used to retreive the maximum number of processed packages per second.
+            *   @return Return the maximum number of processed packages per second.
+            *   @note This method is thread safe.
+            */
+            const uint64_t& getMaximumProcessedPackagesPerSecond() override
             {
                 std::lock_guard<std::mutex> lock2(updateMtx_);
                 return maxProcessedPackagesPerSecond_;

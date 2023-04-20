@@ -1,21 +1,5 @@
 #pragma once
 
-// C++ standard library
-#include <string>
-#include <vector>
-#include <map>
-#include <memory>
-#include <functional>
-#include <filesystem>
-#include <fstream>
-#include <sstream>
-#include <algorithm>
-
-// C standard library
-#include <cstdint>
-#include <cstring>
-#include <inttypes.h>
-
 // ImGui library
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -29,3 +13,9 @@
 
 #define VERSION_MAJOR 0
 #define VERSION_MINOR 2
+
+#if DEBUG
+#define PROJECT_TYPE "Debug"
+#else
+#define PROJECT_TYPE "Release"
+#endif

@@ -60,6 +60,8 @@ install(TARGETS ${PROJECT_NAME}_raw
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     COMPONENT DEVELOPMENT
 )
+
+install(TARGETS ${PROJECT_NAME}_raw RUNTIME_DEPENDENCIES DESTINATION ${CMAKE_INSTALL_BINDIR})
 #######################################################
 # test step                                           #
 #######################################################

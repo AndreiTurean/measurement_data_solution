@@ -54,11 +54,42 @@ namespace core
             */
             const std::string& getName() override;
 
+            /*!
+            *   @brief Method to retreive the property table of the measurement object.
+            *   @return Return true if the measurement object has a property table, false otherwise.
+            */
             bool hasPropertyTable() override;
+
+            /*!
+            *  @brief Method used to insert a new entry to the property table.
+            *  @param entryPair pair of strings containing the property name and the property value.
+            *  @return Return true if the entry was inserted, false otherwise.
+            */
             bool insertEntry(const PropertyPair& entryPair) override;
+
+            /*!
+            *  @brief Method used to remove an entry from the property table.
+            *  @param propertyName name of the property to be removed.
+            *  @return Return true if the entry was removed, false otherwise.
+            */
             bool removeProperty(const std::string& propertyName) override;
+
+            /*!
+            *  @brief Method used to clear the property table.
+            */
             void clearPropertyTable() override;
+
+            /*!
+            *  @brief Method used to retreive the property table.
+            *  @return Return the property table reference.
+            */
             const PropertyTable& getPropertyTable() override;
+
+            /*!
+            *  @brief Method used to retreive the value of a property.
+            *  @param entry name of the property.
+            *  @return Return the value of the property.
+            */
             const std::string& getPropertyEntryValue(const std::string& entry) override;
 
             /*!
