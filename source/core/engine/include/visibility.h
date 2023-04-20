@@ -3,7 +3,7 @@
 * The example bellow was extracted from https://gcc.gnu.org/wiki/Visibility
 */
 
-#// Generic helper definitions for shared library support
+//! Generic helper definitions for shared library support
 #if defined _WIN32 || defined __CYGWIN__
 #ifndef CREATE_DLL
 #define CORE_LIB_IMPORT __declspec(dllimport)

@@ -102,6 +102,7 @@ namespace core
 
         /*!
         *  @brief Method used to show the gui object.
+        *  @param ctx ImGui context pointer.
         */
         void show(ImGuiContext* ctx) override;
     };

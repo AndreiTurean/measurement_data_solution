@@ -36,11 +36,11 @@ namespace core
         EngineObject* self_; //!< mds engine mirror as measurement object.
         core::utility::InterfaceUtilityHelper* interfaceHelperPtr_; //!< engine interface helper
 
-        bool showLogger_;
-        bool showDistrMgr_;
-        bool showConfigMgr_;
-        bool showAbout_;
-        bool showConfigurationManager_;
+        bool showLogger_; //!< flag to show logger
+        bool showDistrMgr_; //!< flag to show data distribution manager
+        bool showConfigMgr_; //!< flag to show configuration manager
+        bool showAbout_; //!< flag to show about window
+        bool showConfigurationManager_; //!< flag to show configuration manager window
     public:
         /*!
         *   @brief MDS engine contructor.
@@ -93,6 +93,11 @@ namespace core
         */
         bool isPerformingDataAquisition();
 
+        /*!
+        *   @brief Method used to retreive a template interface. A wrapper and upgrade over the getInterface method.
+        *   @tparam ifc Interface type.
+        *   @return Return a pointer of the requested interface.
+        */
         template <typename ifc> ifc* getInterface()
         {
             return interfaceHelperPtr_->getInteface<ifc>();

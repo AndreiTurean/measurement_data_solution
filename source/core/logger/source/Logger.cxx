@@ -1,26 +1,21 @@
+#include "pch.h"
 #include <Logger.hpp>
+
 #include <iostream>
 #include <chrono>
 #include <sstream>
 #include <algorithm>
 
-// ImGui library
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
-#include <stdio.h>
-#if defined(IMGUI_IMPL_OPENGL_ES2)
-#include <GLES2/gl2.h>
-#endif
-#include <GLFW/glfw3.h> // Will drag system OpenGL headers
-#include <imgui_stdlib.h>
+
 
 namespace core
 {
     Logger::Logger(InterfaceAccess* interfaceAccess, bool ignoreDebug):
         interfaceAccess_(interfaceAccess),
         ignoreDebugMsg_(ignoreDebug),
-        showGui_(true)
+        showGui_(true),
+        logRegister_(this),
+        showAbout_(false)
     {
     }
     void* Logger::getInterface(const std::string& interfaceName)
@@ -94,11 +89,6 @@ namespace core
         return logRegister_.removeHandle(handle);
     }
 
-    Logger::~Logger()
-    {
-
-    }
-
     void Logger::show(ImGuiContext* ctx)
     {
         ImGui::SetCurrentContext(ctx);
@@ -136,5 +126,37 @@ namespace core
             ImGui::PopStyleColor();
         }
         ImGui::End();
+
+        if(ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::BeginMenu("About"))
+            {
+                if (ImGui::MenuItem("About logger", "Ctrl+e")) 
+                {
+                    showAbout_ = true;
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
+
+        if(showAbout_)
+        {
+            ImGui::OpenPopup("About logger");
+            if(ImGui::BeginPopupModal("About logger", &showAbout_, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                ImGui::Text("Logger version: %d.%d", VERSION_MAJOR, VERSION_MINOR);
+                ImGui::Text("Logger build date: %s", __DATE__);
+                ImGui::Text("Logger build time: %s", __TIME__);
+                ImGui::Text("Logger build type: %s", PROJECT_TYPE);
+
+                if (ImGui::Button("OK"))
+                {
+                    showAbout_ = false;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
+            }
+        }
     }
 }

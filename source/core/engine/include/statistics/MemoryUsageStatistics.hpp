@@ -114,6 +114,9 @@ namespace core
         #endif
         }
 
+        /*!
+        * Returns the current memory usage of the process in bytes.
+        */
         static size_t getCurrentMemUsage()
         {
         #if defined(_WIN32)

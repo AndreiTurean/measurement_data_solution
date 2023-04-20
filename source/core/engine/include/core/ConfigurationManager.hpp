@@ -95,6 +95,11 @@ namespace core
         */
         void show(ImGuiContext* ctx) override;
 
+        /*!
+        *  @brief Method used to show the modal gui object.
+        *  @param ctx ImGui context.
+        * @return Return true if the modal object was closed, false otherwise.
+        */
         bool showModal(ImGuiContext* ctx) override;
     };
 }

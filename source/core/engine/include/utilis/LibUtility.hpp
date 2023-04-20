@@ -23,6 +23,9 @@ namespace core
             std::vector<void*> handleContainer_; 
             LoggingInterface* logger_;
         public:
+            /*!
+            *   @brief Lib loader constructor
+            */
             LibUtility(LoggingInterface* logger):
                 logger_(logger)
             {
@@ -30,16 +33,11 @@ namespace core
             }
 
             /*!
-            *   @brief Class destructor. Close all the library handles left open. Exclude the null handles.
-            */
-            ~LibUtility()
-            {
-            }
-            /*!
             *   @brief Method receive a library name and will try to load and resolve the symbols.
             *   @param libName path to the library that will be loaded. The path must include the library name.
             *   @param libSymbols library simbol name
             *   @return a pointer to library function
+            *   @note The library will be closed when the LibUtility object is destroyed.
             */
             void* openLibrary(const std::string& libName, const char* libSymbols)
             {
@@ -71,6 +69,7 @@ namespace core
             /*!
             *   @brief Method used to close the open library handles.
             *   @param libHandle library handle
+            *   @return return 0 if the library was closed successfully
             */
             static int closeLibrary(void* libHandle)
             {
