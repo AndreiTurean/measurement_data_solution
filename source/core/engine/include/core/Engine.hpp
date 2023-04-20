@@ -41,6 +41,7 @@ namespace core
         bool showConfigMgr_; //!< flag to show configuration manager
         bool showAbout_; //!< flag to show about window
         bool showConfigurationManager_; //!< flag to show configuration manager window
+        GuiControlIfc* memoryMonitor_;
     public:
         /*!
         *   @brief MDS engine contructor.

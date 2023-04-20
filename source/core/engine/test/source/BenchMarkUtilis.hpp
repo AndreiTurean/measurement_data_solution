@@ -21,12 +21,12 @@ public:
         engine_(nullptr),
         initialMemory_(0)
     {
-        initialMemory_ = core::statistics::getCurrentMemUsage();
+        initialMemory_ = core::statistics::getCurrentRSS();
         std::cout << "Initial memory used: "<<  initialMemory_ << " (bytes)" << std::endl;
     }
     ~BenchmarkUtilis()
     {
-        size_t memLeaked = core::statistics::getCurrentMemUsage() - initialMemory_;
+        size_t memLeaked = core::statistics::getCurrentRSS() - initialMemory_;
         std::cout << "Memory leaked during runtime: "<<  memLeaked << " (bytes)" << std::endl;
         EXPECT_LE(memLeaked, 1024 * 1024); // we expect leaks smaller than 1 MB
     }
@@ -37,33 +37,33 @@ public:
             engine_->terminate();
             delete engine_;
         }
-        std::cout << "before engine creation: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
+        std::cout << "before engine creation: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
         engine_ = new core::Engine(EngineInitFlag::performance);
         
         ASSERT_TRUE(engine_ != nullptr);
         std::this_thread::sleep_for(1s);
-        std::cout<< "after engine creation: " << core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
+        std::cout<< "after engine creation: " << core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
     }
     virtual void TearDown() override
     {
         std::this_thread::sleep_for(1s);
-        std::cout << "before engine termination: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
+        std::cout << "before engine termination: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
         ASSERT_TRUE(engine_ != nullptr);
         engine_->terminate();
         delete engine_;
         engine_ = nullptr;
         ASSERT_TRUE(engine_ == nullptr);
         std::this_thread::sleep_for(1s);
-        std::cout << "after engine termination: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
+        std::cout << "after engine termination: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
     }
 
     void ASSERT_MEM_CONSUMPTION_ENGINE_INIT()
     {
         std::this_thread::sleep_for(1s);
-        std::cout << "before engine initialization: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
+        std::cout << "before engine initialization: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
         engine_->initialize();
         std::this_thread::sleep_for(1s);
-        std::cout << "after engine initialization: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
+        std::cout << "after engine initialization: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
     }
 
     void ASSERT_MEM_CONSUMPTION_MO_CREATED(const std::string& name, uint8_t instancenb = 0)
@@ -71,17 +71,17 @@ public:
         ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
         ASSERT_TRUE(conf != nullptr);
         std::this_thread::sleep_for(1s);
-        std::cout << "before mo creation: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
-        size_t memBefore = core::statistics::getCurrentMemUsage();
+        std::cout << "before mo creation: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
+        size_t memBefore = core::statistics::getCurrentRSS();
         ASSERT_TRUE(conf->createMeasurementObject(name, instancenb));
         std::this_thread::sleep_for(1s);
-        std::cout << "after mo creation: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
-        std::cout<<"memory used to created MO: "<< core::statistics::getCurrentMemUsage() - memBefore << " (bytes)" << std::endl;
+        std::cout << "after mo creation: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
+        std::cout<<"memory used to created MO: "<< core::statistics::getCurrentRSS() - memBefore << " (bytes)" << std::endl;
         conf->clearMeasurementObjectList();
-        size_t memoryWasted = core::statistics::getCurrentMemUsage() > memBefore ?core::statistics::getCurrentMemUsage() - memBefore : 0;
+        size_t memoryWasted = core::statistics::getCurrentRSS() > memBefore ?core::statistics::getCurrentRSS() - memBefore : 0;
         std::this_thread::sleep_for(1s);
         std::cout<<"memory leaked while created MO: "<< memoryWasted << " (bytes)" << std::endl;
-        std::cout << "after mo destroyed: "<< core::statistics::getCurrentMemUsage() << " (bytes)" << std::endl;
+        std::cout << "after mo destroyed: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
     }
 
     void ASSERT_MEM_CONSUMPTION_DATA_PROCESSING()

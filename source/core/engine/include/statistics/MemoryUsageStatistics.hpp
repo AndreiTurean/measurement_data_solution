@@ -28,7 +28,7 @@ namespace core
     namespace statistics
     {
         /**
-         * Returns the peak (maximum so far) resident set size (physical
+         * @return the peak (maximum so far) resident set size (physical
          * memory use) measured in bytes, or zero if the value cannot be
          * determined on this OS.
          */
@@ -74,7 +74,7 @@ namespace core
         }
 
         /**
-         * Returns the current resident set size (physical memory use) measured
+         * @return the current resident set size (physical memory use) measured
          * in bytes, or zero if the value cannot be determined on this OS.
          */
         static size_t getCurrentRSS( )
@@ -114,36 +114,64 @@ namespace core
         #endif
         }
 
-        /*!
-        * Returns the current memory usage of the process in bytes.
-        */
-        static size_t getCurrentMemUsage()
+        static size_t getTotalMemoryAvailable()
         {
-        #if defined(_WIN32)
-            /* Windows -------------------------------------------------- */
-            PROCESS_MEMORY_COUNTERS info;
-            GetProcessMemoryInfo( GetCurrentProcess( ), &info, sizeof(info) );
-            return (size_t)info.WorkingSetSize;
-
-        #elif defined(__APPLE__) && defined(__MACH__)
-            /* OSX ------------------------------------------------------ */
-            struct mach_task_basic_info info;
-            mach_msg_type_number_t infoCount = MACH_TASK_BASIC_INFO_COUNT;
-            if ( task_info( mach_task_self( ), MACH_TASK_BASIC_INFO,
-                (task_info_t)&info, &infoCount ) != KERN_SUCCESS )
-                return (size_t)0L;      /* Can't access? */
-            return (size_t)info.resident_size;
-
-        #elif defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
+        #if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
             /* Linux ---------------------------------------------------- */
-            struct mallinfo2 mallInfo = {0};
-            mallInfo = mallinfo2();
-            return mallInfo.uordblks;
+            int rss = 0L;
+            FILE* fp = NULL;
+            if ( (fp = fopen( "/proc/meminfo", "r" )) == NULL )
+                return (size_t)0L;     /* Can't open? */
+            
+            char line[256];
+            while(fgets(line, sizeof(line), fp))
+            {
+                if ( sscanf( line, "MemTotal: %d kB", &rss ) == 1 )
+                {
+                    fclose( fp );
+                    return (size_t)rss;      /* Can't read? */
+                }
+            }
+            fclose( fp );
+            return (size_t)0;
 
         #else
             /* AIX, BSD, Solaris, and Unknown OS ------------------------ */
             return (size_t)0L;          /* Unsupported. */
         #endif
         }
+        
+
+        /*!
+        * Returns the current memory usage of the process in bytes.
+        */
+        // static size_t getCurrentMemUsage()
+        // {
+        // #if defined(_WIN32)
+        //     /* Windows -------------------------------------------------- */
+        //     PROCESS_MEMORY_COUNTERS info;
+        //     GetProcessMemoryInfo( GetCurrentProcess( ), &info, sizeof(info) );
+        //     return (size_t)info.WorkingSetSize;
+
+        // #elif defined(__APPLE__) && defined(__MACH__)
+        //     /* OSX ------------------------------------------------------ */
+        //     struct mach_task_basic_info info;
+        //     mach_msg_type_number_t infoCount = MACH_TASK_BASIC_INFO_COUNT;
+        //     if ( task_info( mach_task_self( ), MACH_TASK_BASIC_INFO,
+        //         (task_info_t)&info, &infoCount ) != KERN_SUCCESS )
+        //         return (size_t)0L;      /* Can't access? */
+        //     return (size_t)info.resident_size;
+
+        // #elif defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
+        //     /* Linux ---------------------------------------------------- */
+        //     struct mallinfo2 mallInfo = {0};
+        //     mallInfo = mallinfo2();
+        //     return mallInfo.uordblks;
+
+        // #else
+        //     /* AIX, BSD, Solaris, and Unknown OS ------------------------ */
+        //     return (size_t)0L;          /* Unsupported. */
+        // #endif
+        // }
     }
 }

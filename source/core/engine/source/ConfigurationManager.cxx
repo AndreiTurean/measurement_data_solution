@@ -112,6 +112,14 @@ namespace core
         {
             return false;
         }
+
+        auto objectControlIfc = dynamic_cast<ObjectControl*>(*it);
+
+        if (objectControlIfc)
+        {
+            objectControlIfc->terminateObject();
+        }
+
         measurementObjectList_.erase(it, measurementObjectList_.end());
 
         return true;
@@ -194,7 +202,7 @@ namespace core
             {
                 for (auto& entryMO : factory_->getFactoryMap())
                 {
-                    if (ImGui::Button(entryMO.first.c_str()))
+                    if (ImGui::Button(entryMO.first.c_str(), ImVec2(400, 0)))
                     {
                         
                         ImGui::OpenPopup(("Create measurement object" + entryMO.first).c_str());
@@ -222,7 +230,44 @@ namespace core
             {
                 for (MeasurementObjectPtr object : measurementObjectList_)
                 {
-                    ImGui::Text("%s", object->getName().c_str());
+                    if(ImGui::TreeNode(object->getName().c_str()))
+                    {
+                        auto extObject = dynamic_cast<ExtendedMeasurementObject*>(object);
+
+                        if (extObject)
+                        {
+                            ImGui::BeginTable("Property table", 2, ImGuiTableFlags_Borders);
+                            ImGui::TableNextRow();
+                            ImGui::TableSetColumnIndex(0);
+                            ImGui::Text("Entry name");
+                            ImGui::TableSetColumnIndex(1);
+                            ImGui::Text("Entry value");
+                            for (auto& entry : extObject->getPropertyTable())
+                            {
+                                ImGui::TableNextRow();
+                                ImGui::TableSetColumnIndex(0);
+                                ImGui::Text("%s", entry.first.c_str());
+                                ImGui::TableSetColumnIndex(1);
+                                ImGui::Text("%s", entry.second.c_str());
+                            }
+                            ImGui::EndTable();
+                        }
+
+                        if(object->getType() != MeasurementObjectType::system)
+                        {
+                            if(ImGui::Button("Remove", ImVec2(400, 0)))
+                            {
+                                if(removeMeasurementObject(object->getName()))
+                                {
+                                    ImGui::TreePop();
+                                    ImGui::TreePop();
+                                    ImGui::EndPopup();
+                                    return true;
+                                }
+                            }
+                        }
+                        ImGui::TreePop();
+                    }
                 }
                 ImGui::TreePop();
             }

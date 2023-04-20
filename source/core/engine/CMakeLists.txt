@@ -16,6 +16,8 @@ add_library(${PROJECT_NAME}
 	source/Watchdog.hpp
 	source/EngineObject.cxx
   source/pch.h
+  source/MemoryVisualization.cxx
+  source/MemoryVisualization.hpp
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

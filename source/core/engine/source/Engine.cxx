@@ -4,6 +4,7 @@
 #include <core/DistributionManager.hpp>
 #include <Logger.hpp>
 #include "Watchdog.hpp"
+#include "MemoryVisualization.hpp"
 
 namespace core
 {
@@ -18,10 +19,11 @@ namespace core
         showDistrMgr_(false),
         showConfigMgr_(false),
         showAbout_(false),
-        showConfigurationManager_(false)
+        showConfigurationManager_(false),
+        memoryMonitor_(nullptr)
     {
         bool silentLog = false;
-        bool silenceWatchDog = false;
+
         switch (flag)
         {
         case EngineInitFlag::normal:
@@ -33,13 +35,13 @@ namespace core
         break;
         case EngineInitFlag::no_metrics:
         {
-            silenceWatchDog = true;
+            //silenceWatchDog = true;
         }
         break;
         case EngineInitFlag::performance:
         {
             silentLog = true;
-            silenceWatchDog = true;
+            //silenceWatchDog = true;
         }
         break;
         default:
@@ -49,10 +51,11 @@ namespace core
         logger_ = new Logger(this, silentLog);
         dataDistributionPtr_ = new DistributionManager(this);
 
-        if(!silenceWatchDog)
-        {
-            watchdog_ = new metrics::Watchdog(logger_);
-        }
+        
+        watchdog_ = new metrics::Watchdog(logger_);
+
+        memoryMonitor_ = new MemoryVisualization();
+        
     }
     Engine::~Engine()
     {
@@ -217,5 +220,6 @@ namespace core
         configMgr_->show(ctx);
         if(showDistrMgr_) dataDistributionPtr_->show(ctx);
         if(showLogger_) logger_->show(ctx);
+        memoryMonitor_->show(ctx);
     }
 }
