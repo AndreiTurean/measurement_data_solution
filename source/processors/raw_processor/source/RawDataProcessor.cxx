@@ -45,7 +45,7 @@ namespace processors
 
         if(packagesBuffer_.size() > (size_t)maxPkgInBuffer_)
         {
-            packagesBuffer_.erase(packagesBuffer_.begin());
+            packagesBuffer_.erase(packagesBuffer_.begin(), packagesBuffer_.begin() +  (packagesBuffer_.size() - (size_t)maxPkgInBuffer_));
         }
         return true;
     }

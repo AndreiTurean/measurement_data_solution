@@ -1,4 +1,5 @@
 #pragma once
+#include <visibility.h>
 #include <defs/MdsInterface.hpp>
 #include <PlayerDefs.hpp>
 
@@ -7,11 +8,13 @@
 */
 namespace replay
 {
-    class Player : 
+    class REPLAY_API Player : 
         public PlayerMovement,
         public PlayerInterface,
-        public InterfaceAccess
+        public InterfaceAccess,
+        public GuiControlIfc
     {
+        bool show_;
     public:
         /*!
         *   @brief Player constructor
@@ -26,10 +29,12 @@ namespace replay
         bool move(const uint64_t steps = 1, Direction direction = Direction::forward);
 
         //! PlayerInterface interface implementation
-        virtual bool play();
-        virtual bool pause();
+        bool play();
+        bool pause();
 
         //! InterfaceAccess interface implementation
-        virtual void* getInterface(const std::string& interfaceName);
+        void* getInterface(const std::string& interfaceName);
+
+        void show(ImGuiContext* ctx) override;
     };
 }

@@ -66,6 +66,9 @@ int main(int, char**)
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    //io.Fonts: 1 fonts, Flags: 0x00000000, TexSize: 4096,8192;
+    io.DisplaySize = ImVec2(1920.00,1080.00);
+    io.DisplayFramebufferScale = ImVec2(1.00,1.00);
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
