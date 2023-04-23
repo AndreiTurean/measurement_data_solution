@@ -1,5 +1,6 @@
 #include <core/Engine.hpp>
 #include "pch.h"
+#include <defs/GuiDefs.hpp>
 #include <core/MeasurementObjectFactory.hpp>
 #include <core/DistributionManager.hpp>
 #include <Logger.hpp>
@@ -17,7 +18,6 @@ namespace core
         interfaceHelperPtr_(nullptr),
         showLogger_(true),
         showDistrMgr_(false),
-        showConfigMgr_(false),
         showAbout_(false),
         showConfigurationManager_(false),
         memoryMonitor_(nullptr)
@@ -163,63 +163,28 @@ namespace core
 
     void Engine::show(ImGuiContext* ctx)
     {
-        ImGui::SetCurrentContext(ctx);
-        if(ImGui::BeginMainMenuBar())
-        {
-            if (ImGui::BeginMenu("File"))
-            {
-                if (ImGui::MenuItem("Open configuration manager", "Ctrl+o")) { showConfigurationManager_ = true; }
-                
-                ImGui::EndMenu();
-            }
+        INIT_CONTEXT(ctx);
 
-            if (ImGui::BeginMenu("Show"))
-            {
-                //if (ImGui::MenuItem("Show configuration manager", "Ctrl+m")) { showConfigMgr_ = !showConfigMgr_; }
-                if (ImGui::MenuItem("Show distribution manager", "Ctrl+d"))   { showDistrMgr_ = !showDistrMgr_; }
-                if (ImGui::MenuItem("Show logger", "Ctrl+l"))  { showLogger_ = !showLogger_; }
-                ImGui::EndMenu();
-            }
+        BEGIN_MAIN_MENU_BAR
+            BEGIN_MENU("File")
+                ADD_MENU_ITEM("Open configuration manager", "Ctrl+o", showConfigurationManager_);
+            END_MENU
 
-            if (ImGui::BeginMenu("About"))
-            {
-                if (ImGui::MenuItem("About engine", "Ctrl+e")) 
-                {
-                    showAbout_ = true;
-                }
-                ImGui::EndMenu();
-            }
-        }
-        ImGui::EndMainMenuBar();
+            BEGIN_MENU("Show")
+                ADD_MENU_ITEM("Show distribution manager", "Ctrl+d", showDistrMgr_);
+                ADD_MENU_ITEM("Show logger", "Ctrl+l()", showLogger_); 
+            END_MENU
+            
+            BEGIN_MENU("About")
+                ADD_MENU_ITEM("About engine", "Ctrl+a", showAbout_);
+            END_MENU
+        END_MAIN_MENU_BAR
 
-        if(showConfigurationManager_)
-        {
-            showConfigMgr_ = false;
-            showConfigurationManager_ = configMgr_->showModal(ctx);
-        }
-
-        if(showAbout_)
-        {
-            ImGui::OpenPopup("About engine");
-            if(ImGui::BeginPopupModal("About engine", &showAbout_, ImGuiWindowFlags_AlwaysAutoResize))
-            {
-                ImGui::Text("Engine version: %d.%d", VERSION_MAJOR, VERSION_MINOR);
-                ImGui::Text("Engine build date: %s", __DATE__);
-                ImGui::Text("Engine build time: %s", __TIME__);
-                ImGui::Text("Engine build type: %s", PROJECT_TYPE);
-
-                if (ImGui::Button("OK"))
-                {
-                    showAbout_ = false;
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
-            }
-        }
-        
-        configMgr_->show(ctx);
-        if(showDistrMgr_) dataDistributionPtr_->show(ctx);
-        if(showLogger_) logger_->show(ctx);
-        memoryMonitor_->show(ctx);
+        DISPLAY_MODAL_WINDOW(showConfigurationManager_, configMgr_, ctx)
+        DISPLAY_ABOUT_MENU(showAbout_, "About engine")
+        DISPLAY_WINDOW(showDistrMgr_, dataDistributionPtr_, ctx)
+        DISPLAY_WINDOW(showLogger_, logger_, ctx)
+        DISPLAY_WINDOW(true, memoryMonitor_, ctx)
+        DISPLAY_WINDOW(true, configMgr_, ctx)
     }
 }

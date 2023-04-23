@@ -78,7 +78,7 @@ int main(int, char**)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImVec4 clear_color = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
     std::shared_ptr<core::Engine> engine = std::make_shared<core::Engine>();
     engine->initialize();
 
@@ -101,7 +101,7 @@ int main(int, char**)
         {
 
             engine->show(ImGui::GetCurrentContext());
-            ImGui::Begin("Engine stats", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::Begin("Engine data", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
             ImGui::Text("Watchdog active: %s", engine->isWatchDogActive() ? "Yes" : "No");
             ImGui::Text("Data distribution active: %s", engine->isPerformingDataAquisition() ? "Yes" : "No");
             ImGui::Text("Logging active: %s", engine->isLoggerActive() ? "Yes" : "No");

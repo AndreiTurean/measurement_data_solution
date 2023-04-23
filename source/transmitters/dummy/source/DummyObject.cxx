@@ -10,7 +10,7 @@ namespace transmitters
         interfaceAccess_(interfaceAccess),
         instanceNumber_(instanceNb),
         handle_(INVALID_HANDLE),
-        name_(name),
+        name_(name + "#" + std::to_string(instanceNb)),
         type_(MeasurementObjectType::data_source),
         isProcessing_(true),
         showGui_(false),
@@ -123,7 +123,7 @@ namespace transmitters
         {
             ImGui::Begin("MOs", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
             ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
-            if(ImGui::BeginTabItem((name_ + " # " + std::to_string((int)instanceNumber_)).c_str() , nullptr, ImGuiTabItemFlags_None))
+            if(ImGui::BeginTabItem((name_).c_str() , nullptr, ImGuiTabItemFlags_None))
             {
                
                 ImGui::Text("Processing status: %s", isProcessing_ ? "enabled" : "dissabled");

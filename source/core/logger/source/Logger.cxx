@@ -6,16 +6,16 @@
 #include <sstream>
 #include <algorithm>
 
-
+#include <defs/GuiDefs.hpp>
 
 namespace core
 {
     Logger::Logger(InterfaceAccess* interfaceAccess, bool ignoreDebug):
         interfaceAccess_(interfaceAccess),
         ignoreDebugMsg_(ignoreDebug),
-        showGui_(true),
         logRegister_(this),
-        showAbout_(false)
+        showAbout_(false),
+        maximumLogSize_(100)
     {
     }
     void* Logger::getInterface(const std::string& interfaceName)
@@ -77,7 +77,10 @@ namespace core
         default:
             break;
         }
-
+        if(logBuffer_.size() >= (size_t)maximumLogSize_)
+        {
+            logBuffer_.erase(logBuffer_.begin(), logBuffer_.begin() + (logBuffer_.size() - (size_t)maximumLogSize_));
+        }
         logBuffer_.push_back(logMessageStream.str());
     }
     bool Logger::subscribe(const char* name, const uint64_t handle)
@@ -92,7 +95,7 @@ namespace core
     void Logger::show(ImGuiContext* ctx)
     {
         ImGui::SetCurrentContext(ctx);
-        auto color = [&](auto msg)
+        static auto color = [&](auto msg)
         {
             if(msg.find("[DBG") != std::string::npos)
             {
@@ -108,23 +111,25 @@ namespace core
             }
             if(msg.find("[ERR") != std::string::npos)
             {
-                return ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+                return ImVec4(1.0f, 0.3f, 0.0f, 1.0f);
             }
             if(msg.find("[CRIT") != std::string::npos)
             {
                 return ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
             }
-            return ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+            return ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
         };
 
         std::lock_guard<std::mutex> lock(loggingGuard_);
-        ImGui::Begin("Log", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::Begin("Log", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
         for(auto& logMessage : logBuffer_)
         {
             ImGui::PushStyleColor(ImGuiCol_Text, color(logMessage));
             ImGui::Text("%s", logMessage.c_str());
             ImGui::PopStyleColor();
         }
+
         ImGui::End();
 
         if(ImGui::BeginMainMenuBar())
@@ -140,23 +145,6 @@ namespace core
             ImGui::EndMainMenuBar();
         }
 
-        if(showAbout_)
-        {
-            ImGui::OpenPopup("About logger");
-            if(ImGui::BeginPopupModal("About logger", &showAbout_, ImGuiWindowFlags_AlwaysAutoResize))
-            {
-                ImGui::Text("Logger version: %d.%d", VERSION_MAJOR, VERSION_MINOR);
-                ImGui::Text("Logger build date: %s", __DATE__);
-                ImGui::Text("Logger build time: %s", __TIME__);
-                ImGui::Text("Logger build type: %s", PROJECT_TYPE);
-
-                if (ImGui::Button("OK"))
-                {
-                    showAbout_ = false;
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::EndPopup();
-            }
-        }
+        DISPLAY_ABOUT_MENU(showAbout_, "About logger")
     }
 }

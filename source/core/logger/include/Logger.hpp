@@ -22,7 +22,6 @@ namespace core
         bool ignoreDebugMsg_; //!< Flag to ignore debug messages.
         std::mutex loggingGuard_; //!< Mutex to protect the log buffer.
         std::vector<std::string> logBuffer_; //!< Buffer for the log messages.
-        bool showGui_; //!< Flag to show the gui.
         
     public:
         /*!
@@ -82,5 +81,6 @@ namespace core
     private:
         LogRegister logRegister_; //!< Log register object.
         bool showAbout_; //!< Flag to show the about window.
+        int maximumLogSize_; //!< Maximum log size.
     };
 }

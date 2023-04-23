@@ -7,7 +7,7 @@ namespace processors
         interfaceAccess_(interfaceAccess),
         instanceNb_(nb),
         handle_(INVALID_HANDLE),
-        name_(name),
+        name_(name + " # " + std::to_string(nb)),
         type_(MeasurementObjectType::data_receiver),
         showGui_(false),
         maxPkgInBuffer_(1024)
@@ -123,7 +123,7 @@ namespace processors
             ImGui::EndTabBar();
             ImGui::End();
 
-            ImGui::Begin("RawDataProcessor", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::Begin(name_.c_str(), &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
 
             ImGui::Text("Timestamp, \tCycle, \tType, \tSize, \tData");
             std::lock_guard<std::mutex> lock(mtx_);
