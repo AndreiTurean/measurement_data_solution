@@ -4,6 +4,7 @@
 #include "Watchdog.hpp"
 #include <defs/MdsInterface.hpp>
 #include <inttypes.h>
+#include <defs/GuiDefs.hpp>
 
 namespace core
 {
@@ -38,7 +39,7 @@ namespace core
             handle_(WATCHDOG_HANDLE),
             type_(MeasurementObjectType::system),
             name_("Watchdog"),
-            showWatchdog_(false),
+            showWatchdog_(true),
             maxDuration_(0xffff)
         {
             watchThread_ = std::make_unique<std::thread>(&Watchdog::watch, this);
@@ -56,34 +57,25 @@ namespace core
 
         void Watchdog::show(ImGuiContext* ctx)
         {
-            ImGui::SetCurrentContext(ctx);
-            if(ImGui::BeginMainMenuBar())
-            {
-                if (ImGui::BeginMenu("Show"))
-                {
-                    if (ImGui::MenuItem("Show watchdog MO", "Ctrl+w")) { showWatchdog_ = !showWatchdog_; }
-                    
-                    ImGui::EndMenu();
-                }
-            }
-            ImGui::EndMainMenuBar();
+            INIT_CONTEXT(ctx)
+            BEGIN_MAIN_MENU_BAR
+                BEGIN_MENU("Show")
+                    ADD_MENU_ITEM(!showWatchdog_ ? "Show watchdog" : "Hide watchdog", "Ctrl+w", showWatchdog_)
+                END_MENU
+            END_MAIN_MENU_BAR
 
             if (showWatchdog_)
             {
                 std::lock_guard<std::mutex> lock(timestampGuard_);
-                ImGui::Begin("MOs", &showWatchdog_, ImGuiWindowFlags_AlwaysAutoResize);
-                ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
-                if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
-                {
-                    ImGui::Text("Last timestamp: %" PRIu64, lastTimestamp_);
-                    ImGui::Text("Delta timestamp (microseconds): %" PRIu64, deltaTimestamp_);
-                    ImGui::SliderInt("Max duration",&maxDuration_, 0, 0xffff);
-                    ImGui::EndTabItem();
-                }
-
-                ImGui::EndTabBar();
-
-                ImGui::End();
+                BEGIN_GUI("Measurement objects", &showWatchdog_, ImGuiWindowFlags_AlwaysAutoResize)
+                    BEGIN_TAB_BAR("Measurement objects")
+                        ADD_TAB_ITEM(name_.c_str(), nullptr)
+                            ImGui::Text("Last timestamp: %" PRIu64, lastTimestamp_);
+                            ImGui::Text("Delta timestamp (microseconds): %" PRIu64, deltaTimestamp_);
+                            ImGui::SliderInt("Max duration",&maxDuration_, 0, 0xffff);
+                        END_TAB_ITEM
+                    END_TAB_BAR
+                END_GUI
             }
         }
 

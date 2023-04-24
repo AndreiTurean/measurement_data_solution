@@ -4,7 +4,7 @@
 *  @brief Begin a new GUI window.
 *  @param name Name of the window.
 */
-#define BEGIN_GUI(name) ImGui::Begin(name);
+#define BEGIN_GUI(name, openPtr, flags) if(ImGui::Begin(name, openPtr, flags)) {
 
 /*!
 *  @brief Display a property table as a list of key-value pairs.
@@ -16,7 +16,7 @@
 /*!
 *  @brief End the current GUI window.
 */
-#define END_GUI ImGui::End();
+#define END_GUI ImGui::End(); }
 
 
 /*!
@@ -74,8 +74,8 @@
 #define END_TABLE ImGui::EndTable();
 
 #define BEGIN_TAB_BAR(name) if(ImGui::BeginTabBar(name, ImGuiWindowFlags_AlwaysAutoResize))
-#define ADD_TAB(name, openPtr) if(ImGui::BeginTabItem(name, openPtr, ImGuiTabItemFlags_None))
-#define END_TAB_ITEM ImGui::EndTabItem();
+#define ADD_TAB_ITEM(name, openPtr) if(ImGui::BeginTabItem(name, openPtr, ImGuiTabItemFlags_None)) {
+#define END_TAB_ITEM ImGui::EndTabItem(); }
 #define END_TAB_BAR ImGui::EndTabBar();
 
 #define DISPLAY_MODAL_WINDOW(dispalyFlag, obj, ctx) if(dispalyFlag) { dispalyFlag = obj->showModal(ctx); }
@@ -84,3 +84,6 @@
 #define INIT_CONTEXT(ctx) ImGui::SetCurrentContext(ctx);
 
 #define DISPLAY_ABOUT_MENU(displayFlag, name) if(displayFlag) { ImGui::OpenPopup(name); if(ImGui::BeginPopupModal(name, &displayFlag, ImGuiWindowFlags_AlwaysAutoResize)) {ImGui::Text("Version: %d.%d", VERSION_MAJOR, VERSION_MINOR); ImGui::Text("Build date: %s", __DATE__); ImGui::Text("Build time: %s", __TIME__); ImGui::Text("Build type: %s", PROJECT_TYPE); if(!displayFlag) ImGui::CloseCurrentPopup(); ImGui::EndPopup(); }}
+
+#define DISPLAY_VECTOR_ELEMENTS_STR(vec, color) for(auto& vecElem : vec) { ImGui::PushStyleColor(ImGuiCol_Text, color(vecElem)); ImGui::Text("%s", vecElem.c_str()); ImGui::PopStyleColor();}
+#define DISPLAY_MAP_ELEMENTS_STR(map) for(auto& mapElem : map) { ImGui::Text("%s", mapElem.first.c_str()); ImGui::SameLine(); ImGui::Text("%s", mapElem.second.c_str()); }

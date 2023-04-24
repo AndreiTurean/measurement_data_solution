@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <core/EngineObject.hpp>
+#include <defs/GuiDefs.hpp>
 
 
 namespace core
@@ -75,33 +76,23 @@ namespace core
 
     void EngineObject::show(ImGuiContext* ctx)
     {
-        ImGui::SetCurrentContext(ctx);
-        if(ImGui::BeginMainMenuBar())
-        {
-            if (ImGui::BeginMenu("Show"))
-            {
-                if (ImGui::MenuItem("Show engine MO", "Ctrl+w")) { showGui_ = !showGui_; }
-                
-                ImGui::EndMenu();
-            }
-        }
-        ImGui::EndMainMenuBar();
+        INIT_CONTEXT(ctx)
+        
+        BEGIN_MAIN_MENU_BAR
+            BEGIN_MENU("Show")
+                ADD_MENU_ITEM(showGui_ ? "Hide engine MO" : "Show engine MO", "Ctrl+w", showGui_)
+            END_MENU
+        END_MAIN_MENU_BAR
 
         if(showGui_)
         {
-            ImGui::Begin("MOs", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
-            ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
-            if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
-            {
-                for(const auto& entry : propertyTable_)
-                {
-                    ImGui::Text("%s : %s", entry.first.c_str(), entry.second.c_str());
-                }
-                ImGui::EndTabItem();
-            }
-
-            ImGui::EndTabBar();
-            ImGui::End();
+            BEGIN_GUI("Measurement objects", &showGui_, ImGuiWindowFlags_AlwaysAutoResize)
+                BEGIN_TAB_BAR("Measurement objects")
+                    ADD_TAB_ITEM(name_.c_str(), nullptr)
+                        DISPLAY_MAP_ELEMENTS_STR(propertyTable_)
+                    END_TAB_ITEM
+                END_TAB_BAR
+            END_GUI
         }
     }
 }

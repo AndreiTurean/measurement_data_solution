@@ -67,8 +67,8 @@ namespace replay
 
         if(showGui_)
         {
-            ImGui::Begin("MOs", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
-            ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
+            ImGui::Begin("Measurement objects", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::BeginTabBar("Measurement objects", ImGuiTabBarFlags_None);
             if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
             {
                 // for(const auto& entry : propertyTable_)

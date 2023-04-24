@@ -94,7 +94,8 @@ namespace core
 
     void Logger::show(ImGuiContext* ctx)
     {
-        ImGui::SetCurrentContext(ctx);
+        INIT_CONTEXT(ctx)
+
         static auto color = [&](auto msg)
         {
             if(msg.find("[DBG") != std::string::npos)
@@ -122,28 +123,16 @@ namespace core
         };
 
         std::lock_guard<std::mutex> lock(loggingGuard_);
-        ImGui::Begin("Log", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-        for(auto& logMessage : logBuffer_)
-        {
-            ImGui::PushStyleColor(ImGuiCol_Text, color(logMessage));
-            ImGui::Text("%s", logMessage.c_str());
-            ImGui::PopStyleColor();
-        }
 
-        ImGui::End();
+        BEGIN_GUI("Log monitor", nullptr, ImGuiWindowFlags_AlwaysAutoResize)
+            DISPLAY_VECTOR_ELEMENTS_STR(logBuffer_, color)
+        END_GUI
 
-        if(ImGui::BeginMainMenuBar())
-        {
-            if (ImGui::BeginMenu("About"))
-            {
-                if (ImGui::MenuItem("About logger", "Ctrl+e")) 
-                {
-                    showAbout_ = true;
-                }
-                ImGui::EndMenu();
-            }
-            ImGui::EndMainMenuBar();
-        }
+        BEGIN_MAIN_MENU_BAR
+            BEGIN_MENU("About")
+                ADD_MENU_ITEM("About logger", "Ctrl+e", showAbout_)
+            END_MENU
+        END_MAIN_MENU_BAR
 
         DISPLAY_ABOUT_MENU(showAbout_, "About logger")
     }

@@ -171,8 +171,8 @@ namespace core
             END_MENU
 
             BEGIN_MENU("Show")
-                ADD_MENU_ITEM("Show distribution manager", "Ctrl+d", showDistrMgr_);
-                ADD_MENU_ITEM("Show logger", "Ctrl+l()", showLogger_); 
+                ADD_MENU_ITEM(showDistrMgr_ ? "Hide distribution manager" : "Show distribution manager", "Ctrl+d", showDistrMgr_);
+                ADD_MENU_ITEM(showLogger_ ? "Hide log monitor" : "Show log monitor", "Ctrl+l()", showLogger_); 
             END_MENU
             
             BEGIN_MENU("About")

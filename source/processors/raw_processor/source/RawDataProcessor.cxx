@@ -108,8 +108,8 @@ namespace processors
 
         if(showGui_)
         {
-            ImGui::Begin("MOs", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
-            ImGui::BeginTabBar("MOs", ImGuiTabBarFlags_None);
+            ImGui::Begin("Measurement objects", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::BeginTabBar("Measurement objects", ImGuiTabBarFlags_None);
             if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
             {
                 ImGui::InputInt("Max packages in buffer", &maxPkgInBuffer_);
