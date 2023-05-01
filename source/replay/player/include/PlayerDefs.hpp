@@ -17,6 +17,8 @@ struct PlayerInterface
 {
     virtual bool play() = 0;
     virtual bool pause() = 0;
+    virtual bool open(const std::string& path) = 0;
+    virtual void close() = 0;
 };
 
 struct PlayerPosition

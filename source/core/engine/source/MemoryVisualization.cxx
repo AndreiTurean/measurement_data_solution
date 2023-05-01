@@ -50,7 +50,7 @@ namespace core
         ImGui::Text("Peak RAM memory usage:  %" PRIu64 " MBytes", peakRSS);
         ImGui::PopStyleColor();
         
-        ImGui::PushStyleColor(ImGuiCol_Text, color(rssMem));
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
         ImGuiIO& io = ImGui::GetIO();
         ImGui::ProgressBar(float(float(rssMem) / float(totalMemory)), ImVec2(io.DisplaySize.x, 0.0f), ("Percentage of RAM used by the application: " + std::to_string(float(float(rssMem) / float(totalMemory)) * 100.0f) + "%").c_str());
         ImGui::PopStyleColor();

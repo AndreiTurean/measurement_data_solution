@@ -28,6 +28,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 #target_link_libraries(${PROJECT_NAME} PRIVATE core)
 target_link_libraries(${PROJECT_NAME} PRIVATE defs)
+target_link_libraries(${PROJECT_NAME} PRIVATE core)
 find_package(imgui)
 target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui)
 find_package(SDL2 CONFIG REQUIRED)

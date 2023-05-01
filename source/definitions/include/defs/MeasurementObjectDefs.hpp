@@ -63,6 +63,7 @@ interface ReaderIfc
     virtual DataPackagePtr readData(uint8_t* data, uint64_t size) = 0;
     virtual bool openFile(const std::string& fileName) = 0;
     virtual void closeFile() = 0;
+    virtual const std::string& getExtension() = 0;
 };
 
 /*!

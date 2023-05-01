@@ -23,6 +23,7 @@ namespace replay
             DataPackagePtr readData(uint8_t* data, uint64_t size) override;
             bool openFile(const std::string& fileName) override;
             void closeFile() override;
+            const std::string& getExtension() override;
             
 
             //! InterfaceAccess interface implementation
@@ -35,6 +36,7 @@ namespace replay
         private:
             InterfaceAccess* interfaceAccess_;
             std::fstream reader_;
+            std::string extension_;
         };
     }
 }

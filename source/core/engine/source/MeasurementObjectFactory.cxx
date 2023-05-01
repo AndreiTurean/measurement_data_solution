@@ -60,7 +60,10 @@ namespace core
             }
             else
             {
-                logger_->log(("Failed to load library: " + obj.path().filename().string()).c_str(), FACTORY_HANDLE, severity::warning);
+                if(utilityLibrary_.openLibrary(obj.path().string(), "createReader") == nullptr) //skip readers. They are handled by the ReaderFactory (Player)
+                {
+                    logger_->log(("Failed to load library: " + obj.path().filename().string()).c_str(), FACTORY_HANDLE, severity::warning);
+                }
             }
         }
     }

@@ -38,7 +38,7 @@ struct ConfigurationParser
     virtual const MeasurementObjectList& getMOsAddedInConfig() = 0;
 };
 
-using FactoryMap = std::map<const std::string, void*>;
+using FactoryMap = std::map<std::string, void*>;
 
 struct ConfigurationFactory
 {

@@ -53,13 +53,19 @@ namespace replay
             reader_.close();
         }
 
-        void AscReader::show()
+        void AscReader::show(ImGuiContext* ctx)
         {
+            ImGui::SetCurrentContext(ctx);
             if(ImGui::Begin("AscReader"))
             {
                 ImGui::Text("Hello from AscReader");
             }
             ImGui::End();
+        }
+
+        const std::string& AscReader::getExtension()
+        {
+            return extension_;
         }
     }
 }

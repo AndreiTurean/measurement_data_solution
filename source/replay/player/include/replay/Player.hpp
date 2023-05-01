@@ -2,7 +2,9 @@
 #include <visibility.h>
 #include <defs/MdsInterface.hpp>
 #include <PlayerDefs.hpp>
+#include <defs/Configuration.hpp>
 
+class LoggingInterface;
 /*!
 *   @brief Data replay
 */
@@ -15,6 +17,9 @@ namespace replay
         public GuiControlIfc
     {
         bool show_;
+        LoggingInterface* logger_;
+        FactoryMap readerMap_;
+        ReaderIfc* activeReader_;
     public:
         /*!
         *   @brief Player constructor
@@ -36,5 +41,8 @@ namespace replay
         void* getInterface(const std::string& interfaceName);
 
         void show(ImGuiContext* ctx) override;
+
+        bool open(const std::string& path);
+        void close();
     };
 }
