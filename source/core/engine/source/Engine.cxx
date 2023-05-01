@@ -95,7 +95,7 @@ namespace core
 
     void Engine::initialize()
     {
-        logger_->log("Started initialization");
+        logger_->log("Started initialization", ENGINE_HANDLE, severity::debug);
         std::shared_ptr<MeasurementObjectFactory> factory = std::make_shared<MeasurementObjectFactory>(this);
         configMgr_ = new ConfigurationManager(this, factory);
         self_ = new EngineObject();
@@ -106,7 +106,7 @@ namespace core
         }
 
         configMgr_->createMeasurementObject(watchdog_);
-        logger_->log("Initialization finished");
+        logger_->log("Initialization finished", ENGINE_HANDLE, severity::debug);
     }
     
     void Engine::terminate()
@@ -140,6 +140,7 @@ namespace core
         }
 
         logger_->log("Finished engine termination");
+        
     }
 
     bool Engine::isWatchDogActive()

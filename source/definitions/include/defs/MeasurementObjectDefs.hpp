@@ -4,6 +4,7 @@
 #include <memory>
 #include <cstdint>
 #include <string>
+#include <defs/DataPackage.hpp>
 
 #define interface struct
 
@@ -53,6 +54,16 @@ using MeasurementObjectList = std::list<MeasurementObjectPtr>;
 
 using PropertyTable = std::map<std::string, std::string>;
 using PropertyPair= std::pair<std::string, std::string>;
+
+interface ReaderIfc
+{
+    virtual uint64_t getCurrentPosition() = 0;
+    virtual uint64_t getEndPosition() = 0;
+    virtual void setPositon(uint64_t position) = 0;
+    virtual DataPackagePtr readData(uint8_t* data, uint64_t size) = 0;
+    virtual bool openFile(const std::string& fileName) = 0;
+    virtual void closeFile() = 0;
+};
 
 /*!
 *   @brief Interface for retreiving extended measurement object information

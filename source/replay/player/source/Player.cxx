@@ -48,6 +48,7 @@ namespace replay
         
         if(ImGui::Begin("Player", &show_, ImGuiWindowFlags_AlwaysAutoResize))
         {
+            
         }
         ImGui::End();
     }

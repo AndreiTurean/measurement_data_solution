@@ -61,16 +61,22 @@ namespace core
 
         return true;
     }
+    
     void EngineObject::clearPropertyTable()
     {
         propertyTable_.clear();
     }
+    
     const PropertyTable& EngineObject::getPropertyTable()
     {
         return propertyTable_;
     }
+
+    
+    // Get the value of a property entry.
     const std::string& EngineObject::getPropertyEntryValue(const std::string& entry)
     {
+        // Return the value of the property entry.
         return propertyTable_[entry];
     }
 

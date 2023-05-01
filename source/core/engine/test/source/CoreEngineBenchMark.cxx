@@ -21,11 +21,18 @@ TEST_F(BenchmarkUtilis, MemoryConsumptionForMultipleMoCreated)
    }
 }
 
+/**
+ * This code checks the memory consumption after the engine initialization.
+ */
+
 TEST_F(BenchmarkUtilis, MemoryConsumptionForDataProcessing)
 {
+   // Check the memory consumption after the engine initialization.
    ASSERT_MEM_CONSUMPTION_ENGINE_INIT();
+   // Create the receiver and transmitter MOs.
    CREATE_MO(RECEIVER_LIB_NAME);
    CREATE_MO(TRANSMITTER_LIB_NAME);
+   // Check the memory consumption after the data processing.
    ASSERT_MEM_CONSUMPTION_DATA_PROCESSING();
 }
 

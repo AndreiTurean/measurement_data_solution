@@ -71,10 +71,6 @@ namespace replay
             ImGui::BeginTabBar("Measurement objects", ImGuiTabBarFlags_None);
             if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
             {
-                // for(const auto& entry : propertyTable_)
-                // {
-                //     ImGui::Text("%s : %s", entry.first.c_str(), entry.second.c_str());
-                // }
                 ImGui::EndTabItem();
             }
 

@@ -15,8 +15,6 @@ project(mds     VERSION 0.1.0
 
 add_executable(${PROJECT_NAME}
 	source/main.cxx
-	source/DataVisualizer.cxx
-	source/DistributionVisualizer.cxx
 )
 
 target_link_libraries(${PROJECT_NAME} defs)
@@ -24,7 +22,6 @@ target_link_libraries(${PROJECT_NAME} logger::logger)
 
 find_package(imgui)
 target_link_libraries(${PROJECT_NAME} imgui::imgui)
-
 
 find_package(SDL2 CONFIG REQUIRED)
 target_link_libraries(${PROJECT_NAME} SDL2::SDL2)
