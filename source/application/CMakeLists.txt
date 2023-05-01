@@ -15,10 +15,19 @@ project(mds     VERSION 0.1.0
 
 add_executable(${PROJECT_NAME}
 	source/main.cxx
+  source/CliParser.cxx
+  source/CliParser.hpp
+)
+
+add_executable(${PROJECT_NAME}_cli
+	source/main_cli.cxx
+  source/CliParser.cxx
+  source/CliParser.hpp
 )
 
 target_link_libraries(${PROJECT_NAME} defs)
 target_link_libraries(${PROJECT_NAME} logger::logger)
+target_link_libraries(${PROJECT_NAME} core)
 
 find_package(imgui)
 target_link_libraries(${PROJECT_NAME} imgui::imgui)
@@ -36,8 +45,10 @@ find_package(GLEW REQUIRED)
 target_link_libraries(${PROJECT_NAME} GLEW::GLEW)
 find_package(glfw3 CONFIG REQUIRED)
 target_link_libraries(${PROJECT_NAME} glfw)
-target_link_libraries(${PROJECT_NAME} core)
 
+target_link_libraries(${PROJECT_NAME}_cli defs)
+target_link_libraries(${PROJECT_NAME}_cli logger::logger)
+target_link_libraries(${PROJECT_NAME}_cli core)
 
 #######################################################
 # setting target compile feature/options              #
