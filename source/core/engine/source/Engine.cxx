@@ -20,7 +20,8 @@ namespace core
         showDistrMgr_(false),
         showAbout_(false),
         showConfigurationManager_(false),
-        memoryMonitor_(nullptr)
+        memoryMonitor_(nullptr),
+        initTerminationPhaseFlag_(false)
     {
         bool silentLog = false;
 
@@ -94,6 +95,7 @@ namespace core
 
     void Engine::initialize()
     {
+        initTerminationPhaseFlag_ = false;
         logger_->log("Started initialization", ENGINE_HANDLE, severity::debug);
         std::shared_ptr<MeasurementObjectFactory> factory = std::make_shared<MeasurementObjectFactory>(this);
         configMgr_ = new ConfigurationManager(this, factory);
@@ -110,13 +112,10 @@ namespace core
     
     void Engine::terminate()
     {
+        if(initTerminationPhaseFlag_) return;
+
+        initTerminationPhaseFlag_ = true;
         logger_->log("Started engine termination");
-        
-        if(watchdog_)
-        {
-            logger_->log("Destroying the watchdog");
-            //delete watchdog_;
-        }
         
         if (dataDistributionPtr_)
         {
@@ -139,7 +138,41 @@ namespace core
             dataDistributionPtr_ = nullptr;
         }
 
+        if(watchdog_)
+        {
+            logger_->log("Destroying the watchdog");
+            delete watchdog_;
+            watchdog_ = nullptr;
+        }
+
+        if(memoryMonitor_)
+        {
+            logger_->log("Destroying the memory monitor");
+            delete reinterpret_cast<MemoryVisualization*>(memoryMonitor_);
+            memoryMonitor_ = nullptr;
+        }
+
+        if(self_)
+        {
+            logger_->log("Destroying the engine object");
+            delete self_;
+            self_ = nullptr;
+        }
+
+        if(interfaceHelperPtr_)
+        {
+            logger_->log("Destroying the interface helper");
+            delete interfaceHelperPtr_;
+            interfaceHelperPtr_ = nullptr;
+        }
+
         logger_->log("Finished engine termination");
+
+        if(logger_)
+        {
+            delete logger_;
+            logger_ = nullptr;
+        }
         
     }
 
@@ -164,6 +197,8 @@ namespace core
 
     void Engine::show(ImGuiContext* ctx)
     {
+        if(initTerminationPhaseFlag_) return;
+
         INIT_CONTEXT(ctx);
 
         BEGIN_MAIN_MENU_BAR

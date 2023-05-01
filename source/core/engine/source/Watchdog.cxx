@@ -49,6 +49,7 @@ namespace core
         }
         Watchdog::~Watchdog()
         {
+            std::lock_guard<std::mutex> lock(timestampGuard_);
             logger_->log("Watchdog stopped", WATCHDOG_HANDLE, severity::information);
             logger_->unsubscribe(WATCHDOG_HANDLE);
             alive_ = false;

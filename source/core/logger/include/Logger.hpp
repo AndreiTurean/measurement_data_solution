@@ -31,6 +31,8 @@ namespace core
         */
         Logger(InterfaceAccess* interfaceAccess, bool ignoreDebug = false);
 
+        virtual ~Logger() = default;
+
         /*!
         *   @brief Retreive a pointer to the desired interface.
         *   @param interfaceName Name of the interface required.

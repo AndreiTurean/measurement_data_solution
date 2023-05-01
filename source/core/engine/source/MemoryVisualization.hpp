@@ -7,6 +7,7 @@ namespace core
         : public GuiControlIfc
     {
         public:
+        virtual ~MemoryVisualization() = default;
         /*!
         *  @brief Method used to show the gui object.
         *  @param ctx ImGui context.

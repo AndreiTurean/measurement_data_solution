@@ -42,6 +42,7 @@ namespace core
         bool showAbout_; //!< flag to show about window
         bool showConfigurationManager_; //!< flag to show configuration manager window
         GuiControlIfc* memoryMonitor_;
+        bool initTerminationPhaseFlag_; //!< flag to indicate if the engine is in the initialization or termination phase
     public:
         /*!
         *   @brief MDS engine contructor.
