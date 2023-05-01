@@ -198,7 +198,7 @@ namespace core
         ImGui::OpenPopup("Configuration manager");
         if (ImGui::BeginPopupModal("Configuration manager", &modalResult, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            if(ImGui::TreeNode("Measurement objects available in configuration manager"))
+            if(ImGui::TreeNodeEx("Measurement objects available in configuration manager", ImGuiTreeNodeFlags_Framed))
             {
                 for (auto& entryMO : factory_->getFactoryMap())
                 {
@@ -226,11 +226,11 @@ namespace core
                 ImGui::TreePop();
             }
 
-            if(ImGui::TreeNode("Existing measurement objects"))
+            if(ImGui::TreeNodeEx("Existing measurement objects", ImGuiTreeNodeFlags_Framed))
             {
                 for (MeasurementObjectPtr object : measurementObjectList_)
                 {
-                    if(ImGui::TreeNode(object->getName().c_str()))
+                    if(ImGui::TreeNodeEx(object->getName().c_str(), ImGuiTreeNodeFlags_Framed))
                     {
                         auto extObject = dynamic_cast<ExtendedMeasurementObject*>(object);
 

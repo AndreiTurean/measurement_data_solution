@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include <defs/GuiDefs.hpp>
+#include <imgui_internal.h>
 
 namespace core
 {
@@ -45,42 +46,58 @@ namespace core
         {
         case severity::debug:
         {
-            logMessageStream << std::to_string(timestamp) <<" [DBG/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
             if(!ignoreDebugMsg_)
+            {
+                logMessageStream << std::to_string(timestamp) <<" [DBG/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
                 std::cout<< logMessageStream.str();
+            }
         }
         break;
         case severity::information:
         {
-            logMessageStream << std::to_string(timestamp) << " [INFO/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
-            std::cout << logMessageStream.str();
+            if(!ignoreDebugMsg_)
+            {
+                logMessageStream << std::to_string(timestamp) << " [INFO/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
+                std::cout << logMessageStream.str();
+            }
         }
         break;
         case severity::warning:
         {
-            logMessageStream << std::to_string(timestamp) <<" [WARN/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
-            std::cout << logMessageStream.str();
+            if(!ignoreDebugMsg_)
+            {
+                logMessageStream << std::to_string(timestamp) <<" [WARN/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
+                std::cout << logMessageStream.str();
+            }
         }
         break;
         case severity::error:
         {
-            logMessageStream << std::to_string(timestamp) <<" [ERR/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
-            std::cerr << logMessageStream.str();
+            if(!ignoreDebugMsg_)
+            {
+                logMessageStream << std::to_string(timestamp) <<" [ERR/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
+                std::cerr << logMessageStream.str();
+            }
         }
         break;
         case severity::critical:
         {
-            logMessageStream << std::to_string(timestamp) <<" [CRIT/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
-            std::cerr << logMessageStream.str();
+            if(!ignoreDebugMsg_)
+            {
+                logMessageStream << std::to_string(timestamp) <<" [CRIT/"<< logRegister_.getName(handle) << "]: "<< message << std::endl;
+                std::cerr << logMessageStream.str();
+            }
         }
         break;
         default:
             break;
         }
+
         if(logBuffer_.size() >= (size_t)maximumLogSize_)
         {
             logBuffer_.erase(logBuffer_.begin(), logBuffer_.begin() + (logBuffer_.size() - (size_t)maximumLogSize_));
         }
+
         logBuffer_.push_back(logMessageStream.str());
     }
     bool Logger::subscribe(const char* name, const uint64_t handle)
@@ -123,10 +140,13 @@ namespace core
         };
 
         std::lock_guard<std::mutex> lock(loggingGuard_);
-
-        BEGIN_GUI("Log monitor", nullptr, ImGuiWindowFlags_AlwaysAutoResize)
+        ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+        if (ImGui::BeginViewportSideBar("##MainStatusBar", viewport, ImGuiDir_Down, BOTTOM_BAR_HEIGHT, window_flags))
+        {
             DISPLAY_VECTOR_ELEMENTS_STR(logBuffer_, color)
-        END_GUI
+            ImGui::End();
+        }
 
         BEGIN_MAIN_MENU_BAR
             BEGIN_MENU("About")

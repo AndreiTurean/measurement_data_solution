@@ -5,6 +5,7 @@
 #include <defs/MdsInterface.hpp>
 #include <inttypes.h>
 #include <defs/GuiDefs.hpp>
+#include <imgui_internal.h>
 
 namespace core
 {
@@ -66,17 +67,23 @@ namespace core
 
             if (showWatchdog_)
             {
-                std::lock_guard<std::mutex> lock(timestampGuard_);
-                BEGIN_GUI("Measurement objects", &showWatchdog_, ImGuiWindowFlags_AlwaysAutoResize)
-                    BEGIN_TAB_BAR("Measurement objects")
-                        ADD_TAB_ITEM(name_.c_str(), nullptr)
-                            ImGui::Text("Last timestamp: %" PRIu64, lastTimestamp_);
-                            ImGui::Text("Delta timestamp (microseconds): %" PRIu64, deltaTimestamp_);
-                            ImGui::SliderInt("Max duration",&maxDuration_, 0, 0xffff);
-                        END_TAB_ITEM
-                    END_TAB_BAR
-                END_GUI
+                ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
+                ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+                if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
+                {
+                    if(ImGui::TreeNodeEx(name_.c_str(), ImGuiTreeNodeFlags_Framed))
+                    {
+                        ImGui::Text("Last timestamp: %" PRIu64, lastTimestamp_);
+                        ImGui::Text("Delta timestamp (microseconds): %" PRIu64, deltaTimestamp_);
+                        ImGui::SliderInt("Time",&maxDuration_, 0, 0xffff);
+                        ImGui::TreePop();
+                    }
+                    
+                    ImGui::End();
+                }
             }
+
+            
         }
 
         const uint8_t& Watchdog::getInstanceNumber()

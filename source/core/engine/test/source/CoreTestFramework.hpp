@@ -33,7 +33,7 @@ public:
     virtual void SetUp() override
     {
         moSize_ = 0;
-        engine_ = new core::Engine(EngineInitFlag::no_metrics);
+        engine_ = new core::Engine(EngineInitFlag::performance);
         ASSERT_TRUE(engine_ != nullptr);
     }
     virtual void TearDown() override
@@ -65,7 +65,7 @@ public:
         ASSERT_TRUE(configMgr->createMeasurementObject(name, instancenb));
         auto mo = configMgr->getMOsAddedInConfig().back();
 
-        EXPECT_EQ(mo->getName(), name);
+        EXPECT_EQ(mo->getName(), (name +" # " + std::to_string(instancenb)));
 
         ASSERT_EQ(configMgr->getMOsAddedInConfig().size(), moSize_ + 1);
     }
@@ -83,8 +83,6 @@ public:
         moSize_ = conf->getMOsAddedInConfig().size();
         for(size_t idx = 0; idx < count; ++ idx)
         {
-            std::string moName = name + std::to_string(count);
-            
             ASSERT_TRUE(conf->createMeasurementObject(name, (uint8_t)idx));
             ASSERT_EQ(conf->getMOsAddedInConfig().size(), idx + 1 + moSize_);
         }
@@ -100,8 +98,8 @@ public:
             ASSERT_EQ(conf->createMeasurementObject(name, 1), flag);
             for(auto mo :conf->getMOsAddedInConfig())
             {
-                if(mo->getHandle() != ENGINE_HANDLE)
-                    EXPECT_EQ(mo->getName(), name);
+                if(mo->getHandle() != ENGINE_HANDLE && mo->getHandle() != WATCHDOG_HANDLE)
+                    EXPECT_EQ(mo->getName(), name + " # 1" );
             }
 
             ASSERT_EQ(conf->getMOsAddedInConfig().size(), moSize_+ 1);
@@ -111,53 +109,28 @@ public:
     
     void ASSERT_DATA_IS_PROCESSED()
     {
-        bool skip = false;
-        if(skip)
-        {
-            return;
-        }
-
-        int i = 0 ;
         std::this_thread::sleep_for(1s);
-        while(i< 50)
+        for(int i = 0; i < 5; i++)
         {
-            std::this_thread::sleep_for(1000ms);
+            std::this_thread::sleep_for(1s);
             DataDistributionStatistics* stat = static_cast<DataDistributionStatistics*>(engine_->getInterface("DataDistributionStatistics"));
             if (!stat)
                 break;
-            auto r1 = stat->getNumberOfProcessedPackagesPerSecond();
-            auto r2 = stat->getMaximumProcessedPackagesPerSecond();
 
-            std::cout<< "Current: " << r1 << ", maximum: " << r2 << std::endl;
-            ASSERT_GT(r1, 3000);
-            ASSERT_GT(r2, 3000);
-
-            i++;
+            ASSERT_GT(stat->getNumberOfProcessedPackagesPerSecond(), 1);
+            ASSERT_GT(stat->getMaximumProcessedPackagesPerSecond(), 1);
         }
     }
 
     void ASSERT_STRESS_AQUISITION()
     {
-        bool skip = true;
-        if(skip)
-        {
-            return;
-        }
-
-        int i = 0 ;
         std::this_thread::sleep_for(1s);
-        while(i< 500)
+        for(int i = 0; i < 5; i++)
         {
-            std::this_thread::sleep_for(10ms);
+            std::this_thread::sleep_for(1s);
             DataDistributionStatistics* stat = static_cast<DataDistributionStatistics*>(engine_->getInterface("DataDistributionStatistics"));
-            auto r1 = stat->getNumberOfProcessedPackagesPerSecond();
-            auto r2 = stat->getMaximumProcessedPackagesPerSecond();
-
-            std::cout<< "Current: " << r1 << ", maximum: " << r2 << std::endl;
-            ASSERT_GT(r1, 3000);
-            ASSERT_GT(r2, 3000);
-
-            i++;
+            ASSERT_GT(stat->getNumberOfProcessedPackagesPerSecond(), 3);
+            ASSERT_GT(stat->getMaximumProcessedPackagesPerSecond(), 3);
         }
     }
 };

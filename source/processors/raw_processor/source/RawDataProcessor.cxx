@@ -1,5 +1,7 @@
 #include "pch.h"
 #include <RawDataProcessor.hpp>
+#include <defs/GuiDefs.hpp>
+#include <imgui_internal.h>
 
 namespace processors
 {
@@ -94,7 +96,6 @@ namespace processors
     {
         ImGui::SetCurrentContext(ctx);
 
-        ImGui::SetCurrentContext(ctx);
         if(ImGui::BeginMainMenuBar())
         {
             if (ImGui::BeginMenu("Show"))
@@ -106,25 +107,24 @@ namespace processors
         }
         ImGui::EndMainMenuBar();
 
-        if(showGui_)
+        
+        ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+        if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
         {
-            ImGui::Begin("Measurement objects", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
-            ImGui::BeginTabBar("Measurement objects", ImGuiTabBarFlags_None);
-            if(ImGui::BeginTabItem(name_.c_str(), nullptr, ImGuiTabItemFlags_None))
+            if(ImGui::TreeNodeEx(name_.c_str(), ImGuiTreeNodeFlags_Framed))
             {
                 ImGui::InputInt("Max packages in buffer", &maxPkgInBuffer_);
-                // for(const auto& entry : propertyTable_)
-                // {
-                //     ImGui::Text("%s : %s", entry.first.c_str(), entry.second.c_str());
-                // }
-                ImGui::EndTabItem();
+                ImGui::TreePop();
             }
-
-            ImGui::EndTabBar();
+                
             ImGui::End();
+        }
 
+        if(showGui_)
+        {
             ImGui::Begin(name_.c_str(), &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
-
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.0f, 1.00f));
             ImGui::Text("Timestamp, \tCycle, \tType, \tSize, \tData");
             std::lock_guard<std::mutex> lock(mtx_);
             for(auto const& pkg : packagesBuffer_)
@@ -132,6 +132,7 @@ namespace processors
                 std::string msg((char*)pkg->payload, pkg->size);
                 ImGui::Text("%" PRIu64 "\t %" PRIu8 "\t %" PRIu8 "\t %" PRIu64 "\t %s", pkg->timestamp, pkg->cycle_, (uint8_t)pkg->type, pkg->size, msg.c_str());
             }
+            ImGui::PopStyleColor();
             ImGui::End();
         }
     }

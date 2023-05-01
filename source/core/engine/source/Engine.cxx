@@ -35,13 +35,12 @@ namespace core
         break;
         case EngineInitFlag::no_metrics:
         {
-            //silenceWatchDog = true;
+            silentLog = true;
         }
         break;
         case EngineInitFlag::performance:
         {
             silentLog = true;
-            //silenceWatchDog = true;
         }
         break;
         default:
@@ -116,6 +115,7 @@ namespace core
         if(watchdog_)
         {
             logger_->log("Destroying the watchdog");
+            //delete watchdog_;
         }
         
         if (dataDistributionPtr_)

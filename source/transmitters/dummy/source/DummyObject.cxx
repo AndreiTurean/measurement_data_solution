@@ -1,6 +1,8 @@
 #include "pch.h"
 #include <transmitters/DummyObject.hpp>
 #include <chrono>
+#include <defs/GuiDefs.hpp>
+#include <imgui_internal.h>
 
 using namespace std::chrono_literals;
 
@@ -10,10 +12,10 @@ namespace transmitters
         interfaceAccess_(interfaceAccess),
         instanceNumber_(instanceNb),
         handle_(INVALID_HANDLE),
-        name_(name + "#" + std::to_string(instanceNb)),
+        name_(name + " # " + std::to_string(instanceNb)),
         type_(MeasurementObjectType::data_source),
         isProcessing_(true),
-        showGui_(false),
+        showGui_(true),
         sleepDuration_(1000)
     {
         handle_ = (instanceNb + 1);
@@ -121,20 +123,21 @@ namespace transmitters
 
         if(showGui_)
         {
-            ImGui::Begin("Measurement objects", &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
-            ImGui::BeginTabBar("Measurement objects", ImGuiTabBarFlags_None);
-            if(ImGui::BeginTabItem((name_).c_str() , nullptr, ImGuiTabItemFlags_None))
+            ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
+            ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+            if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
             {
-               
-                ImGui::Text("Processing status: %s", isProcessing_ ? "enabled" : "dissabled");
-                ImGui::SliderInt("Sleep duration",&sleepDuration_, 1, 1000);
-                ImGui::InputText("Payload", &payload_);
-                
-                ImGui::EndTabItem();
+                if(ImGui::TreeNodeEx(name_.c_str(), ImGuiTreeNodeFlags_Framed))
+                {
+                    ImGui::Text("Processing status: %s", isProcessing_ ? "enabled" : "dissabled");
+                    ImGui::SliderInt("Sleep duration",&sleepDuration_, 1, 1000);
+                    ImGui::InputText("Payload", &payload_);
+                    
+                    ImGui::TreePop();
+                }
+                    
+                ImGui::End();
             }
-
-            ImGui::EndTabBar();
-            ImGui::End();
         }
     }
 }

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include <core/EngineObject.hpp>
 #include <defs/GuiDefs.hpp>
+#include <imgui_internal.h>
 
 
 namespace core
@@ -92,13 +93,18 @@ namespace core
 
         if(showGui_)
         {
-            BEGIN_GUI("Measurement objects", &showGui_, ImGuiWindowFlags_AlwaysAutoResize)
-                BEGIN_TAB_BAR("Measurement objects")
-                    ADD_TAB_ITEM(name_.c_str(), nullptr)
-                        DISPLAY_MAP_ELEMENTS_STR(propertyTable_)
-                    END_TAB_ITEM
-                END_TAB_BAR
-            END_GUI
+            ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
+            ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+            if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
+            {
+                if(ImGui::TreeNodeEx(name_.c_str(), ImGuiTreeNodeFlags_Framed))
+                {
+                    DISPLAY_MAP_ELEMENTS_STR(propertyTable_)
+                    ImGui::TreePop();
+                }
+                
+                ImGui::End();
+            }
         }
     }
 }

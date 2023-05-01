@@ -27,7 +27,7 @@ namespace application
             ImGui::Begin(name_.c_str(), &visible_, ImGuiWindowFlags_AlwaysAutoResize);
             if(registeredReceiverMgr_ == nullptr)
             {
-                if(ImGui::TreeNode("Connect to a data processor"))
+                if(ImGui::TreeNodeEx("Connect to a data processor", ImGuiTreeNodeFlags_Framed))
                 {
                     for(const auto& mo : cfgMgr->getMOsAddedInConfig())
                     {

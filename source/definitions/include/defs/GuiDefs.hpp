@@ -87,3 +87,8 @@
 
 #define DISPLAY_VECTOR_ELEMENTS_STR(vec, color) for(auto& vecElem : vec) { ImGui::PushStyleColor(ImGuiCol_Text, color(vecElem)); ImGui::Text("%s", vecElem.c_str()); ImGui::PopStyleColor();}
 #define DISPLAY_MAP_ELEMENTS_STR(map) for(auto& mapElem : map) { ImGui::Text("%s", mapElem.first.c_str()); ImGui::SameLine(); ImGui::Text("%s", mapElem.second.c_str()); }
+
+#define RIGHT_BAR_WIDTH 350.0f
+#define LEFT_BAR_WIDTH 350.0f
+#define TOP_BAR_HEIGHT ImGui::GetFrameHeight()
+#define BOTTOM_BAR_HEIGHT 250.0f

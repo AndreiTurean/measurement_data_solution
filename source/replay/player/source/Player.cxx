@@ -2,10 +2,12 @@
 #include <replay/Player.hpp>
 #include <utilis/LibUtility.hpp>
 #include <defs/Log.hpp>
+#include <defs/GuiDefs.hpp>
 
 namespace replay
 {
-    Player::Player(InterfaceAccess* interfaceAccess)
+    Player::Player(InterfaceAccess* interfaceAccess):
+        activeReader_(nullptr)
     {
         show_ = true;
 
@@ -93,76 +95,71 @@ namespace replay
     {
         ImGui::SetCurrentContext(ctx);
         ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
-        float height = ImGui::GetFrameHeight();
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_AlwaysAutoResize;
             
-        if (ImGui::BeginViewportSideBar("##SecondaryMenuBar", viewport, ImGuiDir_Up, height, window_flags))
+        if (ImGui::BeginViewportSideBar("##SecondaryMenuBar", viewport, ImGuiDir_Up, TOP_BAR_HEIGHT, window_flags))
         {
-            if (ImGui::BeginMenuBar()) {
-                ImGui::ProgressBar(0.5f, ImVec2(0.f, 0.f), "Recording replayed status");
+            if (ImGui::BeginMenuBar())
+            {
+                ImGui::ProgressBar(0.0f, ImVec2(0.f, 0.f));
                 ImGui::SameLine();
+                ImGui::Button("Jump to begining");
                 ImGui::Button("Play forward");
+                ImGui::Button("Play backward");
+                ImGui::Button("Jump to end");
+
                 ImGui::EndMenuBar();
             }
             ImGui::End();
         }
 
-        if (ImGui::BeginViewportSideBar("##MainStatusBar", viewport, ImGuiDir_Down, height, window_flags))
+        if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
         {
-            if (ImGui::BeginMenuBar()) {
-                
-                ImGui::EndMenuBar();
+            if (ImGui::TreeNodeEx("Player", ImGuiTreeNodeFlags_Framed))
+            {
+                if(ImGui::TreeNodeEx("Player settings", ImGuiTreeNodeFlags_Framed))
+                {
+                    ImGui::TreePop();
+                }
+                if(ImGui::TreeNodeEx("Player controls", ImGuiTreeNodeFlags_Framed))
+                {
+                    ImGui::TreePop();
+                }
+                if(ImGui::TreeNodeEx("Player status", ImGuiTreeNodeFlags_Framed))
+                {
+                    ImGui::TreePop();
+                }
+                if(ImGui::TreeNodeEx("Player info", ImGuiTreeNodeFlags_Framed))
+                {
+                    ImGui::TreePop();
+                }
+                if(ImGui::TreeNodeEx("Reader factory", ImGuiTreeNodeFlags_Framed))
+                {
+                    if(ImGui::BeginTable("Reader table", 2, ImGuiTableFlags_Borders))
+                    {
+                        ImGui::TableNextRow();
+                        ImGui::TableSetColumnIndex(0);
+                        ImGui::Text("Reader name");
+                        ImGui::TableSetColumnIndex(1);
+                        ImGui::Text("Function location");
+
+                        for(const auto& [name, func] : readerMap_)
+                        {
+                            ImGui::TableNextRow();
+                            ImGui::TableSetColumnIndex(0);
+                            ImGui::Text("%s", name.c_str());
+                            ImGui::TableSetColumnIndex(1);
+                            ImGui::Text("%p", func);
+                        }
+
+                        ImGui::EndTable();
+                    }
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
             }
             ImGui::End();
         }
-
-        if(ImGui::BeginMainMenuBar())
-        {
-
-            if (ImGui::BeginMenu("Player"))
-            {
-                if (ImGui::MenuItem("Open", "Ctrl+o")) { }
-                if (ImGui::MenuItem("Close", "Ctrl+w")) { }
-                if (ImGui::MenuItem("Play", "Ctrl+p")) { }
-                if (ImGui::MenuItem("Pause", "Ctrl+u")) {}
-                if (ImGui::MenuItem("Move forward", "Ctrl+f")) { }
-                if (ImGui::MenuItem("Move backward", "Ctrl+b")) { }
-                if (ImGui::MenuItem("Move to start", "Ctrl+s")) {}
-                if (ImGui::MenuItem("Move to end", "Ctrl+e")) {}
-                if (ImGui::MenuItem("Move to", "Ctrl+m")) {}
-                if (ImGui::MenuItem("Move to next", "Ctrl+n")) {}
-                if (ImGui::MenuItem("Move to previous", "Ctrl+r")) {}
-                if (ImGui::MenuItem("Move to first", "Ctrl+t")) {}
-
-                ImGui::EndMenu();
-            }
-  
-            ImGui::EndMainMenuBar();
-        }
-        
-        
-        if(ImGui::Begin("Reader factory", &show_, ImGuiWindowFlags_AlwaysAutoResize))
-        {
-            ImGui::BeginTable("Reader table", 2, ImGuiTableFlags_Borders);
-            ImGui::TableNextRow();
-            ImGui::TableSetColumnIndex(0);
-            ImGui::Text("Reader name");
-            ImGui::TableSetColumnIndex(1);
-            ImGui::Text("Function location");
-
-            for(const auto& [name, func] : readerMap_)
-            {
-                ImGui::TableNextRow();
-                ImGui::TableSetColumnIndex(0);
-                ImGui::Text("%s", name.c_str());
-                ImGui::TableSetColumnIndex(1);
-                ImGui::Text("%p", func);
-            }
-
-            ImGui::EndTable();
-            
-        }
-        ImGui::End();
     }
 
 }

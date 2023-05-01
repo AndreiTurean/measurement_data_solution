@@ -8,8 +8,8 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 #include <core/Engine.hpp>
 #include <imgui_stdlib.h>
-#include "DataVisualizer.hpp"
-#include "DistributionVisualizer.hpp"
+#include <imgui_internal.h>
+#include <defs/GuiDefs.hpp>
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -72,6 +72,10 @@ int main(int, char**)
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
+    auto clrMap = ImGui::GetStyle().Colors;
+
+    clrMap[ImGuiCol_SliderGrabActive] = ImVec4(0.00f, 1.00f, 0.00f, 0.50f);
+    clrMap[ImGuiCol_SliderGrab] = ImVec4(0.00f, 1.00f, 0.00f, 0.50f);
     //ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
@@ -97,26 +101,29 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // 2. Show engine stats
+        engine->show(ImGui::GetCurrentContext());
+        ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+        if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
         {
-
-            engine->show(ImGui::GetCurrentContext());
-            ImGui::Begin("Engine data", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-            ImGui::Text("Watchdog active: %s", engine->isWatchDogActive() ? "Yes" : "No");
-            ImGui::Text("Data distribution active: %s", engine->isPerformingDataAquisition() ? "Yes" : "No");
-            ImGui::Text("Logging active: %s", engine->isLoggerActive() ? "Yes" : "No");
-            if (ImGui::Button("Reset"))
+            if(ImGui::TreeNodeEx("Engine information", ImGuiTreeNodeFlags_Framed))
             {
-                engine->terminate();
-                engine.reset();
-                engine = std::make_shared<core::Engine>();
-                engine->initialize();
+                ImGui::Text("Watchdog active: %s", engine->isWatchDogActive() ? "Yes" : "No");
+                ImGui::Text("Data distribution active: %s", engine->isPerformingDataAquisition() ? "Yes" : "No");
+                ImGui::Text("Logging active: %s", engine->isLoggerActive() ? "Yes" : "No");
+                if (ImGui::Button("Reset"))
+                {
+                    engine->terminate();
+                    engine.reset();
+                    engine = std::make_shared<core::Engine>();
+                    engine->initialize();
+                }
+                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+                ImGui::TreePop();
             }
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
+            
             ImGui::End();
         }
-
 
         // Rendering
         ImGui::Render();

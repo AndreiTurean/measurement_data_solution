@@ -13,7 +13,7 @@ using namespace std::chrono_literals;
 class BenchmarkUtilis : public ::testing::Test
 {
 protected:
-    core::Engine* engine_;
+    std::unique_ptr<core::Engine> engine_;
     size_t initialMemory_;
     
 public:
@@ -22,12 +22,10 @@ public:
         initialMemory_(0)
     {
         initialMemory_ = core::statistics::getCurrentRSS();
-        std::cout << "Initial memory used: "<<  initialMemory_ << " (bytes)" << std::endl;
     }
     ~BenchmarkUtilis()
     {
         size_t memLeaked = core::statistics::getCurrentRSS() - initialMemory_;
-        std::cout << "Memory leaked during runtime: "<<  memLeaked << " (bytes)" << std::endl;
         EXPECT_LE(memLeaked, 1024 * 1024); // we expect leaks smaller than 1 MB
     }
     virtual void SetUp() override
@@ -35,58 +33,40 @@ public:
         if(engine_)
         {
             engine_->terminate();
-            delete engine_;
+            engine_.reset();
         }
-        std::cout << "before engine creation: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
-        engine_ = new core::Engine(EngineInitFlag::performance);
-        
+        engine_ =  std::make_unique<core::Engine>(EngineInitFlag::performance);
         ASSERT_TRUE(engine_ != nullptr);
-        std::this_thread::sleep_for(1s);
-        std::cout<< "after engine creation: " << core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
     }
     virtual void TearDown() override
     {
-        std::this_thread::sleep_for(1s);
-        std::cout << "before engine termination: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
         ASSERT_TRUE(engine_ != nullptr);
         engine_->terminate();
-        delete engine_;
-        engine_ = nullptr;
-        ASSERT_TRUE(engine_ == nullptr);
-        std::this_thread::sleep_for(1s);
-        std::cout << "after engine termination: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
+        engine_.reset();
     }
 
     void ASSERT_MEM_CONSUMPTION_ENGINE_INIT()
     {
-        std::this_thread::sleep_for(1s);
-        std::cout << "before engine initialization: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
+        size_t memBefore = core::statistics::getCurrentRSS();
         engine_->initialize();
-        std::this_thread::sleep_for(1s);
-        std::cout << "after engine initialization: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
+        size_t memoryWasted = core::statistics::getCurrentRSS() > memBefore ? core::statistics::getCurrentRSS() - memBefore : 0;
+        EXPECT_LE(memoryWasted, 1024 * 1024); // we expect leaks smaller than 1 MB
     }
 
     void ASSERT_MEM_CONSUMPTION_MO_CREATED(const std::string& name, uint8_t instancenb = 0)
     {
         ConfigurationParser* conf = static_cast<ConfigurationParser*>(engine_->getInterface("ConfigurationParser"));
         ASSERT_TRUE(conf != nullptr);
-        std::this_thread::sleep_for(1s);
-        std::cout << "before mo creation: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
         size_t memBefore = core::statistics::getCurrentRSS();
         ASSERT_TRUE(conf->createMeasurementObject(name, instancenb));
-        std::this_thread::sleep_for(1s);
-        std::cout << "after mo creation: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
-        std::cout<<"memory used to created MO: "<< core::statistics::getCurrentRSS() - memBefore << " (bytes)" << std::endl;
         conf->clearMeasurementObjectList();
-        size_t memoryWasted = core::statistics::getCurrentRSS() > memBefore ?core::statistics::getCurrentRSS() - memBefore : 0;
-        std::this_thread::sleep_for(1s);
-        std::cout<<"memory leaked while created MO: "<< memoryWasted << " (bytes)" << std::endl;
-        std::cout << "after mo destroyed: "<< core::statistics::getCurrentRSS() << " (bytes)" << std::endl;
+        size_t memoryWasted = core::statistics::getCurrentRSS() > memBefore ? core::statistics::getCurrentRSS() - memBefore : 0;
+        EXPECT_LE(memoryWasted, 1024 * 1024); // we expect leaks smaller than 1 MB
     }
 
     void ASSERT_MEM_CONSUMPTION_DATA_PROCESSING()
     {
-        std::this_thread::sleep_for(300s);
+        std::this_thread::sleep_for(60s);
     }
 
     void CREATE_MO(const std::string& name, uint8_t instancenb = 0)
@@ -102,20 +82,12 @@ class BenchMarkUtilisPerf : public BenchmarkUtilis
 public:
     virtual void SetUp() override
     {
-        if(BenchmarkUtilis::engine_)
-        {
-            BenchmarkUtilis::engine_->terminate();
-            delete BenchmarkUtilis::engine_;
-        }
-
-        BenchmarkUtilis::engine_ = new core::Engine(EngineInitFlag::performance);
+        BenchmarkUtilis::SetUp();
+       
     }
     virtual void TearDown() override
     {
-        ASSERT_TRUE(BenchmarkUtilis::engine_ != nullptr);
-        BenchmarkUtilis::engine_->terminate();
-        delete BenchmarkUtilis::engine_;
-        ASSERT_TRUE(BenchmarkUtilis::engine_ == nullptr);
+        BenchmarkUtilis::TearDown();
     }
 
     void DUMMY_DISTRIBUTION()
@@ -129,7 +101,7 @@ public:
         dataDistributionPtr->distributeData(pkg);
 
         uint64_t  deltaTimestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - timestamp;
-        std::cout << "Timestamp elapsed for distributing a package: "<< deltaTimestamp << " (us)" << std::endl;
+        EXPECT_LE(deltaTimestamp, 1000000); // we expect leaks smaller than 1 sec
     }
 
     void SMALL_PACKAGE_DISTRIBUTION()
@@ -148,6 +120,5 @@ public:
         dataDistributionPtr->distributeData(pkg);
 
         uint64_t  deltaTimestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - timestamp;
-        std::cout << "Timestamp elapsed for distributing a package: "<< deltaTimestamp << " (us)" << std::endl;
     }
 };

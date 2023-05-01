@@ -1,6 +1,7 @@
 #include "pch.h"
 #include <core/DistributionManager.hpp>
 #include <defs/GuiDefs.hpp>
+#include <imgui_internal.h>
 
 namespace core
 {
@@ -97,11 +98,21 @@ namespace core
     {
         std::lock_guard<std::mutex> lock(distributionLock_);
         INIT_CONTEXT(ctx)
-        BEGIN_GUI("Distribution manager", nullptr, ImGuiWindowFlags_AlwaysAutoResize)  
-            ImGui::Text("Distribution status: %s", distributing_ ? "enabled" : "disabled");
-            ImGui::Text("Receiver pool size %" PRIu64, receiversPool_.size());
-            ImGui::Text("Max packages distributed per second: %" PRIu64, statistics_->getMaximumProcessedPackagesPerSecond());
-            ImGui::Text("Actual packages distributed per second: %" PRIu64, statistics_->getNumberOfProcessedPackagesPerSecond());
-        END_GUI
+        ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+
+        if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
+        {
+            if(ImGui::TreeNodeEx("Distribution manager", ImGuiTreeNodeFlags_Framed))
+            {
+                ImGui::Text("Distribution status: %s", distributing_ ? "enabled" : "disabled");
+                ImGui::Text("Receiver pool size %" PRIu64, receiversPool_.size());
+                ImGui::Text("Max packages distributed per second: %" PRIu64, statistics_->getMaximumProcessedPackagesPerSecond());
+                ImGui::Text("Actual packages distributed per second: %" PRIu64, statistics_->getNumberOfProcessedPackagesPerSecond());
+                ImGui::TreePop();
+            }
+            
+            ImGui::End();
+        }
     }
 }
