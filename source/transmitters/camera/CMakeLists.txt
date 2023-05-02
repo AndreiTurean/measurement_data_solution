@@ -14,7 +14,22 @@ target_include_directories(${PROJECT_NAME}_camera PUBLIC
   $<INSTALL_INTERFACE:include>  # <prefix>/include/
 )
 
-target_link_libraries(${PROJECT_NAME}_camera PRIVATE defs)
+target_link_libraries(${PROJECT_NAME}_camera defs)
+find_package(imgui)
+target_link_libraries(${PROJECT_NAME}_camera imgui::imgui)
+find_package(SDL2 CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME}_camera SDL2::SDL2)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_link_libraries(${PROJECT_NAME}_camera SDL2::SDL2main)
+else()
+    target_link_libraries(${PROJECT_NAME}_camera SDL2::SDL2-static)
+endif()
+
+find_package(GLEW REQUIRED)
+target_link_libraries(${PROJECT_NAME}_camera GLEW::GLEW)
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME}_camera glfw)
 
 #######################################################
 # setting target compile feature/options              #

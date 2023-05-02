@@ -137,7 +137,10 @@ namespace core
 
         #else
             /* AIX, BSD, Solaris, and Unknown OS ------------------------ */
-            return (size_t)0L;          /* Unsupported. */
+            MEMORYSTATUSEX status;
+            status.dwLength = sizeof(status);
+            GlobalMemoryStatusEx(&status);
+            return size_t(status.ullTotalPhys/1024);          /* Unsupported. */
         #endif
         }
         

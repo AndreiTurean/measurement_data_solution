@@ -5,6 +5,9 @@
 #include <cstdint>
 #include <string>
 #include <defs/DataPackage.hpp>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_internal.h>
 
 #define interface struct
 
@@ -142,7 +145,7 @@ interface ObjectControl
     virtual void terminateObject() = 0;
 };
 
-class ImGuiContext;
+
 /*!
 * @brief Interface for controlling the gui object behaviour
 */

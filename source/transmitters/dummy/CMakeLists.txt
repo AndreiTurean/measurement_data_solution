@@ -14,29 +14,28 @@ target_include_directories(${PROJECT_NAME}_dummy PUBLIC
 )
 
 find_package(Threads REQUIRED)
-target_link_libraries(${PROJECT_NAME}_dummy PRIVATE defs)
+target_link_libraries(${PROJECT_NAME}_dummy defs)
 find_package(imgui)
-target_link_libraries(${PROJECT_NAME}_dummy PRIVATE imgui::imgui)
+target_link_libraries(${PROJECT_NAME}_dummy imgui::imgui)
 find_package(SDL2 CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME}_dummy PRIVATE SDL2::SDL2)
+target_link_libraries(${PROJECT_NAME}_dummy SDL2::SDL2)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_link_libraries(${PROJECT_NAME}_dummy PRIVATE SDL2::SDL2main)
+    target_link_libraries(${PROJECT_NAME}_dummy SDL2::SDL2main)
 else()
-    target_link_libraries(${PROJECT_NAME}_dummy PRIVATE SDL2::SDL2-static)
+    target_link_libraries(${PROJECT_NAME}_dummy SDL2::SDL2-static)
 endif()
 
 find_package(GLEW REQUIRED)
-target_link_libraries(${PROJECT_NAME}_dummy PRIVATE GLEW::GLEW)
+target_link_libraries(${PROJECT_NAME}_dummy GLEW::GLEW)
 find_package(glfw3 CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME}_dummy PRIVATE glfw)
+target_link_libraries(${PROJECT_NAME}_dummy glfw)
 
 #######################################################
 # setting target compile feature/options              #
 #######################################################
 # https://cmake.org/cmake/help/latest/manual/cmake-compile-features.7.html
 target_compile_features(${PROJECT_NAME}_dummy PUBLIC cxx_std_17)
-
 
 target_compile_definitions(${PROJECT_NAME}_dummy PUBLIC DUMMY_DLL) # we want to build a shared library
 target_compile_definitions(${PROJECT_NAME}_dummy PRIVATE CREATE_DLL)

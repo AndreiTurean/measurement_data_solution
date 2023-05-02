@@ -48,10 +48,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 # https://cmake.org/cmake/help/latest/manual/cmake-compile-features.7.html
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
-if(BUILD_SHARED_LIBS)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC PLAYER_DLL) # we want to build a shared library
-    target_compile_definitions(${PROJECT_NAME} PRIVATE CREATE_DLL)
-endif()
+target_compile_definitions(${PROJECT_NAME} PUBLIC ASC_READER_DLL) # we want to build a shared library
+target_compile_definitions(${PROJECT_NAME} PRIVATE CREATE_DLL)
+
 
 
 target_compile_options(${PROJECT_NAME} PRIVATE

@@ -6,9 +6,9 @@
 #// Generic helper definitions for shared library support
 #if defined _WIN32 || defined __CYGWIN__
 #ifndef CREATE_DLL
-#define REPLAY_LIB_IMPORT __declspec(dllimport)
+#define ASC_READER_LIB_IMPORT __declspec(dllimport)
 #else
-#define REPLAY_LIB_EXPORT __declspec(dllexport)
+#define ASC_READER_LIB_EXPORT __declspec(dllexport)
 #endif
 #define ASC_READER_LIB_LOCAL
 #else

@@ -26,7 +26,7 @@ add_executable(${PROJECT_NAME}_cli
 )
 
 target_link_libraries(${PROJECT_NAME} defs)
-target_link_libraries(${PROJECT_NAME} logger::logger)
+target_link_libraries(${PROJECT_NAME} logger)
 target_link_libraries(${PROJECT_NAME} core)
 
 find_package(imgui)
