@@ -9,6 +9,7 @@ namespace replay
         AscReader::AscReader(InterfaceAccess* interfaceAccess)
         {
             interfaceAccess_ = interfaceAccess;
+            extension_ = ".asc";
         }
 
         AscReader::~AscReader()

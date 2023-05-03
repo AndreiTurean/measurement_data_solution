@@ -3,11 +3,15 @@
 #include <utilis/LibUtility.hpp>
 #include <defs/Log.hpp>
 #include <defs/GuiDefs.hpp>
+#include <filesystem>
+
+typedef ReaderIfc* createReader(InterfaceAccess*);
 
 namespace replay
 {
     Player::Player(InterfaceAccess* interfaceAccess):
-        activeReader_(nullptr)
+        activeReader_(nullptr),
+        interfaceAccess_(interfaceAccess)
     {
         show_ = true;
 
@@ -32,6 +36,10 @@ namespace replay
             {
                 logger_->log(("Loaded library: " + obj.path().filename().string()).c_str(), PLAYER_HANDLE, severity::information);
                 readerMap_[obj.path().filename().u8string()] = func;
+
+                createReader* rdr = (createReader*)func;
+                ReaderIfc* reader = rdr(interfaceAccess_);
+                activeReaderPool_[reader->getExtension()] = reader;
             }
             else
             {
@@ -131,6 +139,31 @@ namespace replay
                 }
                 if(ImGui::TreeNodeEx("Player info", ImGuiTreeNodeFlags_Framed))
                 {
+
+                    if(ImGui::InputText("Recording name", &currentLoadedRecordingFile_, ImGuiInputTextFlags_EnterReturnsTrue))
+                    {
+                        logger_->log(("Changed recording name to: " + currentLoadedRecordingFile_).c_str(), PLAYER_HANDLE, severity::information);
+                        std::string extension = std::filesystem::path(currentLoadedRecordingFile_).extension().string();
+
+                        if(activeReaderPool_.find(extension) != activeReaderPool_.end())
+                        {
+                            activeReader_ = activeReaderPool_[extension];
+
+                            if(activeReader_->openFile(currentLoadedRecordingFile_))
+                            {
+                                logger_->log(("Opened file: " + currentLoadedRecordingFile_).c_str(), PLAYER_HANDLE, severity::information);
+                            }
+                            else
+                            {
+                                logger_->log(("Failed to open file: " + currentLoadedRecordingFile_).c_str(), PLAYER_HANDLE, severity::error);
+                            }
+                        }
+                        else
+                        {
+                            logger_->log(("Failed to find reader for extension: " + extension).c_str(), PLAYER_HANDLE, severity::error);
+                        }
+                    }
+                    
                     ImGui::TreePop();
                 }
                 if(ImGui::TreeNodeEx("Reader factory", ImGuiTreeNodeFlags_Framed))
@@ -150,6 +183,26 @@ namespace replay
                             ImGui::Text("%s", name.c_str());
                             ImGui::TableSetColumnIndex(1);
                             ImGui::Text("%p", func);
+                        }
+
+                        ImGui::EndTable();
+                    }
+
+                    if(ImGui::BeginTable("Active reader table", 2, ImGuiTableFlags_Borders))
+                    {
+                        ImGui::TableNextRow();
+                        ImGui::TableSetColumnIndex(0);
+                        ImGui::Text("Reader extension");
+                        ImGui::TableSetColumnIndex(1);
+                        ImGui::Text("Reader location");
+
+                        for(const auto& [name, reader] : activeReaderPool_)
+                        {
+                            ImGui::TableNextRow();
+                            ImGui::TableSetColumnIndex(0);
+                            ImGui::Text("%s", name.c_str());
+                            ImGui::TableSetColumnIndex(1);
+                            ImGui::Text("%p", (void*)reader);
                         }
 
                         ImGui::EndTable();

@@ -18,6 +18,8 @@ add_library(${PROJECT_NAME}
   source/pch.h
   source/MemoryVisualization.cxx
   source/MemoryVisualization.hpp
+  source/CPUMonitor.cxx
+  source/CPUMonitor.hpp
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

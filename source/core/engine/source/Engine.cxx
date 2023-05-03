@@ -6,6 +6,7 @@
 #include <Logger.hpp>
 #include "Watchdog.hpp"
 #include "MemoryVisualization.hpp"
+#include "CPUMonitor.hpp"
 
 namespace core
 {
@@ -21,7 +22,8 @@ namespace core
         showAbout_(false),
         showConfigurationManager_(false),
         memoryMonitor_(nullptr),
-        initTerminationPhaseFlag_(false)
+        initTerminationPhaseFlag_(false),
+        cpuMonitor_(nullptr)
     {
         bool silentLog = false;
 
@@ -47,14 +49,13 @@ namespace core
         default:
             break;
         }
+
         interfaceHelperPtr_ = new core::utility::InterfaceUtilityHelper(this);
         logger_ = new Logger(this, silentLog);
         dataDistributionPtr_ = new DistributionManager(this);
-
-        
         watchdog_ = new metrics::Watchdog(logger_);
-
         memoryMonitor_ = new MemoryVisualization();
+        cpuMonitor_ = new CPUMonitor();
         
     }
     Engine::~Engine()
@@ -222,5 +223,6 @@ namespace core
         DISPLAY_WINDOW(showLogger_, logger_, ctx)
         DISPLAY_WINDOW(true, memoryMonitor_, ctx)
         DISPLAY_WINDOW(true, configMgr_, ctx)
+        DISPLAY_WINDOW(true, cpuMonitor_, ctx)
     }
 }

@@ -21,7 +21,7 @@ namespace core
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
         if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
         {
-            if(ImGui::TreeNodeEx("Core information", ImGuiTreeNodeFlags_Framed))
+            if(ImGui::TreeNodeEx("Core Memory information", ImGuiTreeNodeFlags_Framed))
             {
                 ImGui::Text("RAM memory usage:  %" PRIu64 " MBytes", rssMem);
                 ImGui::Text("Peak RAM memory usage:  %" PRIu64 " MBytes", peakRSS);

@@ -26,6 +26,7 @@ namespace processors
         bool showGui_;
         std::mutex mtx_;
         int maxPkgInBuffer_;
+        int maxPayloadSize_;
 
     public:
         RawDataProcessor(InterfaceAccess* interfaceAccess, uint8_t nb, const std::string& name);

@@ -65,7 +65,7 @@ configure_package_config_file(${PROJECT_NAME}.cmake.in
 
 write_basic_package_version_file(
   ${PROJECT_NAME}ConfigVersion.cmake
-  VERSION 0.1.0
+  VERSION 0.2.0
   COMPATIBILITY SameMajorVersion
 )
 
@@ -76,5 +76,24 @@ include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE)
 set(CPACK_PACKAGE_VERSION_MAJOR ${${PROJECT_NAME}_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${${PROJECT_NAME}_VERSION_MINOR})
+# set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+# set(CPACK_GENERATOR "DEB")
+# set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+
+# set(CPACK_DEBIAN_PACKAGE_NAME "mds-dev")
+
+# set(CPACK_DEBIAN_PACKAGE_VERSION 1.0.0)
+# set(CPACK_DEBIAN_PACKAGE_RELEASE 1)
+# string(TIMESTAMP NOW "%s")
+# set(CPACK_DEBIAN_PACKAGE_RELEASE ${NOW})
+
+# set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "some short description")
+
+# set(CPACK_PACKAGE_DESCRIPTION
+# "some very long long
+# long long description")
+
+# set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Your Name <your@email.com>")
+# set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://something.org/")
 
 include(CPack)

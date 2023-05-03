@@ -15,7 +15,6 @@ project(player     VERSION 0.1.0
 
 add_library(${PROJECT_NAME} MODULE
 	source/Player.cxx
-	source/PlayerDataBuffer.cxx
 	source/PlayerObject.cxx)
 
 #add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

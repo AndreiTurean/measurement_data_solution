@@ -12,7 +12,8 @@ namespace processors
         name_(name + " # " + std::to_string(nb)),
         type_(MeasurementObjectType::data_receiver),
         showGui_(false),
-        maxPkgInBuffer_(1024)
+        maxPkgInBuffer_(1024),
+        maxPayloadSize_(64)
     {
         handle_ = (instanceNb_ + 1);
         handle_ = handle_ << 0x8;
@@ -20,7 +21,7 @@ namespace processors
     RawDataProcessor::~RawDataProcessor()
     {
         interfaceAccess_ = nullptr;
-        subjects_.clear();
+        packagesBuffer_.clear();
     }
 
     const uint8_t& RawDataProcessor::getInstanceNumber()
@@ -114,7 +115,8 @@ namespace processors
         {
             if(ImGui::TreeNodeEx(name_.c_str(), ImGuiTreeNodeFlags_Framed))
             {
-                ImGui::InputInt("Max packages in buffer", &maxPkgInBuffer_);
+                ImGui::InputInt("Max packages", &maxPkgInBuffer_);
+                ImGui::InputInt("Max payload", &maxPayloadSize_);
                 ImGui::TreePop();
             }
                 
@@ -125,12 +127,45 @@ namespace processors
         {
             ImGui::Begin(name_.c_str(), &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.0f, 1.00f));
-            ImGui::Text("Timestamp, \tCycle, \tType, \tSize, \tData");
+            if(ImGui::BeginTable("Raw Data Visualization", 5, ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollX |ImGuiTableFlags_ScrollY)){
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("Timestamp");
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("Cycle");
+            ImGui::TableSetColumnIndex(2);
+            ImGui::Text("Type");
+            ImGui::TableSetColumnIndex(3);
+            ImGui::Text("Size");
+            ImGui::TableSetColumnIndex(4);
+            ImGui::Text("Data");
+
             std::lock_guard<std::mutex> lock(mtx_);
             for(auto const& pkg : packagesBuffer_)
             {
-                std::string msg((char*)pkg->payload, pkg->size);
-                ImGui::Text("%" PRIu64 "\t %" PRIu8 "\t %" PRIu8 "\t %" PRIu64 "\t %s", pkg->timestamp, pkg->cycle_, (uint8_t)pkg->type, pkg->size, msg.c_str());
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+                ImGui::Text("%" PRIu64, pkg->timestamp);
+                ImGui::TableSetColumnIndex(1);
+                ImGui::Text("%" PRIu8, pkg->cycle_);
+                ImGui::TableSetColumnIndex(2);
+                ImGui::Text("%" PRIu8, (uint8_t)pkg->type);
+                ImGui::TableSetColumnIndex(3);
+                ImGui::Text("%" PRIu64, pkg->size);
+                ImGui::TableSetColumnIndex(4);
+
+                if(pkg->size > (size_t)maxPayloadSize_)
+                {
+                    ImGui::Text("%s", (std::string((char*)pkg->payload, maxPayloadSize_) + "...").c_str());
+                }
+                else
+                {
+                    ImGui::Text("%s", (char*)pkg->payload);
+                }
+                
+            }
+
+            ImGui::EndTable();
             }
             ImGui::PopStyleColor();
             ImGui::End();

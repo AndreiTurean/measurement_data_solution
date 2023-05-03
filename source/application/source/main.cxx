@@ -76,6 +76,9 @@ int main(int, char**)
 
     clrMap[ImGuiCol_SliderGrabActive] = ImVec4(0.00f, 1.00f, 0.00f, 0.50f);
     clrMap[ImGuiCol_SliderGrab] = ImVec4(0.00f, 1.00f, 0.00f, 0.50f);
+    clrMap[ImGuiCol_PlotLines] = ImVec4(0.00f, 1.00f, 0.00f, 1.00f);
+    clrMap[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
+
     //ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends

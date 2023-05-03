@@ -19,7 +19,11 @@ namespace replay
         bool show_;
         LoggingInterface* logger_;
         FactoryMap readerMap_;
+        std::map<std::string, ReaderIfc*> activeReaderPool_;
         ReaderIfc* activeReader_;
+        InterfaceAccess* interfaceAccess_;
+        std::string currentLoadedRecordingFile_;
+        
     public:
         /*!
         *   @brief Player constructor
