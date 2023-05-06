@@ -14,8 +14,16 @@ public:
         engine->initialize();
 
         core::utility::LibUtility utility(reinterpret_cast<LoggingInterface*>(engine->getInterface("LoggingInterface")));
+#if defined(_WIN32)
+        TCHAR buffer[MAX_PATH] = { 0 };
+        GetModuleFileName(NULL, buffer, MAX_PATH);
+        std::wstring::size_type pos = std::string(buffer).find_last_of("\\/");
+        libPath = std::string(buffer).substr(0, pos) + "/" + LIB_NAME;
+#else
         libPath = std::filesystem::current_path().string() + "/" + LIB_NAME;
+#endif
         void* lib = utility.openLibrary(libPath, "createReader");
+        
         ASSERT_NE(lib, engine);
         createReader* rdr = (createReader*)lib;
         ASSERT_NE(rdr, nullptr);
