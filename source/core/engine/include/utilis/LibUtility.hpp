@@ -10,6 +10,7 @@
 #include <vector>
 #include <mutex>
 #include <defs/Log.hpp>
+#include <defs/MdsInterface.hpp>
 
 namespace core
 {

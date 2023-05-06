@@ -1,15 +1,17 @@
 #include "pch.h"
 #include <asc/AscReader.hpp>
 #include <defs/DataPackage.hpp>
+#include <iostream>
 
 namespace replay
 {
     namespace asc
     {
-        AscReader::AscReader(InterfaceAccess* interfaceAccess)
+        AscReader::AscReader(InterfaceAccess* interfaceAccess):
+            interfaceAccess_(interfaceAccess),
+            extension_(".asc")
         {
-            interfaceAccess_ = interfaceAccess;
-            extension_ = ".asc";
+            
         }
 
         AscReader::~AscReader()
