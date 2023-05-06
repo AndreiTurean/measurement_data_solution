@@ -77,19 +77,22 @@ install(TARGETS ${PROJECT_NAME} RUNTIME_DEPENDENCIES DESTINATION ${CMAKE_INSTALL
 #######################################################
 
 if(BUILD_TESTING)
-    # include(GoogleTest)
-    # enable_testing()
+    include(GoogleTest)
+    enable_testing()
 
-    # add_executable(${PROJECT_NAME}_test
-    # test/main.cxx)
+    add_executable(${PROJECT_NAME}_test
+      test/main.cxx
+      test/ReaderInitTests.cxx
+      test/ReaderFuncTests.cxx)
 
-    # # packages are getted using the vcpkg package manager
-    # find_package(GTest REQUIRED)
-    # target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
+    # packages are getted using the vcpkg package manager
+    find_package(GTest REQUIRED)
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
 
-    # gtest_add_tests(TARGET ${PROJECT_NAME}_test)
+    gtest_add_tests(TARGET ${PROJECT_NAME}_test)
 
-    # target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME}::${PROJECT_NAME}) #link against the alias library
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE core)
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE defs)
 
-    # install(TARGETS ${PROJECT_NAME}_test)
+    install(TARGETS ${PROJECT_NAME}_test)
 endif()

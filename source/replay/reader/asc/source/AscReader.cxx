@@ -1,15 +1,17 @@
 #include "pch.h"
 #include <asc/AscReader.hpp>
 #include <defs/DataPackage.hpp>
+#include <iostream>
 
 namespace replay
 {
     namespace asc
     {
-        AscReader::AscReader(InterfaceAccess* interfaceAccess)
+        AscReader::AscReader(InterfaceAccess* interfaceAccess):
+            interfaceAccess_(interfaceAccess),
+            extension_(".asc")
         {
-            interfaceAccess_ = interfaceAccess;
-            extension_ = ".asc";
+            
         }
 
         AscReader::~AscReader()
@@ -37,9 +39,9 @@ namespace replay
             reader_.seekg(position);
         }
 
-        DataPackagePtr AscReader::readData(uint8_t* data, uint64_t size)
+        DataPackagePtr AscReader::readData()
         {
-            reader_.read(reinterpret_cast<char*>(data), size);
+            //reader_.read(reinterpret_cast<char*>(data), size);
             return nullptr;
         }
 
