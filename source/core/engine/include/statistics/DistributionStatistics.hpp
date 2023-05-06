@@ -2,6 +2,7 @@
 #include <mutex>
 #include <thread>
 #include <cstdint>
+#include <cassert>
 #include <defs/Distribution.hpp>
 
 using namespace std::chrono_literals;
@@ -42,8 +43,13 @@ namespace core
                             return;
                         }
                         processedPackagesPerSecond_ = processedPackagesCnt_ + failedPackagesCnt_;
+
+#if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
                         maxProcessedPackagesPerSecond_ = std::max(maxProcessedPackagesPerSecond_, processedPackagesPerSecond_);
-        
+#else
+                        maxProcessedPackagesPerSecond_ = maxProcessedPackagesPerSecond_ > processedPackagesPerSecond_ ? maxProcessedPackagesPerSecond_ : processedPackagesPerSecond_;
+#endif
+
                         processedPackagesCnt_ = 0;
                         failedPackagesCnt_ = 0;
                     }
