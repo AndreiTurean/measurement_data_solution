@@ -14,18 +14,27 @@ namespace core
 {
     namespace helper
     {
+        /*!
+        *  @brief CPU helper class.
+        *  @note This class is used to retreive the CPU usage.
+        */
         class CPUHelper
         {
+            float lastCPUUsageValue_ = 0.0f; //!< Last CPU usage value.
 #if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
-            clock_t lastCPU, lastSysCPU, lastUserCPU;
-            int numProcessors;
-            float lastCPUUsageValue_ = 0.0f;
+            clock_t lastCPU, lastSysCPU, lastUserCPU; //!< Last CPU, system CPU and user CPU.
+            int numProcessors; //!< Number of processors.
+            
 #elif defined(_WIN32)
-            ULARGE_INTEGER lastCPU, lastSysCPU, lastUserCPU;
-            int numProcessors;
-            HANDLE self;
+            ULARGE_INTEGER lastCPU, lastSysCPU, lastUserCPU; //!< Last CPU, system CPU and user CPU.
+            int numProcessors; //!< Number of processors.
+            HANDLE self; //!< Handle to the current process.
 #endif
         public:
+            /*!
+            *  @brief CPU helper constructor.
+            *  @note This constructor is used to initialize the CPU helper.
+            */
             CPUHelper()
             {
 #if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
@@ -61,6 +70,11 @@ namespace core
 
 #endif
             }
+
+            /*!
+            *  @brief Method used to retreive the current CPU usgage of the process.
+            *  @return Return the current CPU usage of the process.
+            */
             float getCPUUsage()
             {
 #if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)

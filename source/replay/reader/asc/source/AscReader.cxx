@@ -37,9 +37,9 @@ namespace replay
             reader_.seekg(position);
         }
 
-        DataPackagePtr AscReader::readData(uint8_t* data, uint64_t size)
+        DataPackagePtr AscReader::readData()
         {
-            reader_.read(reinterpret_cast<char*>(data), size);
+            //reader_.read(reinterpret_cast<char*>(data), size);
             return nullptr;
         }
 

@@ -20,7 +20,7 @@ namespace replay
             uint64_t getCurrentPosition() override;
             uint64_t getEndPosition() override;
             void setPositon(uint64_t position) override;
-            DataPackagePtr readData(uint8_t* data, uint64_t size) override;
+            DataPackagePtr readData() override;
             bool openFile(const std::string& fileName) override;
             void closeFile() override;
             const std::string& getExtension() override;
