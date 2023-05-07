@@ -65,13 +65,13 @@ TEST_F(ReaderFuncTests, ReaderCanReadDataPackage)
 {
     loadFile("test.asc");
     DataPackageCPtr data = reader->readData();
-
+    
     ASSERT_NE(data, nullptr);
 
     EXPECT_EQ(data->cycle_, 15);
-    EXPECT_EQ(data->size, 8);
-    EXPECT_TRUE(std::memcmp(data->payload, "\x00\x00\x00\x00\x00\x00\x00\x00", 8) == 0);
-    EXPECT_EQ(data->sourceHandle, 1024);
-    EXPECT_EQ(data->timestamp, 10000);
+    EXPECT_EQ(data->size, 10);
+    EXPECT_TRUE(std::memcmp(data->payload, "0000FAFA0000FAFA0080", data->size) == 0);
+    EXPECT_EQ(data->sourceHandle, 0XDEAD);
+    EXPECT_EQ(data->timestamp, 16696363327601);
     EXPECT_EQ(data->type, PackageType::can);
 }
