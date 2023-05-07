@@ -23,6 +23,7 @@ namespace replay
         ReaderIfc* activeReader_;
         InterfaceAccess* interfaceAccess_;
         std::string currentLoadedRecordingFile_;
+        bool showAbout_;
         
     public:
         /*!

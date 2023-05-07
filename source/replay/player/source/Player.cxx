@@ -14,6 +14,7 @@ namespace replay
         interfaceAccess_(interfaceAccess)
     {
         show_ = true;
+        showAbout_ = false;
 
         logger_ = static_cast<LoggingInterface*>(interfaceAccess->getInterface("LoggingInterface"));
         logger_->subscribe("Player", PLAYER_HANDLE);
@@ -104,7 +105,15 @@ namespace replay
         ImGui::SetCurrentContext(ctx);
         ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_AlwaysAutoResize;
-            
+        
+        BEGIN_MAIN_MENU_BAR
+            BEGIN_MENU("About")
+                ADD_MENU_ITEM("About player", "Ctrl+e", showAbout_)
+            END_MENU
+        END_MAIN_MENU_BAR
+
+        DISPLAY_ABOUT_MENU(showAbout_, "About player")
+
         if (ImGui::BeginViewportSideBar("##SecondaryMenuBar", viewport, ImGuiDir_Up, TOP_BAR_HEIGHT, window_flags))
         {
             if (ImGui::BeginMenuBar())

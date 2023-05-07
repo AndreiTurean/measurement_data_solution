@@ -23,7 +23,7 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
-int main(int, char**)
+int main(int, char** argv)
 {
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
@@ -114,14 +114,37 @@ int main(int, char**)
                 ImGui::Text("Watchdog active: %s", engine->isWatchDogActive() ? "Yes" : "No");
                 ImGui::Text("Data distribution active: %s", engine->isPerformingDataAquisition() ? "Yes" : "No");
                 ImGui::Text("Logging active: %s", engine->isLoggerActive() ? "Yes" : "No");
-                if (ImGui::Button("Reset"))
+                if(ImGui::BeginCombo("Engine reset mode", "Name1"))
                 {
-                    engine->terminate();
-                    engine.reset();
-                    engine = std::make_shared<core::Engine>();
-                    engine->initialize();
+                    if (ImGui::Selectable("Name1"))
+                    {
+                        engine->terminate();
+                        engine.reset();
+                        engine = std::make_shared<core::Engine>();
+                        engine->initialize();
+                    }
+
+                    ImGui::EndCombo();
                 }
+
                 ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+                
+                ImGui::TreePop();
+            }
+
+            if(ImGui::TreeNodeEx("Application informations", ImGuiTreeNodeFlags_Framed))
+            {
+                ImGui::Text("Application name: %s", "Measurement data solution");
+                ImGui::Text("Application version: %s", "0.2.0");
+                ImGui::Text("Application author: %s", "Andrei Turean");
+                ImGui::Text("Application license: %s", "MIT");
+                ImGui::Text("Application description: %s", "Application for measurement and data processing");
+                ImGui::TreePop();
+            }
+
+            if(ImGui::TreeNodeEx("Application settings", ImGuiTreeNodeFlags_Framed))
+            {
+                ImGui::TextWrapped("Application path: %s", argv[0]);
                 ImGui::TreePop();
             }
             

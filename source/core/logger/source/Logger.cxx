@@ -117,7 +117,7 @@ namespace core
         {
             if(msg.find("[DBG") != std::string::npos)
             {
-                return ImVec4(0.0f, 1.0f, 0.1f, 0.3f);
+                return ImVec4(0.0f, 0.4f, 1.0f, 1.0f);
             }
             if(msg.find("[INFO") != std::string::npos)
             {
