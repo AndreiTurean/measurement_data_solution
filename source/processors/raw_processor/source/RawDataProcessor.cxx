@@ -127,17 +127,21 @@ namespace processors
         {
             ImGui::Begin(name_.c_str(), &showGui_, ImGuiWindowFlags_AlwaysAutoResize);
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 1.0f, 0.0f, 1.00f));
-            if(ImGui::BeginTable("Raw Data Visualization", 5, ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollX |ImGuiTableFlags_ScrollY)){
+            if(ImGui::BeginTable("Raw Data Visualization", 7, ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollX |ImGuiTableFlags_ScrollY)){
             ImGui::TableNextRow();
             ImGui::TableSetColumnIndex(0);
             ImGui::Text("Timestamp");
             ImGui::TableSetColumnIndex(1);
-            ImGui::Text("Cycle");
+            ImGui::Text("Source handle");
             ImGui::TableSetColumnIndex(2);
-            ImGui::Text("Type");
+            ImGui::Text("Id");
             ImGui::TableSetColumnIndex(3);
-            ImGui::Text("Size");
+            ImGui::Text("Cycle");
             ImGui::TableSetColumnIndex(4);
+            ImGui::Text("Type");
+            ImGui::TableSetColumnIndex(5);
+            ImGui::Text("Size");
+            ImGui::TableSetColumnIndex(6);
             ImGui::Text("Data");
 
             std::lock_guard<std::mutex> lock(mtx_);
@@ -147,12 +151,16 @@ namespace processors
                 ImGui::TableSetColumnIndex(0);
                 ImGui::Text("%" PRIu64, pkg->timestamp);
                 ImGui::TableSetColumnIndex(1);
-                ImGui::Text("%" PRIu8, pkg->cycle);
+                ImGui::Text("%" PRIu64, pkg->sourceHandle);
                 ImGui::TableSetColumnIndex(2);
-                ImGui::Text("%" PRIu8, (uint8_t)pkg->type);
+                ImGui::Text("%" PRIu16, pkg->id);
                 ImGui::TableSetColumnIndex(3);
-                ImGui::Text("%" PRIu64, pkg->size);
+                ImGui::Text("%" PRIu8, pkg->cycle);
                 ImGui::TableSetColumnIndex(4);
+                ImGui::Text("%" PRIu8, (uint8_t)pkg->type);
+                ImGui::TableSetColumnIndex(5);
+                ImGui::Text("%" PRIu64, pkg->size);
+                ImGui::TableSetColumnIndex(6);
 
                 for(size_t i = 0; i < pkg->size && i < (size_t)maxPayloadSize_ ; i++)
                 {

@@ -15,10 +15,9 @@ namespace transmitters
         handle_ = handle_ << 0x8 << 0x8 << 0x8;
         loggingInterface_ = reinterpret_cast<LoggingInterface*>(interfaceAccess_->getInterface("LoggingInterface"));
         loggingInterface_->subscribe(name_.c_str(), handle_);
-        maxPkgInBuffer_ = 100;
         currentDevice_ = nullptr;
         ifcName_ = "None";
-        ipAdress_ = "192.168.1.255";
+        ipAdress_ = "0.0.0.0";
     }
 
     UdpTransmitter::~UdpTransmitter()
@@ -47,19 +46,18 @@ namespace transmitters
     //! DataReceiverObject interface implementation
     bool UdpTransmitter::validatePackage(DataPackageCPtr package)
     {
-        if(!currentDevice_)
-        {
-            packagesBuffer_.push_back(package);
-        }
-        else
+        if(currentDevice_)
         {
             timeval ts;
             ts.tv_sec = package->timestamp / 1000000000;
             ts.tv_usec = package->timestamp % 1000000000;
-            pcpp::RawPacket packet((uint8_t*)package->payload, package->size, ts, false);
-            pcpp::Packet parsedPacket(&packet);
-            loggingInterface_->log(parsedPacket.toString().c_str(), handle_, severity::debug);
-            return currentDevice_->sendPacket(packet);
+            pcpp::RawPacket packet((uint8_t*)package->payload, package->size, ts, false, (pcpp::LinkLayerType)package->id);
+            
+            if(currentDevice_->sendPacket(packet, false))
+            {
+                loggingInterface_->log("Package sent", handle_, severity::debug);
+                return true;
+            }
         }
         return false;
     }
@@ -101,10 +99,18 @@ namespace transmitters
                         
                         if (ImGui::Selectable(dev->getName().c_str()))
                         {
+                            if(currentDevice_ != nullptr)
+                            {
+                                currentDevice_->stopCapture();
+                            }
+
                             currentDevice_ = dev;
                             if(!currentDevice_->open())
                             {
                                 loggingInterface_->log("Failed to open device", handle_ , severity::critical);
+                                currentDevice_ = nullptr;
+                                ifcName_ = "None";
+                                continue;
                             }
 
                             ifcName_ = dev->getName();

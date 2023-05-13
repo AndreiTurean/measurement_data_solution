@@ -42,6 +42,7 @@ namespace replay
                 pkg->size = packet.getRawDataLen();
                 pkg->sourceHandle = 0XEAA8;
                 pkg->cycle = 0;
+                pkg->id = (uint16_t)packet.getLinkLayerType();
                 pkg->type = PackageType::ethernet;
                 pkg->payload = new uint8_t[pkg->size];
                 std::memcpy(pkg->payload, packet.getRawData(), packet.getRawDataLen());

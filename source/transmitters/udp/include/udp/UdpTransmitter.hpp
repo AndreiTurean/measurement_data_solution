@@ -29,12 +29,6 @@ namespace transmitters
         uint64_t handle_;
         std::string name_;
         MeasurementObjectType type_;
-        std::set<NotifySubjects*> subjects_;
-        std::vector<DataPackagePtr> packagesBuffer_;
-        bool showGui_;
-        std::mutex mtx_;
-        int maxPkgInBuffer_;
-        int maxPayloadSize_;
         std::string ipAdress_;
         std::string ifcName_;
         pcpp::PcapLiveDeviceList* devList_;
