@@ -107,16 +107,16 @@ int main(int, char** argv)
         engine->show(ImGui::GetCurrentContext());
         ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
-        if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
+        if (ImGui::BeginViewportSideBar("##Objects toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
         {
             if(ImGui::TreeNodeEx("Engine information", ImGuiTreeNodeFlags_Framed))
             {
                 ImGui::Text("Watchdog active: %s", engine->isWatchDogActive() ? "Yes" : "No");
                 ImGui::Text("Data distribution active: %s", engine->isPerformingDataAquisition() ? "Yes" : "No");
                 ImGui::Text("Logging active: %s", engine->isLoggerActive() ? "Yes" : "No");
-                if(ImGui::BeginCombo("Engine reset mode", "Name1"))
+                if(ImGui::BeginCombo("Engine reset mode", "Normal"))
                 {
-                    if (ImGui::Selectable("Name1"))
+                    if (ImGui::Selectable("Normal"))
                     {
                         engine->terminate();
                         engine.reset();
@@ -137,7 +137,7 @@ int main(int, char** argv)
                 ImGui::Text("Application name: %s", "Measurement data solution");
                 ImGui::Text("Application version: %s", "0.2.0");
                 ImGui::Text("Application author: %s", "Andrei Turean");
-                ImGui::Text("Application license: %s", "MIT");
+                ImGui::Text("Application license: %s", "GNU GENERAL PUBLIC LICENSE");
                 ImGui::Text("Application description: %s", "Application for measurement and data processing");
                 ImGui::TreePop();
             }
@@ -168,6 +168,8 @@ int main(int, char** argv)
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     engine->terminate();
+    engine.reset();
+    engine = nullptr;
     glfwDestroyWindow(window);
     glfwTerminate();
 

@@ -57,7 +57,7 @@ namespace core
         virtual ~Engine();
 
         /*!
-        *   @brief Method that retreive the desired interface as a void pointer.
+        *   @brief Method that retreive the desired inter face as a void pointer.
         *   @param interfaceName Interface name as a string
         *   @return Return a void pointer to the requested interface
         *   @warning Check if the returned pointer is not nullptr.

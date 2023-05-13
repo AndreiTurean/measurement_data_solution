@@ -23,6 +23,7 @@ enum class MeasurementObjectType : uint8_t
     recorder, //!< object used for recording data, can be present in visualizers for recording snapshots
     system, //!< system objectr. E.g. engine, configuration manager, factory ...
     visualization, //!< visualization objects, receive data from data_receiver
+    data_processor //~< data processor object, receive data from data_receiver and transmit data to data_receiver
 };
 /*!
 *   @brief Interface for retreiving measurement object information

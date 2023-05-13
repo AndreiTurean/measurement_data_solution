@@ -17,7 +17,6 @@ namespace transmitters
         public ObjectControl,
         public GuiControlIfc
     {
-        DataDistributionPtr dataDistributinonPtr_;
         InterfaceAccess* interfaceAccess_;
         uint8_t instanceNumber_;
         uint64_t handle_;

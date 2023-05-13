@@ -24,7 +24,13 @@ set(CMAKE_DEBUG_POSTFIX "_debug")
 
 # Set the build type if not set
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release")
+    set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    message("Debug build. Adding adress sanitizer to build.")
+    ##add_compile_options(-fsanitize=address)
+    #add_link_options(-fsanitize=address)
 endif()
 
 add_compile_definitions("DEBUG=$<CONFIG:Debug>")
@@ -53,6 +59,7 @@ add_subdirectory(source/recording)
 add_subdirectory(source/core)
 add_subdirectory(source/application)
 add_subdirectory(source/test)
+add_subdirectory(source/receivers)
 
 #######################################################
 # package versioning                                  #

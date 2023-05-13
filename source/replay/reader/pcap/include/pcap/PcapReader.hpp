@@ -1,20 +1,22 @@
 #pragma once
+#include <fstream>
 #include <visibility.h>
 #include <defs/MdsInterface.hpp>
 #include <defs/MdsInterface.hpp>
+#include <PcapFileDevice.h>
 
 namespace replay
 {
-    namespace asc
+    namespace pcap
     {
-        class ASC_READER_API AscReader :
+        class PCAP_READER_API PcapReader :
             public ReaderIfc,
             public InterfaceAccess,
             public GuiControlIfc
         {
         public:
-            AscReader(InterfaceAccess* interfaceAccess);
-            virtual ~AscReader();
+            PcapReader(InterfaceAccess* interfaceAccess);
+            virtual ~PcapReader();
 
             //! ReaderIfc interface implementation
             uint64_t getCurrentPosition() override;
@@ -35,14 +37,13 @@ namespace replay
             
         private:
             InterfaceAccess* interfaceAccess_;
-            std::fstream reader_;
+            pcpp::IFileReaderDevice* reader_;
             std::string extension_;
-            uint64_t endPosition_;
         };
     }
 }
 
-extern "C" ASC_READER_API ReaderIfc* createReader(InterfaceAccess* interfaceAccess)
+extern "C" PCAP_READER_API ReaderIfc* createReader(InterfaceAccess* interfaceAccess)
 {
-    return new replay::asc::AscReader(interfaceAccess);
+    return new replay::pcap::PcapReader(interfaceAccess);
 }

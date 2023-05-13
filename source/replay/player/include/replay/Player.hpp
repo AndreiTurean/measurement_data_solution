@@ -3,6 +3,9 @@
 #include <defs/MdsInterface.hpp>
 #include <PlayerDefs.hpp>
 #include <defs/Configuration.hpp>
+#include <defs/Distribution.hpp>
+#include <mutex>
+#include <thread>
 
 class LoggingInterface;
 /*!
@@ -24,6 +27,14 @@ namespace replay
         InterfaceAccess* interfaceAccess_;
         std::string currentLoadedRecordingFile_;
         bool showAbout_;
+        DataDistribution* dataDistributionInterface_;
+        std::mutex replayGuard_;
+        std::thread replayThread_;
+        bool isProcessing_;
+        bool isPaused_;
+
+    private:
+        void replayThread();
         
     public:
         /*!

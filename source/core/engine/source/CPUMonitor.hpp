@@ -19,7 +19,7 @@ namespace core
         
     public:
         CPUMonitor(); //!< Default constructor.
-        ~CPUMonitor() = default; //!< Default destructor.
+        virtual ~CPUMonitor() = default; //!< Default destructor.
         /*!
         *   @brief Update CPU monitor.
         *   @param ctx ImGui context.

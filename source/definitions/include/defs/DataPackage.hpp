@@ -38,8 +38,9 @@ struct DataPackage
         return lhs.timestamp == rhs.timestamp &&
             lhs.sourceHandle == rhs.sourceHandle &&
             lhs.size == rhs.size &&
-            lhs.cycle_ == rhs.cycle_ &&
+            lhs.cycle == rhs.cycle &&
             lhs.type == rhs.type &&
+            lhs.id == rhs.id &&
             std::memcmp(lhs.payload, rhs.payload, lhs.size) == 0;
     }
 
@@ -123,7 +124,8 @@ struct DataPackage
     uint64_t timestamp; //!< package timestamp
     uint64_t sourceHandle; //!< package source handle
     size_t size; //!< package size
-    uint8_t cycle_; //!< package cycle
+    uint16_t cycle; //!< package cycle
+    uint16_t id; //!< package id
     PackageType type; //!< package type
     void* payload; //!< pointer to where the package payload starts.
 };

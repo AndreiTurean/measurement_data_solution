@@ -9,3 +9,4 @@ project(transmitters     VERSION 0.1.0
 
 add_subdirectory(dummy)
 add_subdirectory(camera)
+add_subdirectory(udp)

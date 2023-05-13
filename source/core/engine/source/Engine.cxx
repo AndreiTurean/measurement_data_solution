@@ -167,6 +167,13 @@ namespace core
             interfaceHelperPtr_ = nullptr;
         }
 
+        if(cpuMonitor_)
+        {
+            logger_->log("Destroying the cpu monitor");
+            delete dynamic_cast<CPUMonitor*>(cpuMonitor_);
+            cpuMonitor_ = nullptr;
+        }
+
         logger_->log("Finished engine termination");
 
         if(logger_)

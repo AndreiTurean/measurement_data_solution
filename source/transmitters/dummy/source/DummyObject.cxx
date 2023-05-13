@@ -125,7 +125,7 @@ namespace transmitters
         {
             ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
             ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
-            if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
+            if (ImGui::BeginViewportSideBar("##Objects toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
             {
                 if(ImGui::TreeNodeEx(name_.c_str(), ImGuiTreeNodeFlags_Framed))
                 {

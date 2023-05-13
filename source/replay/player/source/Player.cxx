@@ -5,14 +5,19 @@
 #include <defs/GuiDefs.hpp>
 #include <filesystem>
 
+
 typedef ReaderIfc* createReader(InterfaceAccess*);
 
 namespace replay
 {
     Player::Player(InterfaceAccess* interfaceAccess):
         activeReader_(nullptr),
-        interfaceAccess_(interfaceAccess)
+        interfaceAccess_(interfaceAccess),
+        isProcessing_(false),
+        isPaused_(true)
     {
+        dataDistributionInterface_ = reinterpret_cast<DataDistribution*>(interfaceAccess_->getInterface("DataDistribution"));
+        
         show_ = true;
         showAbout_ = false;
 
@@ -50,11 +55,14 @@ namespace replay
                 }
             }
         }
+
+        replayThread_ = std::thread(&Player::replayThread, this);
     }
 
     Player::~Player()
     {
-
+        isPaused_ = false;
+        replayThread_.join();
     }
 
     Player::Player(const Player&)
@@ -91,13 +99,41 @@ namespace replay
 
     void Player::close()
     {
-
+        replayThread_.join();
     }
 
     //! InterfaceAccess interface implementation
     void* Player::getInterface(const std::string&)
     {
         return nullptr;
+    }
+
+    void Player::replayThread()
+    {
+        while(isProcessing_ || isPaused_)
+        {
+            DataPackagePtr pkg = nullptr;
+
+            if(isProcessing_)
+            {
+                std::lock_guard<std::mutex> lock(replayGuard_);
+                pkg = activeReader_->readData();
+            }
+
+            if(pkg == nullptr)
+            {
+                isProcessing_ = false;;
+            }
+
+            if(isProcessing_)
+            {
+                dataDistributionInterface_->distributeData(pkg);
+            }
+            else
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            }
+        }
     }
 
     void Player::show(ImGuiContext* ctx)
@@ -118,11 +154,38 @@ namespace replay
         {
             if (ImGui::BeginMenuBar())
             {
-                ImGui::ProgressBar(0.0f, ImVec2(0.f, 0.f));
+                uint64_t curPos = 0;
+                uint64_t endPos = -1;
+                {
+                    std::lock_guard<std::mutex> lock(replayGuard_);
+                    if(activeReader_ != nullptr)
+                    {
+                        curPos = activeReader_->getCurrentPosition();
+                        endPos = activeReader_->getEndPosition();
+                    }
+                    
+                }
+
+                ImGui::ProgressBar(float(float(curPos)/float(endPos)), ImVec2(0.f, 0.f));
                 ImGui::SameLine();
-                ImGui::Button("Jump to begining");
-                ImGui::Button("Play forward");
+                if(ImGui::Button("Jump to begining"))
+                {
+                    std::lock_guard<std::mutex> lock(replayGuard_);
+                    if(activeReader_ != nullptr)
+                    {
+                        //activeReader_->setPositon(0);
+                        activeReader_->closeFile();
+                        activeReader_->openFile(currentLoadedRecordingFile_);
+                    }
+                }
+                ImGui::SameLine();
+                if(ImGui::Button("Play forward") && activeReader_ != nullptr)
+                {
+                    isProcessing_ = true;
+                }
+                ImGui::SameLine();
                 ImGui::Button("Play backward");
+                ImGui::SameLine();
                 ImGui::Button("Jump to end");
 
                 ImGui::EndMenuBar();
@@ -130,7 +193,7 @@ namespace replay
             ImGui::End();
         }
 
-        if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
+        if (ImGui::BeginViewportSideBar("##Objects toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
         {
             if (ImGui::TreeNodeEx("Player", ImGuiTreeNodeFlags_Framed))
             {
@@ -140,6 +203,16 @@ namespace replay
                 }
                 if(ImGui::TreeNodeEx("Player controls", ImGuiTreeNodeFlags_Framed))
                 {
+                    
+                    ImGui::Text("Current loaded recording: %s", currentLoadedRecordingFile_.c_str());
+
+                    if(activeReader_ != nullptr)
+                    {
+                        std::lock_guard<std::mutex> lock(replayGuard_);
+                        ImGui::Text("Current recording position: %lu", activeReader_->getCurrentPosition());
+                        ImGui::Text("Current recording end position: %lu", activeReader_->getEndPosition());
+                    }
+                    
                     ImGui::TreePop();
                 }
                 if(ImGui::TreeNodeEx("Player status", ImGuiTreeNodeFlags_Framed))

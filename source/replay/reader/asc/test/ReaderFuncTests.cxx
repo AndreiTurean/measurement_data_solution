@@ -51,24 +51,24 @@ public:
 TEST_F(ReaderFuncTests, ReaderCanReadFile)
 {
     ASSERT_NE(reader, nullptr);
-    ASSERT_TRUE(reader->openFile("test.asc"));
+    ASSERT_TRUE(reader->openFile("/home/turean/Project/measurement_data_solution/source/replay/reader/asc/test/data/example.asc"));
 }
 
 TEST_F(ReaderFuncTests, ReaderCanRetreivePosition)
 {
-    loadFile("test.asc");
+    loadFile("/home/turean/Project/measurement_data_solution/source/replay/reader/asc/test/data/example.asc");
     EXPECT_EQ(reader->getCurrentPosition(), 0);
     EXPECT_GT(reader->getEndPosition(), 0);
 }
 
 TEST_F(ReaderFuncTests, ReaderCanReadDataPackage)
 {
-    loadFile("test.asc");
+    loadFile("/home/turean/Project/measurement_data_solution/source/replay/reader/asc/test/data/example.asc");
     DataPackageCPtr data = reader->readData();
     
     ASSERT_NE(data, nullptr);
 
-    EXPECT_EQ(data->cycle_, 15);
+    EXPECT_EQ(data->cycle, 15);
     EXPECT_EQ(data->size, 10);
     EXPECT_TRUE(std::memcmp(data->payload, "0000FAFA0000FAFA0080", data->size) == 0);
     EXPECT_EQ(data->sourceHandle, 0XDEAD);

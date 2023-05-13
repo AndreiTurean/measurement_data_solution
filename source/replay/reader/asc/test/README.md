@@ -20,7 +20,7 @@ After your implementation the following code shall pass without any errors or fa
 
     ASSERT_NE(data, nullptr);
 
-    EXPECT_EQ(data->cycle_, 15);
+    EXPECT_EQ(data->cycle, 15);
     EXPECT_EQ(data->size, 10);
     EXPECT_TRUE(std::memcmp(data->payload, "0000FAFA0000FAFA0080", data->size) == 0);
     EXPECT_EQ(data->sourceHandle, 0XDEAD);

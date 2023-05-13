@@ -11,7 +11,7 @@ namespace processors
         handle_(INVALID_HANDLE),
         name_(name + " # " + std::to_string(nb)),
         type_(MeasurementObjectType::data_receiver),
-        showGui_(false),
+        showGui_(true),
         maxPkgInBuffer_(1024),
         maxPayloadSize_(64)
     {
@@ -111,7 +111,7 @@ namespace processors
         
         ImGuiViewport* viewport = (ImGuiViewport*)(void*)ImGui::GetMainViewport();
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
-        if (ImGui::BeginViewportSideBar("##MO toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
+        if (ImGui::BeginViewportSideBar("##Objects toolbar", viewport, ImGuiDir_Right, RIGHT_BAR_WIDTH, window_flags))
         {
             if(ImGui::TreeNodeEx(name_.c_str(), ImGuiTreeNodeFlags_Framed))
             {
@@ -147,21 +147,23 @@ namespace processors
                 ImGui::TableSetColumnIndex(0);
                 ImGui::Text("%" PRIu64, pkg->timestamp);
                 ImGui::TableSetColumnIndex(1);
-                ImGui::Text("%" PRIu8, pkg->cycle_);
+                ImGui::Text("%" PRIu8, pkg->cycle);
                 ImGui::TableSetColumnIndex(2);
                 ImGui::Text("%" PRIu8, (uint8_t)pkg->type);
                 ImGui::TableSetColumnIndex(3);
                 ImGui::Text("%" PRIu64, pkg->size);
                 ImGui::TableSetColumnIndex(4);
 
+                for(size_t i = 0; i < pkg->size && i < (size_t)maxPayloadSize_ ; i++)
+                {
+                    ImGui::Text("%02X", ((uint8_t*)pkg->payload)[i]); ImGui::SameLine();
+                }
+
                 if(pkg->size > (size_t)maxPayloadSize_)
                 {
-                    ImGui::Text("%s", (std::string((char*)pkg->payload, maxPayloadSize_) + "...").c_str());
+                    ImGui::Text("...");
                 }
-                else
-                {
-                    ImGui::Text("%s", (char*)pkg->payload);
-                }
+                
                 
             }
 
