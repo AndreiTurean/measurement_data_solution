@@ -63,12 +63,8 @@ Assuming that you have a modern Visual Studio, it should already be integrated. 
 ![220905_leak](./img/memory_leak_core_220905.png)
 
 # Project demo
-
-## One transmitter, one processor and one visualizer:
-![220911_111](./img/demo_build_220911.png)
-
-## Two transmitters, one processor and one visualizer:
-![220911_211](./img/demo_build_220911_2_transmitters.png)
+![220911_111](./img/demo_build_230801.png)
+![220911_211](./img/demo_build_230801_1.png)
 
 [Project structure and informtation](./source/README.md)
 
