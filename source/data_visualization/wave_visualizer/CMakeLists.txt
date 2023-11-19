@@ -45,7 +45,7 @@ target_link_libraries(wave_visualizer implot::implot)
 
 target_compile_options(wave_visualizer PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4> # setting the W4 warning level for MSVC compilers
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror> # setting the Wall for other compilers
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic> # setting the Wall for other compilers
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-fms-extensions>
 )
 

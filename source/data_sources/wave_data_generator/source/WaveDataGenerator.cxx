@@ -133,7 +133,7 @@ void data_source::WaveGenerator::show(ImGuiContext* ctx)
                 ImGui::InputDouble("Amplitude", &amplitude_);
                 ImGui::InputDouble("Frequency", &frequency_);
                 ImGui::InputDouble("Phase", &phase_);
-                ImGui::Text("Handle %d", handle_);
+                ImGui::Text("Handle %" PRIu64, handle_);
                 ImGui::TreePop();
             }
                 

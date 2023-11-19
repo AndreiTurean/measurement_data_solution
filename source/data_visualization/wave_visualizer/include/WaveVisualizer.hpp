@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#ifdef _WIN32
 #ifdef WAVE_VIS_API
     class WAVE_VIS_API std::thread;
     class WAVE_VIS_API std::mutex;
@@ -21,7 +22,7 @@
     template class WAVE_VIS_API std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >;
     class WAVE_VIS_API std::string;
 #endif
-
+#endif
 namespace visualizer
 {
     class WAVE_VIS_API WaveVisualizer :

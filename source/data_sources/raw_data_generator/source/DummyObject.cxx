@@ -130,7 +130,7 @@ namespace transmitters
                     ImGui::Text("Processing status: %s", isProcessing_ ? "enabled" : "dissabled");
                     ImGui::SliderInt("Sleep duration",&sleepDuration_, 1, 1000);
                     ImGui::InputText("Payload", &payload_);
-                    ImGui::Text("Handle %d", handle_);
+                    ImGui::Text("Handle %" PRIu64, handle_);
                     ImGui::TreePop();
                 }
                     
