@@ -1,6 +1,7 @@
 #pragma once
 #include <defs/MeasurementObjectDefs.hpp>
 #include <string>
+#include <cstdint>
 
 /*!
 *   @brief Interface helper that facilitate getting other interfaces.
@@ -53,5 +54,4 @@ handle definitions
 #define WATCHDOG_HANDLE 0x03
 #define FACTORY_HANDLE 0x04
 #define LOGGER_HANDLE 0x05
-#define PLAYER_HANDLE 0x06
 

@@ -29,6 +29,9 @@
     {
       "name": "openmpi",
       "platform": "!windows"
+    },
+    {
+      "name" : "implot"
     }
   ]
 }

@@ -9,6 +9,7 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_internal.h>
 #include <string>
+#include <unordered_map>
 
 #define interface struct
 
@@ -17,12 +18,10 @@
 */
 enum class MeasurementObjectType : uint8_t
 {
-    data_source, //!< object used for transmitting data to processors
-    data_receiver, //!< object used for processing data and notifying all the subscribers
-    player, //!< object used for reader a recording file and act as a transmitter
-    recorder, //!< object used for recording data, can be present in visualizers for recording snapshots
-    system, //!< system objectr. E.g. engine, configuration manager, factory ...
-    visualization, //!< visualization objects, receive data from data_receiver
+    system = 0, //!< system objectr. E.g. engine, configuration manager, factory ...
+    data_source = 1, //!< object used for transmitting data to processors
+    data_receiver, //!< object used for receiving data
+    data_processor //!< object used to receive and transmit data further
 };
 /*!
 *   @brief Interface for retreiving measurement object information
@@ -58,57 +57,6 @@ using MeasurementObjectList = std::list<MeasurementObjectPtr>;
 
 using PropertyTable = std::map<std::string, std::string>;
 using PropertyPair= std::pair<std::string, std::string>;
-
-/*!
-*   @brief Interface for retreiving data from a file
-*/
-interface ReaderIfc
-{
-    /*!
-    *   @brief Method to retreive the current position of the reader.
-    *   @return Return the current position of the reader.
-    *   @warning It will return -1 (MAX UINT64_T) if the reader is not open.
-    */
-    virtual uint64_t getCurrentPosition() = 0;
-
-    /*!
-    *   @brief Method to retreive the end position of the reader.
-    *   @return Return the end position of the reader.
-    *   @warning It will return -1 (MAX UINT64_T) if the reader is not open.
-    */
-    virtual uint64_t getEndPosition() = 0;
-
-    /*!
-    *   @brief Method used to set the position of the reader.
-    *   @param position position to be set.
-    *   @warning It will not set the position if the reader is not open.
-    */
-    virtual void setPositon(uint64_t position) = 0;
-
-    /*!
-    *   @brief Method used to read data from the file.
-    *   @return Return the data package read from the file.
-    */
-    virtual DataPackagePtr readData() = 0;
-
-    /*!
-    *   @brief Method used to open a file.
-    *   @param fileName name of the file to be opened.
-    *   @return Return true if the file was opened, false otherwise.
-    */
-    virtual bool openFile(const std::string& fileName) = 0;
-
-    /*!
-    *   @brief Method used to close the file.
-    */
-    virtual void closeFile() = 0;
-
-    /*!
-    *   @brief Method used to retreive the reader extensions.
-    *   @return Return the reader extensions.
-    */
-    virtual const std::string& getExtension() = 0;
-};
 
 /*!
 *   @brief Interface for retreiving extended measurement object information

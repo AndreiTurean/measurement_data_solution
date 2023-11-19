@@ -111,7 +111,6 @@ public:
         ASSERT_TRUE(conf->createMeasurementObject(RECEIVER_LIB_NAME, 0));
         DataDistribution* dataDistributionPtr = static_cast<DataDistribution*>(BenchmarkUtilis::engine_->getInterface("DataDistribution"));
         DataPackagePtr pkg = std::make_shared<DataPackage>();
-        pkg->cycle_ = 1;
         pkg->payload = static_cast<void*>(new uint8_t[1024]);
         pkg->size = 1;
         pkg->sourceHandle = ENGINE_HANDLE;

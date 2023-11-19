@@ -215,7 +215,7 @@ namespace core
                         
                         if (ImGui::Button("OK"))
                         {
-                            createMeasurementObject(entryMO.first, localMoInstanceNb, localMoName);
+                            createMeasurementObject(entryMO.first, static_cast<uint8_t>(localMoInstanceNb), localMoName);
                             
                             ImGui::CloseCurrentPopup();
                             

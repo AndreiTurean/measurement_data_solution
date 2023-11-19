@@ -1,7 +1,9 @@
 #include "pch.h"
+#include <functional>
 #include <core/MeasurementObjectFactory.hpp>
+#include <utilis/HandleGenerator.hpp>
 
-typedef MeasurementObjectPtr createMO(InterfaceAccess*, const uint8_t, const char*);
+typedef MeasurementObjectPtr createMO(InterfaceAccess*, const uint8_t, const char*, std::function<uint64_t(uint8_t, MeasurementObjectType)>);
 
 namespace core
 {
@@ -90,7 +92,7 @@ namespace core
             return nullptr;
         }
         logger_->log(("Finished creating object: " + name + " with instance number: " + std::to_string((int) instanceNb)).c_str(), FACTORY_HANDLE, severity::information);
-        return alias.empty() ? mo(interfaceAccess_, instanceNb, it->first.c_str()) : mo(interfaceAccess_, instanceNb, alias.c_str());
+        return alias.empty() ? mo(interfaceAccess_, instanceNb, it->first.c_str(), std::bind(&core::utils::generateHandle, std::placeholders::_1, std::placeholders::_2)) : mo(interfaceAccess_, instanceNb, alias.c_str(), std::bind(&core::utils::generateHandle, std::placeholders::_1, std::placeholders::_2));
     }
 
     size_t MeasurementObjectFactory::getFactorySize()

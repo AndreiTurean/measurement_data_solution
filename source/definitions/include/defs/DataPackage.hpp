@@ -2,20 +2,49 @@
 #include <cstdint>
 #include <memory>
 #include <cstring>
+#include <chrono>
 
 enum class PackageType : uint8_t
 {
-    dummy = 0x00,
-    camera = 0x01,
-    can = 0x02,
-    flexray = 0x04,
-    ethernet = 0x08
+    generic = 0x00,
+    c_struct = 0x01,
+    development_package = 0x02
 };
+
 /*!
 *   @brief Data package definition
 */
 struct DataPackage
 {
+    DataPackage()
+    {
+        type = PackageType::generic;
+        size = 0;
+        sourceHandle = (uint64_t)-1;
+        payload = nullptr;
+        timestamp = (uint64_t)-1;
+
+    }
+
+
+    DataPackage(void* cStruct, size_t structSize, bool copy = false, uint64_t handle = 0)
+    {
+        size = structSize;
+        type = PackageType::c_struct;
+        sourceHandle = handle;
+        timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
+        if (copy)
+        {
+            payload = new uint8_t[structSize];
+            
+            std::memcpy(payload, cStruct, size);
+        }
+        else
+        {
+            payload = cStruct;
+        }
+    }
     /*!
     *   @brief Data package destructor. Delete the payload if it exists using the delete[] operator.
     */
@@ -38,7 +67,6 @@ struct DataPackage
         return lhs.timestamp == rhs.timestamp &&
             lhs.sourceHandle == rhs.sourceHandle &&
             lhs.size == rhs.size &&
-            lhs.cycle_ == rhs.cycle_ &&
             lhs.type == rhs.type &&
             std::memcmp(lhs.payload, rhs.payload, lhs.size) == 0;
     }
@@ -123,7 +151,6 @@ struct DataPackage
     uint64_t timestamp; //!< package timestamp
     uint64_t sourceHandle; //!< package source handle
     size_t size; //!< package size
-    uint8_t cycle_; //!< package cycle
     PackageType type; //!< package type
     void* payload; //!< pointer to where the package payload starts.
 };
@@ -131,12 +158,3 @@ struct DataPackage
 using DataPackagePtr = std::shared_ptr<DataPackage>;
 //! Const data package pointer
 using DataPackageCPtr = const DataPackagePtr;
-
-/*!
-*   @brief Data chunk header definition
-*/
-struct DataChunckHeader
-{
-    size_t dataSize; //!< size of the data chunk
-    void* dataPtr; //!< pointer to where the data chunk starts
-};

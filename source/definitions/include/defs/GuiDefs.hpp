@@ -162,3 +162,5 @@
 *  @brief Bottom bar height.
 */
 #define BOTTOM_BAR_HEIGHT 250.0f
+
+#define OBJECT_TOOLBAR "##MO toolbar"

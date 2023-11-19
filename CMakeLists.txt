@@ -46,13 +46,11 @@ project(mds     VERSION 0.1.0
 
 add_subdirectory(source/definitions)
 add_subdirectory(source/utilis)
-add_subdirectory(source/replay)
-add_subdirectory(source/processors)
-add_subdirectory(source/transmitters)
-add_subdirectory(source/recording)
+add_subdirectory(source/data_visualization)
+add_subdirectory(source/data_sources)
 add_subdirectory(source/core)
 add_subdirectory(source/application)
-add_subdirectory(source/test)
+#add_subdirectory(source/test)
 
 #######################################################
 # package versioning                                  #

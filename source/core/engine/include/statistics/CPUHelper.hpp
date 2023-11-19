@@ -75,12 +75,12 @@ namespace core
             *  @brief Method used to retreive the current CPU usgage of the process.
             *  @return Return the current CPU usage of the process.
             */
-            float getCPUUsage()
+            double getCPUUsage()
             {
 #if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
                 struct tms timeSample;
                 clock_t now;
-                float percent;
+                double percent;
 
                 now = times(&timeSample);
                 if (now <= lastCPU || timeSample.tms_stime < lastSysCPU ||
