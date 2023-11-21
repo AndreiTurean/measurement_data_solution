@@ -8,6 +8,22 @@
 #include <thread>
 #include <mutex>
 
+#ifdef _WIN32
+#ifdef RAW_DATA_SOURCE_API
+    class RAW_DATA_SOURCE_API std::thread;
+    class RAW_DATA_SOURCE_API std::mutex;
+    struct RAW_DATA_SOURCE_API DataDistribution;
+    template class RAW_DATA_SOURCE_API std::shared_ptr<DataDistribution>;
+    template class RAW_DATA_SOURCE_API std::vector<DataPackagePtr>;
+    template class RAW_DATA_SOURCE_API std::unique_ptr<std::thread>;
+    template class RAW_DATA_SOURCE_API std::allocator<std::string>;
+    template class RAW_DATA_SOURCE_API std::allocator<char>;
+    template class RAW_DATA_SOURCE_API std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >;
+    template class RAW_DATA_SOURCE_API std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >;
+    class RAW_DATA_SOURCE_API std::string;
+#endif
+#endif
+
 namespace transmitters
 {
     class RAW_DATA_SOURCE_API Dummy :
@@ -17,7 +33,7 @@ namespace transmitters
         public ObjectControl,
         public GuiControlIfc
     {
-        DataDistributionPtr dataDistributinonPtr_;
+        std::shared_ptr<DataDistribution> dataDistributinonPtr_;
         InterfaceAccess* interfaceAccess_;
         uint8_t instanceNumber_;
         uint64_t handle_;

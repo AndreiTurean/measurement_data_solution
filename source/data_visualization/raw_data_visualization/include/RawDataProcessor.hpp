@@ -9,6 +9,21 @@
 #include <string>
 #include <vector>
 
+#ifdef _WIN32
+#ifdef DUMMY_API
+    class DUMMY_API std::thread;
+    class DUMMY_API std::mutex;
+    template class DUMMY_API std::vector<double>;
+    template class DUMMY_API std::vector<DataPackagePtr>;
+    template class DUMMY_API std::vector<std::string>;
+    template class DUMMY_API std::allocator<std::string>;
+    template class DUMMY_API std::allocator<char>;
+    template class DUMMY_API std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >;
+    template class DUMMY_API std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >;
+    class DUMMY_API std::string;
+#endif
+#endif
+
 namespace processors
 {
     class DUMMY_API RawDataProcessor :

@@ -7,6 +7,7 @@
 #include "Watchdog.hpp"
 #include "MemoryVisualization.hpp"
 #include "CPUMonitor.hpp"
+#include "SignalExtraction.hpp"
 
 namespace core
 {
@@ -23,7 +24,8 @@ namespace core
         showConfigurationManager_(false),
         memoryMonitor_(nullptr),
         initTerminationPhaseFlag_(false),
-        cpuMonitor_(nullptr)
+        cpuMonitor_(nullptr),
+        signalExtractionIfc_(nullptr)
     {
         bool silentLog = false;
 
@@ -56,6 +58,7 @@ namespace core
         watchdog_ = new metrics::Watchdog(logger_);
         memoryMonitor_ = new MemoryVisualization();
         cpuMonitor_ = new CPUMonitor();
+        signalExtractionIfc_ = new core::signal::SignalExtraction(this);
         
     }
     Engine::~Engine()
@@ -89,6 +92,10 @@ namespace core
         if(ifcName.find("ConfigurationFactory") != std::string::npos)
         {
             return configMgr_->getInterface(ifcName);
+        }
+        if(ifcName.find("SignalExtractionInterface") != std::string::npos)
+        {
+            return signalExtractionIfc_;
         }
 
         return nullptr;

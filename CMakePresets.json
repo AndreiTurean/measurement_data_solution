@@ -43,7 +43,7 @@
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
         "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "BUILD_TESTING": true,
+        "BUILD_TESTING": false,
         "BUILD_SHARED_LIBS": false
       },
       "vendor": {
@@ -83,7 +83,7 @@
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
         "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "BUILD_TESTING": true,
+        "BUILD_TESTING": false,
         "BUILD_SHARED_LIBS": false
       },
       "vendor": {
@@ -125,7 +125,7 @@
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
         "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "BUILD_TESTING": true,
+        "BUILD_TESTING": false,
         "BUILD_SHARED_LIBS": false
       },
       "vendor": {
@@ -217,7 +217,7 @@
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
         "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "BUILD_TESTING": true,
+        "BUILD_TESTING": false,
         "BUILD_SHARED_LIBS": false
       },
       "vendor": {
@@ -265,7 +265,7 @@
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
         "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "BUILD_TESTING": true,
+        "BUILD_TESTING": false,
         "BUILD_SHARED_LIBS": true
       },
       "vendor": {

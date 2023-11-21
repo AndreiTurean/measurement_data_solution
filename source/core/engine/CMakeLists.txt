@@ -20,6 +20,7 @@ add_library(${PROJECT_NAME}
   source/MemoryVisualization.hpp
   source/CPUMonitor.cxx
   source/CPUMonitor.hpp
+  source/SignalExtraction.cxx
 )
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

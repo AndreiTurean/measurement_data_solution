@@ -21,6 +21,7 @@ namespace data_source
         InterfaceAccess* interfaceAccess_;
         uint8_t instanceNumber_;
         uint64_t handle_;
+        int samplePoints_;
         std::string name_;
         MeasurementObjectType type_;
         DataDistribution* dataDistributionInterface_;

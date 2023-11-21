@@ -9,9 +9,9 @@ namespace processors
         interfaceAccess_(interfaceAccess),
         instanceNb_(nb),
         handle_(handleFun(nb, MeasurementObjectType::data_receiver)),
-        name_(name + " # " + std::to_string(nb)),
+        name_(name + " # " + std::to_string(handle_)),
         type_(MeasurementObjectType::data_receiver),
-        showGui_(false),
+        showGui_(true),
         maxPkgInBuffer_(1024),
         maxPayloadSize_(64)
     {
@@ -107,10 +107,12 @@ namespace processors
             ImGui::TableSetColumnIndex(0);
             ImGui::Text("Timestamp");
             ImGui::TableSetColumnIndex(1);
-            ImGui::Text("Type");
+            ImGui::Text("Source");
             ImGui::TableSetColumnIndex(2);
-            ImGui::Text("Size");
+            ImGui::Text("Type");
             ImGui::TableSetColumnIndex(3);
+            ImGui::Text("Size");
+            ImGui::TableSetColumnIndex(4);
             ImGui::Text("Data");
 
             std::lock_guard<std::mutex> lock(mtx_);
@@ -120,10 +122,12 @@ namespace processors
                 ImGui::TableSetColumnIndex(0);
                 ImGui::Text("%" PRIu64, pkg->timestamp);
                 ImGui::TableSetColumnIndex(1);
-                ImGui::Text("%" PRIu8, (uint8_t)pkg->type);
+                ImGui::Text("%" PRIu64, pkg->sourceHandle);
                 ImGui::TableSetColumnIndex(2);
-                ImGui::Text("%" PRIu64, pkg->size);
+                ImGui::Text("%" PRIu8, (uint8_t)pkg->type);
                 ImGui::TableSetColumnIndex(3);
+                ImGui::Text("%" PRIu64, pkg->size);
+                ImGui::TableSetColumnIndex(4);
 
                 std::ostringstream oss;
                 oss << std::hex << std::setfill('0');

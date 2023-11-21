@@ -23,6 +23,7 @@
     class WAVE_VIS_API std::string;
 #endif
 #endif
+
 namespace visualizer
 {
     class WAVE_VIS_API WaveVisualizer :
@@ -37,7 +38,7 @@ namespace visualizer
         uint64_t handle_;
         std::string name_;
         MeasurementObjectType type_;
-        std::vector<double> history_;
+        std::map<uint64_t, std::vector<double>> history_;
         bool showGui_;
         std::mutex mtx_;
         int maxPkgInBuffer_;

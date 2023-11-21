@@ -9,9 +9,9 @@ visualizer::WaveVisualizer::WaveVisualizer(InterfaceAccess* interfaceAccess, uin
     interfaceAccess_(interfaceAccess),
     instanceNb_(nb),
     handle_(handle(nb, MeasurementObjectType::data_receiver)),
-    name_(name + " # " + std::to_string(nb)),
+    name_(name + " # " + std::to_string(handle_)),
     type_(MeasurementObjectType::data_receiver),
-    showGui_(false),
+    showGui_(true),
     maxPkgInBuffer_(64),
     maxPayloadSize_(64)
 {
@@ -50,12 +50,15 @@ bool visualizer::WaveVisualizer::validatePackage(DataPackageCPtr pkg)
     }
 
     //packagesBuffer_.push_back(pkg);
-    history_.push_back(reinterpret_cast<SineWave*>(pkg->payload)->getValue());
+    history_[pkg->sourceHandle].push_back(reinterpret_cast<SineWave*>(pkg->payload)->getValue());
 
-    if(history_.size() > (size_t)maxPkgInBuffer_)
+    for (auto& [handle, history] : history_)
     {
-        //packagesBuffer_.erase(packagesBuffer_.begin(), packagesBuffer_.begin() +  (packagesBuffer_.size() - (size_t)maxPkgInBuffer_));
-        history_.erase(history_.begin(), history_.begin() +  (history_.size() - (size_t)maxPkgInBuffer_));
+        if(history.size() > (size_t)maxPkgInBuffer_)
+        {
+            //packagesBuffer_.erase(packagesBuffer_.begin(), packagesBuffer_.begin() +  (packagesBuffer_.size() - (size_t)maxPkgInBuffer_));
+            history.erase(history.begin(), history.begin() +  (history.size() - (size_t)maxPkgInBuffer_));
+        }
     }
     return true;
 }
@@ -113,11 +116,15 @@ void visualizer::WaveVisualizer::show(ImGuiContext* ctx)
 
     if(showGui_)
     {
+        std::lock_guard<std::mutex> lock(mtx_);
         ImGui::Begin(name_.c_str());
         if (ImPlot::BeginPlot(name_.c_str(), "Point number", "Amplitude")) 
         {
             // Plot the data
-            ImPlot::PlotLine(name_.c_str(), history_.data(), (int)history_.size());
+            for (auto [handle, history] : history_)
+            {
+                ImPlot::PlotLine(std::to_string(handle).c_str(), history.data(), (int)history.size());
+            }
 
             // End the ImPlot plot
             ImPlot::EndPlot();

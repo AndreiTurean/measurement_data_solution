@@ -12,7 +12,7 @@ namespace transmitters
         interfaceAccess_(interfaceAccess),
         instanceNumber_(instanceNb),
         handle_(handle(instanceNb, MeasurementObjectType::data_source)),
-        name_(name + " # " + std::to_string(instanceNb)),
+        name_(name + " # " + std::to_string(handle_)),
         type_(MeasurementObjectType::data_source),
         isProcessing_(true),
         showGui_(true),

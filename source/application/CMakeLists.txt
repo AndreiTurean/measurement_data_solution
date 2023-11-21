@@ -17,6 +17,11 @@ add_executable(${PROJECT_NAME}
 	source/main.cxx
   source/CliParser.cxx
   source/CliParser.hpp
+  source/imnodes.cpp
+  source/imnodes.h
+  source/imnodes_internal.h
+  source/graph_visualizer.cxx
+  source/graph_visualizer.hpp
 )
 
 add_executable(${PROJECT_NAME}_cli

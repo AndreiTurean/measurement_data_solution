@@ -1,6 +1,7 @@
 #pragma once
 #include <defs/Log.hpp>
 #include <defs/MdsInterface.hpp>
+#include <defs/SignalExtraction.hpp>
 #include <core/EngineObject.hpp>
 #include <core/DistributionManager.hpp>
 #include <core/ConfigurationManager.hpp>
@@ -35,6 +36,7 @@ namespace core
         metrics::Watchdog* watchdog_; //!< watchdog pointerinterfaceHelperPtr_
         EngineObject* self_; //!< mds engine mirror as measurement object.
         core::utility::InterfaceUtilityHelper* interfaceHelperPtr_; //!< engine interface helper
+        SignalExtractionInterface* signalExtractionIfc_;
 
         bool showLogger_; //!< flag to show logger
         bool showDistrMgr_; //!< flag to show data distribution manager
